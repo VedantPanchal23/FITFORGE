@@ -1,0 +1,77 @@
+# ============================================
+# PFT — Root .gitignore
+# ============================================
+
+# Dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native build folders
+ios/
+android/
+.kotlin/
+
+# Metro
+.metro-health-check*
+
+# Build artifacts
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.pem
+
+# Debug logs
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+*.log
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+
+# Environment files
+.env
+.env.local
+.env*.local
+.env.development
+.env.production
+
+# TypeScript
+*.tsbuildinfo
+
+# Test output & build artifacts
+test_output.txt
+test-build/
+
+# EAS
+eas.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Package lock (optional — uncomment if you want to track it)
+# package-lock.json
