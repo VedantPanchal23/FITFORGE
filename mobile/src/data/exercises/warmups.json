@@ -1,0 +1,517 @@
+[
+    {
+        "id": "arm_circles_forward",
+        "name": "Arm Circles Forward",
+        "target_muscles": [
+            "shoulders",
+            "rotator_cuff"
+        ],
+        "type": "dynamic",
+        "reps": 15,
+        "difficulty": 1,
+        "instructions": "Make progressively larger circles with straight arms moving forward.",
+        "prepares_for": [
+            "push",
+            "shoulders"
+        ]
+    },
+    {
+        "id": "arm_circles_backward",
+        "name": "Arm Circles Backward",
+        "target_muscles": [
+            "shoulders",
+            "rotator_cuff"
+        ],
+        "type": "dynamic",
+        "reps": 15,
+        "difficulty": 1,
+        "instructions": "Make progressively larger circles with straight arms moving backward.",
+        "prepares_for": [
+            "push",
+            "shoulders"
+        ]
+    },
+    {
+        "id": "arm_swings_horizontal",
+        "name": "Horizontal Arm Swings",
+        "target_muscles": [
+            "chest",
+            "shoulders",
+            "back"
+        ],
+        "type": "dynamic",
+        "reps": 15,
+        "difficulty": 1,
+        "instructions": "Swing arms across chest and back out to sides in controlled motion.",
+        "prepares_for": [
+            "push",
+            "pull",
+            "chest"
+        ]
+    },
+    {
+        "id": "arm_swings_vertical",
+        "name": "Vertical Arm Swings",
+        "target_muscles": [
+            "shoulders",
+            "lats"
+        ],
+        "type": "dynamic",
+        "reps": 15,
+        "difficulty": 1,
+        "instructions": "Swing arms forward and up overhead, then down and behind you.",
+        "prepares_for": [
+            "push",
+            "pull",
+            "shoulders"
+        ]
+    },
+    {
+        "id": "neck_circles",
+        "name": "Neck Circles",
+        "target_muscles": [
+            "neck"
+        ],
+        "type": "dynamic",
+        "reps": 5,
+        "notes": "each direction",
+        "difficulty": 1,
+        "instructions": "Slowly rotate head in full circles, then reverse direction.",
+        "prepares_for": [
+            "full_body"
+        ]
+    },
+    {
+        "id": "shoulder_rolls",
+        "name": "Shoulder Rolls",
+        "target_muscles": [
+            "shoulders",
+            "trapezius"
+        ],
+        "type": "dynamic",
+        "reps": 10,
+        "notes": "each direction",
+        "difficulty": 1,
+        "instructions": "Roll shoulders up, back, and down in smooth circles.",
+        "prepares_for": [
+            "push",
+            "pull",
+            "shoulders"
+        ]
+    },
+    {
+        "id": "torso_twists",
+        "name": "Torso Twists",
+        "target_muscles": [
+            "core",
+            "obliques",
+            "spine"
+        ],
+        "type": "dynamic",
+        "reps": 20,
+        "difficulty": 1,
+        "instructions": "Stand with arms out, rotate torso left and right keeping hips stable.",
+        "prepares_for": [
+            "core",
+            "full_body"
+        ]
+    },
+    {
+        "id": "hip_circles",
+        "name": "Hip Circles",
+        "target_muscles": [
+            "hips",
+            "glutes"
+        ],
+        "type": "dynamic",
+        "reps": 10,
+        "notes": "each direction",
+        "difficulty": 1,
+        "instructions": "Hands on hips, rotate hips in large circles, then reverse.",
+        "prepares_for": [
+            "legs",
+            "hips"
+        ]
+    },
+    {
+        "id": "leg_swings_forward",
+        "name": "Leg Swings Forward-Back",
+        "target_muscles": [
+            "hip_flexors",
+            "hamstrings",
+            "glutes"
+        ],
+        "type": "dynamic",
+        "reps": 15,
+        "notes": "each leg",
+        "difficulty": 1,
+        "instructions": "Hold wall for balance, swing leg forward and back in controlled motion.",
+        "prepares_for": [
+            "legs",
+            "running"
+        ]
+    },
+    {
+        "id": "leg_swings_lateral",
+        "name": "Leg Swings Side-to-Side",
+        "target_muscles": [
+            "hips",
+            "groin",
+            "outer_thighs"
+        ],
+        "type": "dynamic",
+        "reps": 15,
+        "notes": "each leg",
+        "difficulty": 1,
+        "instructions": "Face wall, swing leg across body and out to side.",
+        "prepares_for": [
+            "legs",
+            "hips"
+        ]
+    },
+    {
+        "id": "ankle_circles",
+        "name": "Ankle Circles",
+        "target_muscles": [
+            "ankles"
+        ],
+        "type": "dynamic",
+        "reps": 10,
+        "notes": "each direction, each ankle",
+        "difficulty": 1,
+        "instructions": "Lift foot off ground, rotate ankle in circles both directions.",
+        "prepares_for": [
+            "legs",
+            "running",
+            "jumping"
+        ]
+    },
+    {
+        "id": "jumping_jacks",
+        "name": "Jumping Jacks",
+        "target_muscles": [
+            "full_body",
+            "cardiovascular"
+        ],
+        "type": "dynamic_cardio",
+        "reps": 30,
+        "difficulty": 1,
+        "instructions": "Jump feet wide while raising arms overhead, return to start.",
+        "prepares_for": [
+            "cardio",
+            "full_body"
+        ]
+    },
+    {
+        "id": "high_knees",
+        "name": "High Knees",
+        "target_muscles": [
+            "hip_flexors",
+            "quads",
+            "cardiovascular"
+        ],
+        "type": "dynamic_cardio",
+        "reps": 30,
+        "notes": "each leg",
+        "difficulty": 2,
+        "instructions": "Jog in place lifting knees to hip height.",
+        "prepares_for": [
+            "running",
+            "cardio",
+            "legs"
+        ]
+    },
+    {
+        "id": "butt_kicks",
+        "name": "Butt Kicks",
+        "target_muscles": [
+            "hamstrings",
+            "quads",
+            "cardiovascular"
+        ],
+        "type": "dynamic_cardio",
+        "reps": 30,
+        "notes": "each leg",
+        "difficulty": 2,
+        "instructions": "Jog in place kicking heels up toward glutes.",
+        "prepares_for": [
+            "running",
+            "cardio",
+            "legs"
+        ]
+    },
+    {
+        "id": "bodyweight_squats",
+        "name": "Bodyweight Squats",
+        "target_muscles": [
+            "quads",
+            "glutes",
+            "hamstrings"
+        ],
+        "type": "activation",
+        "reps": 15,
+        "difficulty": 1,
+        "instructions": "Feet shoulder-width, squat down with weight in heels, stand back up.",
+        "prepares_for": [
+            "legs",
+            "squats"
+        ]
+    },
+    {
+        "id": "walking_lunges",
+        "name": "Walking Lunges",
+        "target_muscles": [
+            "quads",
+            "glutes",
+            "hip_flexors"
+        ],
+        "type": "dynamic",
+        "reps": 10,
+        "notes": "each leg",
+        "difficulty": 2,
+        "instructions": "Step forward into lunge, push off and step through into next lunge.",
+        "prepares_for": [
+            "legs",
+            "running"
+        ]
+    },
+    {
+        "id": "inchworms",
+        "name": "Inchworms",
+        "target_muscles": [
+            "hamstrings",
+            "core",
+            "shoulders"
+        ],
+        "type": "dynamic",
+        "reps": 6,
+        "difficulty": 2,
+        "instructions": "From standing, fold forward, walk hands to plank, walk back, stand up.",
+        "prepares_for": [
+            "push",
+            "core",
+            "full_body"
+        ]
+    },
+    {
+        "id": "glute_bridges",
+        "name": "Glute Bridges",
+        "target_muscles": [
+            "glutes",
+            "hamstrings"
+        ],
+        "type": "activation",
+        "reps": 15,
+        "difficulty": 1,
+        "instructions": "Lie on back, feet flat, lift hips by squeezing glutes.",
+        "prepares_for": [
+            "legs",
+            "deadlifts",
+            "running"
+        ]
+    },
+    {
+        "id": "clamshells",
+        "name": "Clamshells",
+        "target_muscles": [
+            "glutes",
+            "hip_abductors"
+        ],
+        "type": "activation",
+        "reps": 15,
+        "notes": "each side",
+        "difficulty": 1,
+        "instructions": "Lie on side, knees bent, lift top knee while keeping feet together.",
+        "prepares_for": [
+            "legs",
+            "hips",
+            "running"
+        ]
+    },
+    {
+        "id": "fire_hydrants",
+        "name": "Fire Hydrants",
+        "target_muscles": [
+            "glutes",
+            "hip_abductors"
+        ],
+        "type": "activation",
+        "reps": 12,
+        "notes": "each side",
+        "difficulty": 1,
+        "instructions": "On hands and knees, lift one leg out to side keeping knee bent.",
+        "prepares_for": [
+            "legs",
+            "hips"
+        ]
+    },
+    {
+        "id": "bird_dogs",
+        "name": "Bird Dogs",
+        "target_muscles": [
+            "core",
+            "lower_back",
+            "glutes"
+        ],
+        "type": "activation",
+        "reps": 10,
+        "notes": "each side",
+        "difficulty": 1,
+        "instructions": "On hands and knees, extend opposite arm and leg, hold briefly, return.",
+        "prepares_for": [
+            "core",
+            "back"
+        ]
+    },
+    {
+        "id": "dead_bugs",
+        "name": "Dead Bugs",
+        "target_muscles": [
+            "core",
+            "hip_flexors"
+        ],
+        "type": "activation",
+        "reps": 10,
+        "notes": "each side",
+        "difficulty": 2,
+        "instructions": "Lie on back, arms up, knees at 90. Extend opposite arm and leg.",
+        "prepares_for": [
+            "core"
+        ]
+    },
+    {
+        "id": "plank_hold",
+        "name": "Plank Hold",
+        "target_muscles": [
+            "core",
+            "shoulders"
+        ],
+        "type": "activation",
+        "duration_secs": 30,
+        "difficulty": 2,
+        "instructions": "Hold push-up position or on forearms, body in straight line.",
+        "prepares_for": [
+            "core",
+            "push"
+        ]
+    },
+    {
+        "id": "side_lunges",
+        "name": "Side Lunges",
+        "target_muscles": [
+            "groin",
+            "quads",
+            "glutes"
+        ],
+        "type": "dynamic",
+        "reps": 10,
+        "notes": "each side",
+        "difficulty": 2,
+        "instructions": "Step wide to side, bend that knee, push back to start.",
+        "prepares_for": [
+            "legs",
+            "hips"
+        ]
+    },
+    {
+        "id": "reverse_lunges",
+        "name": "Reverse Lunges",
+        "target_muscles": [
+            "quads",
+            "glutes",
+            "hip_flexors"
+        ],
+        "type": "dynamic",
+        "reps": 10,
+        "notes": "each leg",
+        "difficulty": 1,
+        "instructions": "Step backward into lunge, return to standing.",
+        "prepares_for": [
+            "legs"
+        ]
+    },
+    {
+        "id": "pushup_hold",
+        "name": "Push-Up Position Hold",
+        "target_muscles": [
+            "chest",
+            "shoulders",
+            "core"
+        ],
+        "type": "activation",
+        "duration_secs": 20,
+        "difficulty": 2,
+        "instructions": "Hold top of push-up position, arms straight, body aligned.",
+        "prepares_for": [
+            "push",
+            "chest"
+        ]
+    },
+    {
+        "id": "scapular_pushups",
+        "name": "Scapular Push-Ups",
+        "target_muscles": [
+            "shoulders",
+            "serratus"
+        ],
+        "type": "activation",
+        "reps": 10,
+        "difficulty": 2,
+        "instructions": "In push-up position, squeeze and spread shoulder blades without bending arms.",
+        "prepares_for": [
+            "push",
+            "pull",
+            "shoulders"
+        ]
+    },
+    {
+        "id": "wall_slides",
+        "name": "Wall Slides",
+        "target_muscles": [
+            "shoulders",
+            "upper_back"
+        ],
+        "type": "activation",
+        "reps": 10,
+        "difficulty": 1,
+        "instructions": "Back against wall, arms in W position, slide up to Y and back down.",
+        "prepares_for": [
+            "push",
+            "pull",
+            "shoulders"
+        ]
+    },
+    {
+        "id": "band_pull_aparts",
+        "name": "Band Pull Aparts",
+        "target_muscles": [
+            "rear_delts",
+            "upper_back"
+        ],
+        "type": "activation",
+        "reps": 15,
+        "equipment": "resistance_band",
+        "difficulty": 1,
+        "instructions": "Hold band at shoulder width, pull apart squeezing shoulder blades.",
+        "prepares_for": [
+            "pull",
+            "shoulders"
+        ]
+    },
+    {
+        "id": "march_in_place",
+        "name": "March in Place",
+        "target_muscles": [
+            "hip_flexors",
+            "cardiovascular"
+        ],
+        "type": "dynamic_cardio",
+        "duration_secs": 60,
+        "difficulty": 1,
+        "instructions": "March in place with high knees and arm swings.",
+        "prepares_for": [
+            "cardio",
+            "full_body"
+        ]
+    }
+]

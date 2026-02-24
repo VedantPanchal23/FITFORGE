@@ -1,0 +1,389 @@
+[
+    {
+        "id": "dal_moong_cooked",
+        "name": "Moong Dal (Cooked)",
+        "name_hindi": "मूंग दाल",
+        "category": "legumes",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 105,
+            "protein": 7.5,
+            "carbs": 17,
+            "fats": 0.5,
+            "fiber": 4,
+            "iron_mg": 1.4,
+            "calcium_mg": 27,
+            "zinc_mg": 1.1,
+            "magnesium_mg": 35,
+            "folate_mcg": 80,
+            "vitamin_b1_mg": 0.12
+        },
+        "household_portions": [
+            {
+                "name": "katori",
+                "grams": 150
+            }
+        ],
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "digestibility": "easy",
+        "benefits": [
+            "easy_digest",
+            "light"
+        ]
+    },
+    {
+        "id": "dal_toor_cooked",
+        "name": "Toor Dal (Cooked)",
+        "name_hindi": "तूर/अरहर दाल",
+        "regional_names": [
+            "arhar",
+            "tur",
+            "kandhi pappu"
+        ],
+        "category": "legumes",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 120,
+            "protein": 7,
+            "carbs": 20,
+            "fats": 0.5,
+            "fiber": 5,
+            "iron_mg": 1.7,
+            "calcium_mg": 45,
+            "zinc_mg": 1.3,
+            "folate_mcg": 85
+        },
+        "household_portions": [
+            {
+                "name": "katori",
+                "grams": 150
+            }
+        ],
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "digestibility": "moderate"
+    },
+    {
+        "id": "dal_chana_cooked",
+        "name": "Chana Dal (Cooked)",
+        "name_hindi": "चना दाल",
+        "category": "legumes",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 130,
+            "protein": 8,
+            "carbs": 22,
+            "fats": 1.5,
+            "fiber": 5,
+            "iron_mg": 2.5,
+            "calcium_mg": 50,
+            "zinc_mg": 1.5,
+            "folate_mcg": 95
+        },
+        "household_portions": [
+            {
+                "name": "katori",
+                "grams": 150
+            }
+        ],
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "glycemic_index": 28,
+        "benefits": [
+            "low_gi",
+            "high_protein"
+        ]
+    },
+    {
+        "id": "dal_masoor_cooked",
+        "name": "Masoor Dal (Cooked)",
+        "name_hindi": "मसूर दाल",
+        "category": "legumes",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 115,
+            "protein": 9,
+            "carbs": 20,
+            "fats": 0.4,
+            "fiber": 4,
+            "iron_mg": 3.3,
+            "calcium_mg": 19,
+            "zinc_mg": 1.3,
+            "folate_mcg": 180
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "iron_rich",
+            "high_folate"
+        ]
+    },
+    {
+        "id": "dal_urad_cooked",
+        "name": "Urad Dal (Cooked)",
+        "name_hindi": "उड़द दाल",
+        "category": "legumes",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 118,
+            "protein": 7.8,
+            "carbs": 18,
+            "fats": 0.6,
+            "fiber": 4.5,
+            "iron_mg": 3.8,
+            "calcium_mg": 55,
+            "zinc_mg": 1.8
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "iron_rich",
+            "calcium_rich"
+        ]
+    },
+    {
+        "id": "rajma_cooked",
+        "name": "Rajma (Kidney Beans)",
+        "name_hindi": "राजमा",
+        "category": "legumes",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 127,
+            "protein": 8.7,
+            "carbs": 23,
+            "fats": 0.5,
+            "fiber": 6.4,
+            "iron_mg": 2.9,
+            "calcium_mg": 35,
+            "zinc_mg": 1.0,
+            "magnesium_mg": 45,
+            "folate_mcg": 130
+        },
+        "household_portions": [
+            {
+                "name": "katori",
+                "grams": 150
+            }
+        ],
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "high_fiber",
+            "high_protein"
+        ]
+    },
+    {
+        "id": "chole_cooked",
+        "name": "Chole (Chickpeas)",
+        "name_hindi": "छोले",
+        "regional_names": [
+            "chana",
+            "kabuli chana"
+        ],
+        "category": "legumes",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 164,
+            "protein": 9,
+            "carbs": 27,
+            "fats": 2.6,
+            "fiber": 8,
+            "iron_mg": 2.9,
+            "calcium_mg": 49,
+            "zinc_mg": 1.5,
+            "magnesium_mg": 48,
+            "folate_mcg": 172
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "glycemic_index": 28,
+        "benefits": [
+            "low_gi",
+            "high_fiber"
+        ]
+    },
+    {
+        "id": "lobia_cooked",
+        "name": "Lobia (Black-Eyed Peas)",
+        "name_hindi": "लोबिया",
+        "category": "legumes",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 116,
+            "protein": 8,
+            "carbs": 20,
+            "fats": 0.5,
+            "fiber": 6,
+            "iron_mg": 2.5,
+            "calcium_mg": 24,
+            "folate_mcg": 208
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "high_folate"
+        ]
+    },
+    {
+        "id": "sprouts_moong",
+        "name": "Moong Sprouts",
+        "name_hindi": "अंकुरित मूंग",
+        "category": "legumes",
+        "state": "raw",
+        "per_100g": {
+            "calories": 31,
+            "protein": 3,
+            "carbs": 6,
+            "fats": 0.2,
+            "fiber": 1.8,
+            "iron_mg": 0.9,
+            "calcium_mg": 13,
+            "vitamin_c_mg": 13,
+            "folate_mcg": 60
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack"
+        ],
+        "benefits": [
+            "enzyme_rich",
+            "vitamin_c"
+        ],
+        "seasonal_note": "avoid_monsoon_raw"
+    },
+    {
+        "id": "soyabean_chunks_dry",
+        "name": "Soya Chunks (Dry)",
+        "name_hindi": "सोया चंक्स",
+        "category": "legumes",
+        "state": "dry",
+        "per_100g": {
+            "calories": 345,
+            "protein": 52,
+            "carbs": 33,
+            "fats": 0.5,
+            "fiber": 13,
+            "iron_mg": 10,
+            "calcium_mg": 350,
+            "zinc_mg": 4.9,
+            "magnesium_mg": 280
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "highest_plant_protein",
+            "iron_rich",
+            "calcium_rich"
+        ]
+    },
+    {
+        "id": "soyabean_chunks_cooked",
+        "name": "Soya Chunks (Cooked)",
+        "name_hindi": "सोया चंक्स (पका)",
+        "category": "legumes",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 95,
+            "protein": 15,
+            "carbs": 9,
+            "fats": 0.2,
+            "fiber": 4,
+            "iron_mg": 3,
+            "calcium_mg": 100
+        },
+        "household_portions": [
+            {
+                "name": "katori",
+                "grams": 100
+            }
+        ],
+        "diet_types": [
+            "veg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "high_protein"
+        ]
+    },
+    {
+        "id": "tofu",
+        "name": "Tofu",
+        "name_hindi": "टोफू",
+        "category": "legumes",
+        "per_100g": {
+            "calories": 76,
+            "protein": 8,
+            "carbs": 1.9,
+            "fats": 4.8,
+            "fiber": 0.3,
+            "iron_mg": 1.6,
+            "calcium_mg": 350,
+            "zinc_mg": 0.8,
+            "magnesium_mg": 30
+        },
+        "per_piece": {
+            "grams": 100,
+            "description": "1 square block"
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "complete_protein",
+            "calcium_rich"
+        ]
+    }
+]

@@ -1,0 +1,643 @@
+[
+    {
+        "id": "rice_white_raw",
+        "name": "White Rice (Raw)",
+        "name_hindi": "सफेद चावल (कच्चा)",
+        "category": "grains",
+        "state": "raw",
+        "cooked_id": "rice_white_cooked",
+        "per_100g": {
+            "calories": 360,
+            "protein": 6.8,
+            "carbs": 79,
+            "fats": 0.6,
+            "fiber": 1.3,
+            "iron_mg": 0.8,
+            "calcium_mg": 28,
+            "zinc_mg": 1.2,
+            "magnesium_mg": 25,
+            "vitamin_b1_mg": 0.07,
+            "vitamin_b6_mg": 0.16,
+            "folate_mcg": 8
+        },
+        "glycemic_index": 73,
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "rice_white_cooked",
+        "name": "White Rice (Cooked)",
+        "name_hindi": "सफेद चावल (पका हुआ)",
+        "category": "grains",
+        "state": "cooked",
+        "raw_id": "rice_white_raw",
+        "per_100g": {
+            "calories": 130,
+            "protein": 2.7,
+            "carbs": 28,
+            "fats": 0.3,
+            "fiber": 0.4,
+            "iron_mg": 0.2,
+            "calcium_mg": 10,
+            "zinc_mg": 0.5,
+            "magnesium_mg": 12
+        },
+        "household_portions": [
+            {
+                "name": "katori",
+                "grams": 100,
+                "description": "1 small bowl"
+            },
+            {
+                "name": "plate",
+                "grams": 200,
+                "description": "1 serving plate"
+            }
+        ],
+        "glycemic_index": 73,
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "rice_brown_cooked",
+        "name": "Brown Rice (Cooked)",
+        "name_hindi": "ब्राउन चावल",
+        "category": "grains",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 112,
+            "protein": 2.6,
+            "carbs": 24,
+            "fats": 0.9,
+            "fiber": 1.8,
+            "iron_mg": 0.5,
+            "calcium_mg": 10,
+            "zinc_mg": 0.6,
+            "magnesium_mg": 44,
+            "vitamin_b1_mg": 0.1,
+            "vitamin_b6_mg": 0.15
+        },
+        "glycemic_index": 50,
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "digestibility": "moderate",
+        "benefits": [
+            "high_fiber",
+            "low_gi"
+        ]
+    },
+    {
+        "id": "roti_wheat",
+        "name": "Wheat Roti/Chapati",
+        "name_hindi": "गेहूं की रोटी",
+        "regional_names": [
+            "phulka",
+            "chapati",
+            "rotli"
+        ],
+        "category": "grains",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 297,
+            "protein": 9.8,
+            "carbs": 56,
+            "fats": 3.7,
+            "fiber": 9.1,
+            "iron_mg": 3.5,
+            "calcium_mg": 30,
+            "zinc_mg": 2.5,
+            "magnesium_mg": 100,
+            "vitamin_b1_mg": 0.35
+        },
+        "per_piece": {
+            "grams": 30,
+            "calories": 89,
+            "protein": 2.9,
+            "carbs": 16.8,
+            "fats": 1.1,
+            "fiber": 2.7
+        },
+        "household_portions": [
+            {
+                "name": "piece",
+                "grams": 30
+            },
+            {
+                "name": "medium",
+                "grams": 40
+            },
+            {
+                "name": "large",
+                "grams": 50
+            }
+        ],
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "lunch",
+            "dinner"
+        ],
+        "digestibility": "moderate"
+    },
+    {
+        "id": "roti_multigrain",
+        "name": "Multigrain Roti",
+        "name_hindi": "मल्टीग्रेन रोटी",
+        "category": "grains",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 285,
+            "protein": 11,
+            "carbs": 52,
+            "fats": 4.5,
+            "fiber": 11,
+            "iron_mg": 4,
+            "calcium_mg": 45,
+            "zinc_mg": 3,
+            "magnesium_mg": 120
+        },
+        "per_piece": {
+            "grams": 35,
+            "calories": 100,
+            "protein": 3.9,
+            "carbs": 18.2,
+            "fats": 1.6
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "lunch",
+            "dinner"
+        ],
+        "benefits": [
+            "high_fiber",
+            "complete_nutrition"
+        ]
+    },
+    {
+        "id": "paratha_plain",
+        "name": "Plain Paratha",
+        "name_hindi": "सादा पराठा",
+        "category": "grains",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 326,
+            "protein": 8.3,
+            "carbs": 45,
+            "fats": 13,
+            "fiber": 3.5,
+            "iron_mg": 2.5,
+            "calcium_mg": 25
+        },
+        "per_piece": {
+            "grams": 60,
+            "calories": 196,
+            "protein": 5,
+            "carbs": 27,
+            "fats": 7.8
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "lunch",
+            "dinner"
+        ]
+    },
+    {
+        "id": "paratha_aloo",
+        "name": "Aloo Paratha",
+        "name_hindi": "आलू पराठा",
+        "category": "grains",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 290,
+            "protein": 6,
+            "carbs": 40,
+            "fats": 12,
+            "fiber": 3
+        },
+        "per_piece": {
+            "grams": 100,
+            "calories": 290,
+            "protein": 6,
+            "carbs": 40,
+            "fats": 12
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg"
+        ],
+        "jain_forbidden": true,
+        "meal_suitability": [
+            "breakfast",
+            "lunch"
+        ]
+    },
+    {
+        "id": "poha",
+        "name": "Poha",
+        "name_hindi": "पोहा",
+        "regional_names": [
+            "chivda",
+            "aval"
+        ],
+        "category": "grains",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 110,
+            "protein": 2.5,
+            "carbs": 22,
+            "fats": 2.5,
+            "fiber": 1.5,
+            "iron_mg": 3.2,
+            "calcium_mg": 20
+        },
+        "household_portions": [
+            {
+                "name": "katori",
+                "grams": 150
+            },
+            {
+                "name": "plate",
+                "grams": 200
+            }
+        ],
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "breakfast"
+        ],
+        "digestibility": "easy",
+        "benefits": [
+            "iron_rich"
+        ]
+    },
+    {
+        "id": "upma",
+        "name": "Upma",
+        "name_hindi": "उपमा",
+        "category": "grains",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 115,
+            "protein": 3.5,
+            "carbs": 18,
+            "fats": 3.5,
+            "fiber": 2,
+            "iron_mg": 1.2,
+            "calcium_mg": 15
+        },
+        "household_portions": [
+            {
+                "name": "katori",
+                "grams": 150
+            }
+        ],
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "breakfast"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "idli",
+        "name": "Idli",
+        "name_hindi": "इडली",
+        "category": "grains",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 58,
+            "protein": 2.1,
+            "carbs": 11,
+            "fats": 0.4,
+            "fiber": 0.8,
+            "iron_mg": 0.5,
+            "calcium_mg": 10
+        },
+        "per_piece": {
+            "grams": 40,
+            "calories": 23,
+            "protein": 0.8,
+            "carbs": 4.4,
+            "fats": 0.2
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg"
+        ],
+        "jain_note": "fermented_check",
+        "meal_suitability": [
+            "breakfast",
+            "dinner"
+        ],
+        "digestibility": "easy",
+        "benefits": [
+            "low_calorie",
+            "probiotic"
+        ]
+    },
+    {
+        "id": "dosa_plain",
+        "name": "Plain Dosa",
+        "name_hindi": "सादा डोसा",
+        "category": "grains",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 168,
+            "protein": 3.9,
+            "carbs": 28,
+            "fats": 4.7,
+            "fiber": 1.5,
+            "iron_mg": 0.8,
+            "calcium_mg": 15
+        },
+        "per_piece": {
+            "grams": 75,
+            "calories": 126,
+            "protein": 2.9,
+            "carbs": 21,
+            "fats": 3.5
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg"
+        ],
+        "jain_note": "fermented_check",
+        "meal_suitability": [
+            "breakfast",
+            "dinner"
+        ]
+    },
+    {
+        "id": "dosa_masala",
+        "name": "Masala Dosa",
+        "name_hindi": "मसाला डोसा",
+        "category": "grains",
+        "state": "cooked",
+        "per_piece": {
+            "grams": 150,
+            "calories": 250,
+            "protein": 5,
+            "carbs": 35,
+            "fats": 10
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg"
+        ],
+        "jain_forbidden": true,
+        "meal_suitability": [
+            "breakfast",
+            "dinner"
+        ]
+    },
+    {
+        "id": "oats_raw",
+        "name": "Oats (Raw)",
+        "name_hindi": "ओट्स",
+        "category": "grains",
+        "state": "raw",
+        "per_100g": {
+            "calories": 389,
+            "protein": 16.9,
+            "carbs": 66,
+            "fats": 6.9,
+            "fiber": 10.6,
+            "iron_mg": 4.7,
+            "calcium_mg": 54,
+            "magnesium_mg": 177,
+            "zinc_mg": 3.9,
+            "vitamin_b1_mg": 0.76
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "glycemic_index": 55,
+        "benefits": [
+            "high_fiber",
+            "low_gi",
+            "heart_healthy"
+        ]
+    },
+    {
+        "id": "oats_cooked",
+        "name": "Oats (Cooked)",
+        "name_hindi": "ओट्स (पका हुआ)",
+        "category": "grains",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 71,
+            "protein": 2.5,
+            "carbs": 12,
+            "fats": 1.5,
+            "fiber": 1.7,
+            "iron_mg": 0.6,
+            "calcium_mg": 9,
+            "magnesium_mg": 27
+        },
+        "household_portions": [
+            {
+                "name": "bowl",
+                "grams": 250
+            }
+        ],
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "breakfast"
+        ],
+        "glycemic_index": 55
+    },
+    {
+        "id": "daliya_cooked",
+        "name": "Daliya/Broken Wheat (Cooked)",
+        "name_hindi": "दलिया",
+        "category": "grains",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 90,
+            "protein": 3.2,
+            "carbs": 18,
+            "fats": 0.5,
+            "fiber": 4,
+            "iron_mg": 1.5,
+            "calcium_mg": 20,
+            "magnesium_mg": 40
+        },
+        "household_portions": [
+            {
+                "name": "katori",
+                "grams": 150
+            }
+        ],
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "dinner"
+        ],
+        "benefits": [
+            "high_fiber",
+            "diabetic_friendly"
+        ]
+    },
+    {
+        "id": "millet_bajra_roti",
+        "name": "Bajra Roti",
+        "name_hindi": "बाजरे की रोटी",
+        "category": "grains",
+        "state": "cooked",
+        "per_piece": {
+            "grams": 40,
+            "calories": 120,
+            "protein": 3.5,
+            "carbs": 20,
+            "fats": 3,
+            "fiber": 2,
+            "iron_mg": 2.8,
+            "calcium_mg": 18
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "seasonal": "winter",
+        "benefits": [
+            "iron_rich",
+            "warming"
+        ]
+    },
+    {
+        "id": "millet_jowar_roti",
+        "name": "Jowar Roti",
+        "name_hindi": "ज्वार की रोटी",
+        "category": "grains",
+        "state": "cooked",
+        "per_piece": {
+            "grams": 40,
+            "calories": 115,
+            "protein": 3.2,
+            "carbs": 22,
+            "fats": 1.8,
+            "fiber": 2.5,
+            "iron_mg": 1.8,
+            "calcium_mg": 15
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "benefits": [
+            "gluten_free",
+            "diabetic_friendly"
+        ]
+    },
+    {
+        "id": "millet_ragi_roti",
+        "name": "Ragi Roti",
+        "name_hindi": "रागी रोटी",
+        "category": "grains",
+        "state": "cooked",
+        "per_piece": {
+            "grams": 40,
+            "calories": 110,
+            "protein": 2.8,
+            "carbs": 23,
+            "fats": 1.2,
+            "fiber": 3,
+            "iron_mg": 1.5,
+            "calcium_mg": 120
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "benefits": [
+            "calcium_rich",
+            "diabetic_friendly"
+        ]
+    }
+]

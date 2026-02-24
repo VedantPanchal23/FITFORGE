@@ -1,0 +1,800 @@
+[
+    {
+        "id": "walking_beginner",
+        "name": "Beginner Walking Program",
+        "type": "walking",
+        "difficulty": 1,
+        "duration_mins": 20,
+        "description": "Gentle walking for beginners",
+        "structure": {
+            "warmup_mins": 3,
+            "main_mins": 15,
+            "cooldown_mins": 2
+        },
+        "intensity": "low",
+        "pace": "comfortable",
+        "calories_per_min": 4,
+        "suitable_for": [
+            "beginner",
+            "intermediate"
+        ]
+    },
+    {
+        "id": "walking_brisk",
+        "name": "Brisk Walking",
+        "type": "walking",
+        "difficulty": 2,
+        "duration_mins": 30,
+        "description": "Moderate pace walking for fitness",
+        "structure": {
+            "warmup_mins": 3,
+            "main_mins": 24,
+            "cooldown_mins": 3
+        },
+        "intensity": "moderate",
+        "pace": "brisk - can talk but not sing",
+        "calories_per_min": 5,
+        "suitable_for": [
+            "beginner",
+            "intermediate"
+        ]
+    },
+    {
+        "id": "walking_power",
+        "name": "Power Walking",
+        "type": "walking",
+        "difficulty": 3,
+        "duration_mins": 40,
+        "description": "Fast-paced walking with arm swings",
+        "structure": {
+            "warmup_mins": 5,
+            "main_mins": 30,
+            "cooldown_mins": 5
+        },
+        "intensity": "moderate-high",
+        "pace": "fast - difficult to hold conversation",
+        "calories_per_min": 7,
+        "suitable_for": [
+            "intermediate",
+            "advanced"
+        ]
+    },
+    {
+        "id": "walking_interval",
+        "name": "Interval Walking",
+        "type": "walking",
+        "difficulty": 3,
+        "duration_mins": 30,
+        "description": "Alternating fast and slow walking",
+        "structure": {
+            "warmup_mins": 3,
+            "intervals": [
+                {
+                    "fast_mins": 2,
+                    "slow_mins": 1,
+                    "rounds": 7
+                },
+                {
+                    "cooldown_mins": 3
+                }
+            ]
+        },
+        "intensity": "moderate-high",
+        "calories_per_min": 6,
+        "suitable_for": [
+            "intermediate",
+            "advanced"
+        ]
+    },
+    {
+        "id": "running_couch_to_5k_w1",
+        "name": "Couch to 5K - Week 1",
+        "type": "running",
+        "difficulty": 2,
+        "duration_mins": 25,
+        "description": "Beginner running program week 1",
+        "structure": {
+            "warmup_mins": 5,
+            "intervals": [
+                {
+                    "run_secs": 60,
+                    "walk_mins": 1.5,
+                    "rounds": 8
+                }
+            ],
+            "cooldown_mins": 5
+        },
+        "intensity": "moderate",
+        "calories_per_min": 8,
+        "suitable_for": [
+            "beginner"
+        ]
+    },
+    {
+        "id": "running_couch_to_5k_w4",
+        "name": "Couch to 5K - Week 4",
+        "type": "running",
+        "difficulty": 3,
+        "duration_mins": 30,
+        "description": "Intermediate running intervals",
+        "structure": {
+            "warmup_mins": 5,
+            "intervals": [
+                {
+                    "run_mins": 3,
+                    "walk_mins": 1.5
+                },
+                {
+                    "run_mins": 5,
+                    "walk_mins": 2.5
+                },
+                {
+                    "run_mins": 3,
+                    "walk_mins": 1.5
+                },
+                {
+                    "run_mins": 5,
+                    "walk_mins": 0
+                }
+            ],
+            "cooldown_mins": 5
+        },
+        "intensity": "moderate-high",
+        "calories_per_min": 10,
+        "suitable_for": [
+            "beginner",
+            "intermediate"
+        ]
+    },
+    {
+        "id": "running_5k",
+        "name": "5K Run",
+        "type": "running",
+        "difficulty": 4,
+        "duration_mins": 30,
+        "description": "Continuous 5K running",
+        "structure": {
+            "warmup_mins": 5,
+            "main_mins": 25,
+            "cooldown_mins": 5
+        },
+        "target_distance_km": 5,
+        "intensity": "high",
+        "pace": "6-7 min/km",
+        "calories_per_min": 11,
+        "suitable_for": [
+            "intermediate",
+            "advanced"
+        ]
+    },
+    {
+        "id": "running_tempo",
+        "name": "Tempo Run",
+        "type": "running",
+        "difficulty": 4,
+        "duration_mins": 35,
+        "description": "Sustained faster pace running",
+        "structure": {
+            "warmup_mins": 8,
+            "tempo_mins": 20,
+            "cooldown_mins": 7
+        },
+        "intensity": "high",
+        "pace": "comfortably hard",
+        "calories_per_min": 12,
+        "suitable_for": [
+            "intermediate",
+            "advanced"
+        ]
+    },
+    {
+        "id": "hiit_beginner",
+        "name": "HIIT Beginner",
+        "type": "hiit",
+        "difficulty": 2,
+        "duration_mins": 15,
+        "description": "Entry-level high intensity intervals",
+        "exercises": [
+            {
+                "name": "Jumping Jacks",
+                "work_secs": 30,
+                "rest_secs": 30
+            },
+            {
+                "name": "Bodyweight Squats",
+                "work_secs": 30,
+                "rest_secs": 30
+            },
+            {
+                "name": "High Knees",
+                "work_secs": 30,
+                "rest_secs": 30
+            },
+            {
+                "name": "Push-Ups",
+                "work_secs": 30,
+                "rest_secs": 30
+            },
+            {
+                "name": "Mountain Climbers",
+                "work_secs": 30,
+                "rest_secs": 30
+            }
+        ],
+        "rounds": 2,
+        "rest_between_rounds_secs": 60,
+        "intensity": "high",
+        "calories_per_min": 12,
+        "suitable_for": [
+            "beginner",
+            "intermediate"
+        ]
+    },
+    {
+        "id": "hiit_intermediate",
+        "name": "HIIT Intermediate",
+        "type": "hiit",
+        "difficulty": 3,
+        "duration_mins": 20,
+        "description": "Moderate HIIT workout",
+        "exercises": [
+            {
+                "name": "Burpees",
+                "work_secs": 40,
+                "rest_secs": 20
+            },
+            {
+                "name": "Jump Squats",
+                "work_secs": 40,
+                "rest_secs": 20
+            },
+            {
+                "name": "Push-Ups",
+                "work_secs": 40,
+                "rest_secs": 20
+            },
+            {
+                "name": "Plank Jacks",
+                "work_secs": 40,
+                "rest_secs": 20
+            },
+            {
+                "name": "Lunges Alternating",
+                "work_secs": 40,
+                "rest_secs": 20
+            },
+            {
+                "name": "Bicycle Crunches",
+                "work_secs": 40,
+                "rest_secs": 20
+            }
+        ],
+        "rounds": 3,
+        "rest_between_rounds_secs": 45,
+        "intensity": "high",
+        "calories_per_min": 14,
+        "suitable_for": [
+            "intermediate",
+            "advanced"
+        ]
+    },
+    {
+        "id": "hiit_advanced",
+        "name": "HIIT Advanced",
+        "type": "hiit",
+        "difficulty": 5,
+        "duration_mins": 25,
+        "description": "Intense HIIT for experienced athletes",
+        "exercises": [
+            {
+                "name": "Burpees",
+                "work_secs": 45,
+                "rest_secs": 15
+            },
+            {
+                "name": "Tuck Jumps",
+                "work_secs": 45,
+                "rest_secs": 15
+            },
+            {
+                "name": "Spiderman Push-Ups",
+                "work_secs": 45,
+                "rest_secs": 15
+            },
+            {
+                "name": "Box Jumps or Jump Squats",
+                "work_secs": 45,
+                "rest_secs": 15
+            },
+            {
+                "name": "Mountain Climbers",
+                "work_secs": 45,
+                "rest_secs": 15
+            },
+            {
+                "name": "V-Ups",
+                "work_secs": 45,
+                "rest_secs": 15
+            }
+        ],
+        "rounds": 4,
+        "rest_between_rounds_secs": 30,
+        "intensity": "very_high",
+        "calories_per_min": 16,
+        "suitable_for": [
+            "advanced"
+        ]
+    },
+    {
+        "id": "hiit_tabata",
+        "name": "Tabata Protocol",
+        "type": "hiit",
+        "difficulty": 4,
+        "duration_mins": 16,
+        "description": "Classic 20/10 Tabata intervals",
+        "exercises": [
+            {
+                "name": "Burpees",
+                "work_secs": 20,
+                "rest_secs": 10,
+                "rounds": 8
+            },
+            {
+                "name": "Jump Squats",
+                "work_secs": 20,
+                "rest_secs": 10,
+                "rounds": 8
+            },
+            {
+                "name": "Push-Ups",
+                "work_secs": 20,
+                "rest_secs": 10,
+                "rounds": 8
+            },
+            {
+                "name": "Mountain Climbers",
+                "work_secs": 20,
+                "rest_secs": 10,
+                "rounds": 8
+            }
+        ],
+        "rest_between_exercises_secs": 60,
+        "intensity": "very_high",
+        "calories_per_min": 15,
+        "suitable_for": [
+            "intermediate",
+            "advanced"
+        ]
+    },
+    {
+        "id": "hiit_emom",
+        "name": "EMOM Workout",
+        "type": "hiit",
+        "difficulty": 4,
+        "duration_mins": 20,
+        "description": "Every Minute On the Minute workout",
+        "structure": [
+            {
+                "minute": "odd",
+                "exercise": "10 Burpees"
+            },
+            {
+                "minute": "even",
+                "exercise": "15 Kettlebell Swings or Squats"
+            }
+        ],
+        "total_minutes": 20,
+        "intensity": "high",
+        "calories_per_min": 13,
+        "suitable_for": [
+            "intermediate",
+            "advanced"
+        ]
+    },
+    {
+        "id": "jump_rope_beginner",
+        "name": "Jump Rope Basics",
+        "type": "jump_rope",
+        "difficulty": 2,
+        "duration_mins": 10,
+        "description": "Beginner jump rope cardio",
+        "structure": [
+            {
+                "jump_secs": 30,
+                "rest_secs": 30,
+                "rounds": 10
+            }
+        ],
+        "techniques": [
+            "basic_bounce",
+            "alternate_foot"
+        ],
+        "intensity": "moderate",
+        "calories_per_min": 11,
+        "suitable_for": [
+            "beginner",
+            "intermediate"
+        ]
+    },
+    {
+        "id": "jump_rope_intermediate",
+        "name": "Jump Rope Cardio",
+        "type": "jump_rope",
+        "difficulty": 3,
+        "duration_mins": 15,
+        "description": "Intermediate jump rope workout",
+        "structure": [
+            {
+                "jump_mins": 1,
+                "rest_secs": 20,
+                "rounds": 10
+            }
+        ],
+        "techniques": [
+            "basic_bounce",
+            "alternate_foot",
+            "high_knees",
+            "boxer_step"
+        ],
+        "intensity": "high",
+        "calories_per_min": 13,
+        "suitable_for": [
+            "intermediate",
+            "advanced"
+        ]
+    },
+    {
+        "id": "jump_rope_hiit",
+        "name": "Jump Rope HIIT",
+        "type": "jump_rope",
+        "difficulty": 4,
+        "duration_mins": 20,
+        "description": "High intensity jump rope intervals",
+        "structure": [
+            {
+                "double_unders_secs": 30,
+                "rest_secs": 30
+            },
+            {
+                "high_knees_secs": 30,
+                "rest_secs": 30
+            },
+            {
+                "fast_skips_secs": 30,
+                "rest_secs": 30
+            },
+            {
+                "criss_cross_secs": 30,
+                "rest_secs": 30
+            }
+        ],
+        "rounds": 5,
+        "intensity": "very_high",
+        "calories_per_min": 15,
+        "suitable_for": [
+            "advanced"
+        ]
+    },
+    {
+        "id": "cycling_easy",
+        "name": "Easy Cycling",
+        "type": "cycling",
+        "difficulty": 1,
+        "duration_mins": 30,
+        "description": "Low intensity cycling",
+        "structure": {
+            "warmup_mins": 5,
+            "main_mins": 22,
+            "cooldown_mins": 3
+        },
+        "target_rpm": 70,
+        "intensity": "low",
+        "calories_per_min": 6,
+        "suitable_for": [
+            "beginner",
+            "intermediate"
+        ]
+    },
+    {
+        "id": "cycling_moderate",
+        "name": "Moderate Cycling",
+        "type": "cycling",
+        "difficulty": 2,
+        "duration_mins": 40,
+        "description": "Steady state cycling",
+        "structure": {
+            "warmup_mins": 5,
+            "main_mins": 30,
+            "cooldown_mins": 5
+        },
+        "target_rpm": 80,
+        "intensity": "moderate",
+        "calories_per_min": 8,
+        "suitable_for": [
+            "beginner",
+            "intermediate",
+            "advanced"
+        ]
+    },
+    {
+        "id": "cycling_intervals",
+        "name": "Cycling Intervals",
+        "type": "cycling",
+        "difficulty": 4,
+        "duration_mins": 30,
+        "description": "High intensity cycling intervals",
+        "structure": {
+            "warmup_mins": 5,
+            "intervals": [
+                {
+                    "sprint_mins": 1,
+                    "recovery_mins": 2,
+                    "rounds": 6
+                }
+            ],
+            "cooldown_mins": 7
+        },
+        "intensity": "high",
+        "calories_per_min": 11,
+        "suitable_for": [
+            "intermediate",
+            "advanced"
+        ]
+    },
+    {
+        "id": "stair_climbing_beginner",
+        "name": "Stair Climbing Beginner",
+        "type": "stair_climbing",
+        "difficulty": 2,
+        "duration_mins": 15,
+        "description": "Basic stair climbing workout",
+        "structure": {
+            "climb_mins": 3,
+            "rest_mins": 1,
+            "rounds": 4
+        },
+        "intensity": "moderate",
+        "calories_per_min": 9,
+        "suitable_for": [
+            "beginner",
+            "intermediate"
+        ]
+    },
+    {
+        "id": "stair_climbing_advanced",
+        "name": "Stair Climbing HIIT",
+        "type": "stair_climbing",
+        "difficulty": 4,
+        "duration_mins": 20,
+        "description": "Intense stair intervals",
+        "structure": {
+            "sprint_up_secs": 30,
+            "walk_down_secs": 45,
+            "rounds": 15
+        },
+        "intensity": "very_high",
+        "calories_per_min": 12,
+        "suitable_for": [
+            "intermediate",
+            "advanced"
+        ]
+    },
+    {
+        "id": "elliptical_steady",
+        "name": "Steady Elliptical",
+        "type": "elliptical",
+        "difficulty": 2,
+        "duration_mins": 30,
+        "description": "Moderate elliptical workout",
+        "structure": {
+            "warmup_mins": 3,
+            "main_mins": 24,
+            "cooldown_mins": 3
+        },
+        "target_spm": 140,
+        "intensity": "moderate",
+        "calories_per_min": 8,
+        "suitable_for": [
+            "beginner",
+            "intermediate"
+        ]
+    },
+    {
+        "id": "elliptical_intervals",
+        "name": "Elliptical Intervals",
+        "type": "elliptical",
+        "difficulty": 3,
+        "duration_mins": 25,
+        "description": "Interval training on elliptical",
+        "structure": {
+            "warmup_mins": 3,
+            "intervals": [
+                {
+                    "high_resistance_mins": 2,
+                    "low_resistance_mins": 1,
+                    "rounds": 6
+                }
+            ],
+            "cooldown_mins": 4
+        },
+        "intensity": "high",
+        "calories_per_min": 10,
+        "suitable_for": [
+            "intermediate",
+            "advanced"
+        ]
+    },
+    {
+        "id": "rowing_beginner",
+        "name": "Rowing Beginner",
+        "type": "rowing",
+        "difficulty": 2,
+        "duration_mins": 15,
+        "description": "Basic rowing workout",
+        "structure": {
+            "warmup_mins": 3,
+            "main_mins": 10,
+            "cooldown_mins": 2
+        },
+        "target_spm": 22,
+        "intensity": "moderate",
+        "calories_per_min": 9,
+        "suitable_for": [
+            "beginner"
+        ]
+    },
+    {
+        "id": "rowing_endurance",
+        "name": "Rowing Endurance",
+        "type": "rowing",
+        "difficulty": 3,
+        "duration_mins": 25,
+        "description": "Sustained rowing for endurance",
+        "structure": {
+            "warmup_mins": 3,
+            "main_mins": 20,
+            "cooldown_mins": 2
+        },
+        "target_spm": 24,
+        "intensity": "moderate-high",
+        "calories_per_min": 10,
+        "suitable_for": [
+            "intermediate",
+            "advanced"
+        ]
+    },
+    {
+        "id": "rowing_intervals",
+        "name": "Rowing Intervals",
+        "type": "rowing",
+        "difficulty": 4,
+        "duration_mins": 20,
+        "description": "High intensity rowing intervals",
+        "structure": {
+            "warmup_mins": 3,
+            "intervals": [
+                {
+                    "power_mins": 1,
+                    "recovery_mins": 1,
+                    "rounds": 7
+                }
+            ],
+            "cooldown_mins": 3
+        },
+        "intensity": "high",
+        "calories_per_min": 12,
+        "suitable_for": [
+            "intermediate",
+            "advanced"
+        ]
+    },
+    {
+        "id": "swimming_laps_easy",
+        "name": "Easy Swimming Laps",
+        "type": "swimming",
+        "difficulty": 2,
+        "duration_mins": 30,
+        "description": "Relaxed lap swimming",
+        "structure": {
+            "warmup_laps": 4,
+            "main_laps": 16,
+            "cooldown_laps": 4
+        },
+        "stroke": "freestyle_or_breaststroke",
+        "intensity": "low",
+        "calories_per_min": 7,
+        "suitable_for": [
+            "beginner",
+            "intermediate"
+        ]
+    },
+    {
+        "id": "swimming_intervals",
+        "name": "Swimming Intervals",
+        "type": "swimming",
+        "difficulty": 4,
+        "duration_mins": 30,
+        "description": "Interval lap swimming",
+        "structure": {
+            "warmup_mins": 5,
+            "intervals": [
+                {
+                    "fast_laps": 2,
+                    "easy_laps": 2,
+                    "rounds": 5
+                }
+            ],
+            "cooldown_mins": 5
+        },
+        "stroke": "freestyle",
+        "intensity": "high",
+        "calories_per_min": 11,
+        "suitable_for": [
+            "intermediate",
+            "advanced"
+        ]
+    },
+    {
+        "id": "dancing_cardio",
+        "name": "Dance Cardio",
+        "type": "dancing",
+        "difficulty": 2,
+        "duration_mins": 30,
+        "description": "Fun dance-based cardio workout",
+        "structure": {
+            "warmup_mins": 5,
+            "main_mins": 22,
+            "cooldown_mins": 3
+        },
+        "styles": [
+            "bollywood",
+            "zumba",
+            "hip_hop"
+        ],
+        "intensity": "moderate",
+        "calories_per_min": 8,
+        "suitable_for": [
+            "beginner",
+            "intermediate",
+            "advanced"
+        ]
+    },
+    {
+        "id": "boxing_cardio",
+        "name": "Boxing Cardio",
+        "type": "boxing",
+        "difficulty": 3,
+        "duration_mins": 25,
+        "description": "Shadow boxing cardio workout",
+        "exercises": [
+            {
+                "name": "Jab-Cross Combo",
+                "duration_secs": 60
+            },
+            {
+                "name": "Hook Combo",
+                "duration_secs": 60
+            },
+            {
+                "name": "Uppercut Combo",
+                "duration_secs": 60
+            },
+            {
+                "name": "Defense Slips",
+                "duration_secs": 30
+            },
+            {
+                "name": "Active Rest - Bounce",
+                "duration_secs": 30
+            }
+        ],
+        "rounds": 5,
+        "rest_between_rounds_secs": 45,
+        "intensity": "high",
+        "calories_per_min": 10,
+        "suitable_for": [
+            "intermediate",
+            "advanced"
+        ]
+    }
+]

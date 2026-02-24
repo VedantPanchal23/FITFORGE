@@ -1,0 +1,548 @@
+[
+    {
+        "id": "spinach_cooked",
+        "name": "Spinach (Cooked)",
+        "name_hindi": "पालक",
+        "category": "vegetables",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 23,
+            "protein": 2.9,
+            "carbs": 3.6,
+            "fats": 0.4,
+            "fiber": 2.2,
+            "iron_mg": 3.6,
+            "calcium_mg": 136,
+            "vitamin_a_mcg": 469,
+            "vitamin_c_mg": 9.8,
+            "vitamin_k_mcg": 493,
+            "folate_mcg": 146,
+            "magnesium_mg": 87
+        },
+        "household_portions": [
+            {
+                "name": "katori",
+                "grams": 100
+            }
+        ],
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "seasonal": "winter",
+        "benefits": [
+            "iron_rich",
+            "vitamin_a",
+            "vitamin_k"
+        ]
+    },
+    {
+        "id": "methi_leaves",
+        "name": "Fenugreek Leaves (Methi)",
+        "name_hindi": "मेथी",
+        "category": "vegetables",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 49,
+            "protein": 4.4,
+            "carbs": 6,
+            "fats": 0.9,
+            "fiber": 4,
+            "iron_mg": 6.5,
+            "calcium_mg": 176,
+            "vitamin_a_mcg": 175,
+            "vitamin_c_mg": 52
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "seasonal": "winter",
+        "benefits": [
+            "highest_iron_veg",
+            "blood_sugar_control"
+        ]
+    },
+    {
+        "id": "sarson_saag",
+        "name": "Mustard Greens (Sarson)",
+        "name_hindi": "सरसों का साग",
+        "category": "vegetables",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 35,
+            "protein": 3,
+            "carbs": 4.5,
+            "fats": 0.7,
+            "fiber": 3.5,
+            "iron_mg": 2.4,
+            "calcium_mg": 115,
+            "vitamin_a_mcg": 380,
+            "vitamin_c_mg": 35
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "seasonal": "winter",
+        "regional": "punjab"
+    },
+    {
+        "id": "broccoli",
+        "name": "Broccoli",
+        "name_hindi": "ब्रोकली",
+        "category": "vegetables",
+        "per_100g": {
+            "calories": 35,
+            "protein": 2.4,
+            "carbs": 7,
+            "fats": 0.4,
+            "fiber": 2.6,
+            "iron_mg": 0.7,
+            "calcium_mg": 47,
+            "vitamin_c_mg": 89,
+            "vitamin_k_mcg": 102
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "vitamin_c",
+            "antioxidants"
+        ]
+    },
+    {
+        "id": "cauliflower",
+        "name": "Cauliflower (Gobhi)",
+        "name_hindi": "गोभी",
+        "category": "vegetables",
+        "per_100g": {
+            "calories": 25,
+            "protein": 1.9,
+            "carbs": 5,
+            "fats": 0.3,
+            "fiber": 2,
+            "vitamin_c_mg": 48,
+            "vitamin_k_mcg": 16,
+            "folate_mcg": 57
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "seasonal": "winter"
+    },
+    {
+        "id": "cabbage",
+        "name": "Cabbage",
+        "name_hindi": "पत्ता गोभी",
+        "category": "vegetables",
+        "per_100g": {
+            "calories": 25,
+            "protein": 1.3,
+            "carbs": 6,
+            "fats": 0.1,
+            "fiber": 2.5,
+            "vitamin_c_mg": 36,
+            "vitamin_k_mcg": 76
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ]
+    },
+    {
+        "id": "carrot_raw",
+        "name": "Carrot (Raw)",
+        "name_hindi": "गाजर",
+        "category": "vegetables",
+        "state": "raw",
+        "per_100g": {
+            "calories": 41,
+            "protein": 0.9,
+            "carbs": 10,
+            "fats": 0.2,
+            "fiber": 2.8,
+            "vitamin_a_mcg": 835,
+            "vitamin_k_mcg": 13
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg"
+        ],
+        "jain_forbidden": true,
+        "seasonal": "winter",
+        "benefits": [
+            "vitamin_a_highest"
+        ]
+    },
+    {
+        "id": "beetroot",
+        "name": "Beetroot",
+        "name_hindi": "चुकंदर",
+        "category": "vegetables",
+        "per_100g": {
+            "calories": 43,
+            "protein": 1.6,
+            "carbs": 10,
+            "fats": 0.2,
+            "fiber": 2,
+            "iron_mg": 0.8,
+            "folate_mcg": 109,
+            "nitrates": "high"
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg"
+        ],
+        "jain_forbidden": true,
+        "benefits": [
+            "blood_pressure",
+            "endurance"
+        ]
+    },
+    {
+        "id": "tomato",
+        "name": "Tomato",
+        "name_hindi": "टमाटर",
+        "category": "vegetables",
+        "per_100g": {
+            "calories": 18,
+            "protein": 0.9,
+            "carbs": 3.9,
+            "fats": 0.2,
+            "fiber": 1.2,
+            "vitamin_c_mg": 14,
+            "vitamin_a_mcg": 42,
+            "lycopene_mg": 3
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "lycopene",
+            "antioxidant"
+        ]
+    },
+    {
+        "id": "cucumber",
+        "name": "Cucumber",
+        "name_hindi": "खीरा",
+        "category": "vegetables",
+        "per_100g": {
+            "calories": 15,
+            "protein": 0.7,
+            "carbs": 3.6,
+            "fats": 0.1,
+            "fiber": 0.5,
+            "vitamin_k_mcg": 16
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "hydrating",
+            "low_calorie"
+        ]
+    },
+    {
+        "id": "bottle_gourd",
+        "name": "Bottle Gourd (Lauki)",
+        "name_hindi": "लौकी",
+        "category": "vegetables",
+        "per_100g": {
+            "calories": 14,
+            "protein": 0.6,
+            "carbs": 3.4,
+            "fats": 0.02,
+            "fiber": 0.5,
+            "vitamin_c_mg": 10,
+            "zinc_mg": 0.7
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "seasonal": "summer",
+        "benefits": [
+            "cooling",
+            "weight_loss"
+        ]
+    },
+    {
+        "id": "ridge_gourd",
+        "name": "Ridge Gourd (Turai)",
+        "name_hindi": "तुरई",
+        "category": "vegetables",
+        "per_100g": {
+            "calories": 18,
+            "protein": 1.2,
+            "carbs": 3,
+            "fats": 0.2,
+            "fiber": 2,
+            "iron_mg": 0.4
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "seasonal": "summer"
+    },
+    {
+        "id": "bitter_gourd",
+        "name": "Bitter Gourd (Karela)",
+        "name_hindi": "करेला",
+        "category": "vegetables",
+        "per_100g": {
+            "calories": 17,
+            "protein": 1,
+            "carbs": 3.4,
+            "fats": 0.2,
+            "fiber": 2.8,
+            "vitamin_c_mg": 84,
+            "iron_mg": 0.4
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "blood_sugar_control",
+            "vitamin_c"
+        ]
+    },
+    {
+        "id": "bhindi",
+        "name": "Lady Finger (Bhindi/Okra)",
+        "name_hindi": "भिंडी",
+        "category": "vegetables",
+        "per_100g": {
+            "calories": 33,
+            "protein": 1.9,
+            "carbs": 7,
+            "fats": 0.2,
+            "fiber": 3.2,
+            "vitamin_c_mg": 23,
+            "folate_mcg": 60
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "seasonal": "monsoon"
+    },
+    {
+        "id": "capsicum",
+        "name": "Capsicum/Bell Pepper",
+        "name_hindi": "शिमला मिर्च",
+        "category": "vegetables",
+        "per_100g": {
+            "calories": 31,
+            "protein": 1,
+            "carbs": 6,
+            "fats": 0.3,
+            "fiber": 2.1,
+            "vitamin_c_mg": 128,
+            "vitamin_a_mcg": 157
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "highest_vitamin_c_veg"
+        ]
+    },
+    {
+        "id": "french_beans",
+        "name": "French Beans",
+        "name_hindi": "फ्रेंच बीन्स",
+        "category": "vegetables",
+        "per_100g": {
+            "calories": 31,
+            "protein": 1.8,
+            "carbs": 7,
+            "fats": 0.1,
+            "fiber": 2.7,
+            "vitamin_c_mg": 12,
+            "folate_mcg": 33
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ]
+    },
+    {
+        "id": "peas_green",
+        "name": "Green Peas (Matar)",
+        "name_hindi": "मटर",
+        "category": "vegetables",
+        "per_100g": {
+            "calories": 81,
+            "protein": 5.4,
+            "carbs": 14,
+            "fats": 0.4,
+            "fiber": 5,
+            "iron_mg": 1.5,
+            "vitamin_c_mg": 40,
+            "folate_mcg": 65
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "seasonal": "winter",
+        "benefits": [
+            "protein_rich_veg"
+        ]
+    },
+    {
+        "id": "sweet_potato",
+        "name": "Sweet Potato (Shakarkand)",
+        "name_hindi": "शकरकंद",
+        "category": "vegetables",
+        "per_100g": {
+            "calories": 86,
+            "protein": 1.6,
+            "carbs": 20,
+            "fats": 0.1,
+            "fiber": 3,
+            "vitamin_a_mcg": 709,
+            "vitamin_c_mg": 2.4
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg"
+        ],
+        "jain_forbidden": true,
+        "benefits": [
+            "vitamin_a",
+            "slow_carb"
+        ]
+    },
+    {
+        "id": "potato_boiled",
+        "name": "Potato (Boiled)",
+        "name_hindi": "उबला आलू",
+        "category": "vegetables",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 87,
+            "protein": 1.9,
+            "carbs": 20,
+            "fats": 0.1,
+            "fiber": 1.8,
+            "vitamin_c_mg": 13,
+            "potassium_mg": 379
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg"
+        ],
+        "jain_forbidden": true
+    },
+    {
+        "id": "onion",
+        "name": "Onion",
+        "name_hindi": "प्याज",
+        "category": "vegetables",
+        "per_100g": {
+            "calories": 40,
+            "protein": 1.1,
+            "carbs": 9,
+            "fats": 0.1,
+            "fiber": 1.7,
+            "vitamin_c_mg": 7
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg"
+        ],
+        "jain_forbidden": true
+    },
+    {
+        "id": "garlic",
+        "name": "Garlic",
+        "name_hindi": "लहसुन",
+        "category": "vegetables",
+        "per_100g": {
+            "calories": 149,
+            "protein": 6.4,
+            "carbs": 33,
+            "fats": 0.5,
+            "fiber": 2.1,
+            "vitamin_c_mg": 31
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg"
+        ],
+        "jain_forbidden": true,
+        "benefits": [
+            "immunity",
+            "heart_health"
+        ]
+    },
+    {
+        "id": "ginger",
+        "name": "Ginger",
+        "name_hindi": "अदरक",
+        "category": "vegetables",
+        "per_100g": {
+            "calories": 80,
+            "protein": 1.8,
+            "carbs": 18,
+            "fats": 0.8,
+            "fiber": 2
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg"
+        ],
+        "jain_forbidden": true,
+        "benefits": [
+            "digestion",
+            "anti_inflammatory"
+        ]
+    }
+]

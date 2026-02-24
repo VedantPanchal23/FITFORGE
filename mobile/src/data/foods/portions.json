@@ -1,0 +1,193 @@
+{
+    "household_measures": {
+        "katori": {
+            "ml": 150,
+            "description": "Standard Indian bowl"
+        },
+        "cup": {
+            "ml": 240,
+            "description": "Standard measuring cup"
+        },
+        "glass": {
+            "ml": 200,
+            "description": "Standard drinking glass"
+        },
+        "tablespoon": {
+            "ml": 15,
+            "grams_approx": 15
+        },
+        "teaspoon": {
+            "ml": 5,
+            "grams_approx": 5
+        },
+        "handful": {
+            "grams_approx": 30
+        },
+        "fistful": {
+            "grams_approx": 100
+        },
+        "palm": {
+            "grams_approx": 85,
+            "description": "Palm-sized portion"
+        },
+        "pinch": {
+            "grams_approx": 0.5
+        }
+    },
+    "standard_portions": {
+        "roti": {
+            "grams": 30,
+            "pieces_typical": 3
+        },
+        "paratha": {
+            "grams": 60,
+            "pieces_typical": 2
+        },
+        "idli": {
+            "grams": 40,
+            "pieces_typical": 3
+        },
+        "dosa": {
+            "grams": 75,
+            "pieces_typical": 2
+        },
+        "vada": {
+            "grams": 50,
+            "pieces_typical": 2
+        },
+        "puri": {
+            "grams": 25,
+            "pieces_typical": 4
+        },
+        "bhatura": {
+            "grams": 80,
+            "pieces_typical": 2
+        },
+        "naan": {
+            "grams": 90,
+            "pieces_typical": 1
+        },
+        "kulcha": {
+            "grams": 80,
+            "pieces_typical": 1
+        },
+        "egg": {
+            "grams": 50,
+            "pieces_typical": 2
+        },
+        "egg_white": {
+            "grams": 33
+        },
+        "banana_medium": {
+            "grams": 120
+        },
+        "apple_medium": {
+            "grams": 180
+        },
+        "orange_medium": {
+            "grams": 130
+        },
+        "chapati": {
+            "grams": 30
+        },
+        "rice_katori": {
+            "grams": 100,
+            "cooked": true
+        },
+        "dal_katori": {
+            "grams": 150,
+            "cooked": true
+        },
+        "sabzi_katori": {
+            "grams": 120,
+            "cooked": true
+        },
+        "milk_glass": {
+            "ml": 200
+        },
+        "curd_katori": {
+            "grams": 100
+        },
+        "chicken_piece": {
+            "grams": 85
+        },
+        "fish_piece": {
+            "grams": 100
+        },
+        "paneer_piece": {
+            "grams": 40
+        }
+    },
+    "cooking_multipliers": {
+        "rice": {
+            "raw_to_cooked": 2.5,
+            "note": "1 cup raw = 2.5 cups cooked"
+        },
+        "dal": {
+            "raw_to_cooked": 2.2
+        },
+        "pasta": {
+            "raw_to_cooked": 2.25
+        },
+        "oats": {
+            "raw_to_cooked": 2.5
+        },
+        "quinoa": {
+            "raw_to_cooked": 3
+        },
+        "poha": {
+            "raw_to_cooked": 1.5
+        },
+        "suji": {
+            "raw_to_cooked": 3
+        },
+        "vegetables_general": {
+            "raw_to_cooked": 0.75,
+            "note": "Lose water, become denser"
+        }
+    },
+    "regional_names": {
+        "roti": [
+            "chapati",
+            "phulka",
+            "rotli"
+        ],
+        "dal": [
+            "daal",
+            "paruppu",
+            "pappu"
+        ],
+        "sabzi": [
+            "bhaji",
+            "shaak",
+            "curry"
+        ],
+        "rice": [
+            "chawal",
+            "bhat",
+            "annam"
+        ],
+        "curd": [
+            "dahi",
+            "yogurt",
+            "thayir",
+            "perugu"
+        ],
+        "buttermilk": [
+            "chaas",
+            "majjiga",
+            "mor"
+        ],
+        "ghee": [
+            "nei",
+            "tup",
+            "neyyi"
+        ],
+        "jaggery": [
+            "gur",
+            "gud",
+            "bellam",
+            "vellam"
+        ]
+    }
+}

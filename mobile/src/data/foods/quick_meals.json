@@ -1,0 +1,1741 @@
+[
+    {
+        "id": "paneer_bhurji_quick",
+        "name": "Paneer Bhurji",
+        "name_hindi": "पनीर भुर्जी",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 195,
+            "protein": 14,
+            "carbs": 6,
+            "fats": 13,
+            "fiber": 1
+        },
+        "per_serving": {
+            "grams": 150,
+            "calories": 293,
+            "protein": 21,
+            "carbs": 9,
+            "fats": 20
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "lunch",
+            "dinner",
+            "snack"
+        ],
+        "prep_time_mins": 10,
+        "cost_inr": 60,
+        "tags": [
+            "quick",
+            "high_protein",
+            "low_carb",
+            "no_prep_required"
+        ],
+        "digestibility": "easy",
+        "jain_note": "Avoid onion/garlic version"
+    },
+    {
+        "id": "egg_bhurji",
+        "name": "Egg Bhurji",
+        "name_hindi": "अंडा भुर्जी",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 165,
+            "protein": 11,
+            "carbs": 3,
+            "fats": 12,
+            "fiber": 0.5
+        },
+        "per_serving": {
+            "grams": 150,
+            "calories": 248,
+            "protein": 17,
+            "carbs": 5,
+            "fats": 18
+        },
+        "diet_types": [
+            "nonveg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "lunch",
+            "dinner"
+        ],
+        "prep_time_mins": 8,
+        "cost_inr": 40,
+        "tags": [
+            "quick",
+            "high_protein",
+            "budget"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "masala_omelette",
+        "name": "Masala Omelette",
+        "name_hindi": "मसाला ऑमलेट",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 155,
+            "protein": 11,
+            "carbs": 2,
+            "fats": 12,
+            "fiber": 0.3
+        },
+        "per_serving": {
+            "grams": 120,
+            "calories": 186,
+            "protein": 13,
+            "carbs": 2,
+            "fats": 14
+        },
+        "diet_types": [
+            "nonveg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack"
+        ],
+        "prep_time_mins": 5,
+        "cost_inr": 30,
+        "tags": [
+            "quick",
+            "high_protein",
+            "budget",
+            "no_cook"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "curd_rice",
+        "name": "Curd Rice",
+        "name_hindi": "दही चावल",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 105,
+            "protein": 3.5,
+            "carbs": 16,
+            "fats": 3,
+            "fiber": 0.5
+        },
+        "per_serving": {
+            "grams": 250,
+            "calories": 263,
+            "protein": 9,
+            "carbs": 40,
+            "fats": 8
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "prep_time_mins": 5,
+        "cost_inr": 25,
+        "tags": [
+            "quick",
+            "probiotic",
+            "easy_digest",
+            "budget",
+            "portable"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "upma",
+        "name": "Upma",
+        "name_hindi": "उपमा",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 135,
+            "protein": 3.5,
+            "carbs": 22,
+            "fats": 4,
+            "fiber": 2
+        },
+        "per_serving": {
+            "grams": 200,
+            "calories": 270,
+            "protein": 7,
+            "carbs": 44,
+            "fats": 8
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast"
+        ],
+        "prep_time_mins": 12,
+        "cost_inr": 20,
+        "tags": [
+            "quick",
+            "budget",
+            "south_indian"
+        ],
+        "digestibility": "easy",
+        "jain_note": "not_suitable_some_versions"
+    },
+    {
+        "id": "poha",
+        "name": "Poha",
+        "name_hindi": "पोहा",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 130,
+            "protein": 2.5,
+            "carbs": 26,
+            "fats": 2,
+            "fiber": 1
+        },
+        "per_serving": {
+            "grams": 180,
+            "calories": 234,
+            "protein": 5,
+            "carbs": 47,
+            "fats": 4
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack"
+        ],
+        "prep_time_mins": 10,
+        "cost_inr": 20,
+        "tags": [
+            "quick",
+            "budget",
+            "light"
+        ],
+        "digestibility": "easy",
+        "jain_note": "not_suitable"
+    },
+    {
+        "id": "besan_chilla",
+        "name": "Besan Chilla",
+        "name_hindi": "बेसन चीला",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 180,
+            "protein": 8,
+            "carbs": 18,
+            "fats": 9,
+            "fiber": 3
+        },
+        "per_serving": {
+            "grams": 100,
+            "calories": 180,
+            "protein": 8,
+            "carbs": 18,
+            "fats": 9
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack"
+        ],
+        "prep_time_mins": 8,
+        "cost_inr": 25,
+        "tags": [
+            "quick",
+            "high_protein",
+            "budget",
+            "gluten_free"
+        ],
+        "digestibility": "moderate"
+    },
+    {
+        "id": "moong_chilla",
+        "name": "Moong Dal Chilla",
+        "name_hindi": "मूंग दाल चीला",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 120,
+            "protein": 7,
+            "carbs": 15,
+            "fats": 4,
+            "fiber": 2
+        },
+        "per_serving": {
+            "grams": 120,
+            "calories": 144,
+            "protein": 8,
+            "carbs": 18,
+            "fats": 5
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack"
+        ],
+        "prep_time_mins": 15,
+        "cost_inr": 30,
+        "tags": [
+            "quick",
+            "high_protein",
+            "gluten_free"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "sprouts_chaat",
+        "name": "Sprouts Chaat",
+        "name_hindi": "अंकुरित चाट",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 95,
+            "protein": 6,
+            "carbs": 12,
+            "fats": 2,
+            "fiber": 4
+        },
+        "per_serving": {
+            "grams": 150,
+            "calories": 143,
+            "protein": 9,
+            "carbs": 18,
+            "fats": 3
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack"
+        ],
+        "prep_time_mins": 5,
+        "cost_inr": 25,
+        "tags": [
+            "quick",
+            "high_protein",
+            "no_cook",
+            "raw",
+            "budget"
+        ],
+        "digestibility": "moderate",
+        "jain_note": "not_suitable"
+    },
+    {
+        "id": "masala_buttermilk",
+        "name": "Masala Chaas",
+        "name_hindi": "मसाला छाछ",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 25,
+            "protein": 1.5,
+            "carbs": 3,
+            "fats": 0.8,
+            "fiber": 0
+        },
+        "per_serving": {
+            "grams": 250,
+            "calories": 63,
+            "protein": 4,
+            "carbs": 8,
+            "fats": 2
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "snack"
+        ],
+        "prep_time_mins": 2,
+        "cost_inr": 15,
+        "tags": [
+            "quick",
+            "no_cook",
+            "probiotic",
+            "budget",
+            "portable"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "lassi_sweet",
+        "name": "Sweet Lassi",
+        "name_hindi": "मीठी लस्सी",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 72,
+            "protein": 2.5,
+            "carbs": 10,
+            "fats": 2.5,
+            "fiber": 0
+        },
+        "per_serving": {
+            "grams": 300,
+            "calories": 216,
+            "protein": 8,
+            "carbs": 30,
+            "fats": 8
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack"
+        ],
+        "prep_time_mins": 3,
+        "cost_inr": 30,
+        "tags": [
+            "quick",
+            "no_cook",
+            "probiotic",
+            "portable"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "banana_shake",
+        "name": "Banana Shake",
+        "name_hindi": "केला शेक",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 85,
+            "protein": 3,
+            "carbs": 15,
+            "fats": 2,
+            "fiber": 1
+        },
+        "per_serving": {
+            "grams": 300,
+            "calories": 255,
+            "protein": 9,
+            "carbs": 45,
+            "fats": 6
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack",
+            "post_workout"
+        ],
+        "prep_time_mins": 3,
+        "cost_inr": 35,
+        "tags": [
+            "quick",
+            "no_cook",
+            "portable",
+            "high_carb"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "protein_shake_whey",
+        "name": "Whey Protein Shake",
+        "name_hindi": "व्हे प्रोटीन शेक",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 55,
+            "protein": 8,
+            "carbs": 3,
+            "fats": 1,
+            "fiber": 0
+        },
+        "per_serving": {
+            "grams": 300,
+            "calories": 165,
+            "protein": 24,
+            "carbs": 9,
+            "fats": 3
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack",
+            "post_workout"
+        ],
+        "prep_time_mins": 2,
+        "cost_inr": 50,
+        "tags": [
+            "quick",
+            "no_cook",
+            "high_protein",
+            "portable"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "peanut_butter_sandwich",
+        "name": "Peanut Butter Sandwich",
+        "name_hindi": "पीनट बटर सैंडविच",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 320,
+            "protein": 12,
+            "carbs": 32,
+            "fats": 16,
+            "fiber": 3
+        },
+        "per_serving": {
+            "grams": 80,
+            "calories": 256,
+            "protein": 10,
+            "carbs": 26,
+            "fats": 13
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack"
+        ],
+        "prep_time_mins": 2,
+        "cost_inr": 35,
+        "tags": [
+            "quick",
+            "no_cook",
+            "high_protein",
+            "portable",
+            "budget"
+        ],
+        "digestibility": "moderate"
+    },
+    {
+        "id": "paneer_sandwich",
+        "name": "Paneer Sandwich",
+        "name_hindi": "पनीर सैंडविच",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 245,
+            "protein": 12,
+            "carbs": 22,
+            "fats": 12,
+            "fiber": 2
+        },
+        "per_serving": {
+            "grams": 150,
+            "calories": 368,
+            "protein": 18,
+            "carbs": 33,
+            "fats": 18
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "lunch",
+            "snack"
+        ],
+        "prep_time_mins": 8,
+        "cost_inr": 50,
+        "tags": [
+            "quick",
+            "high_protein",
+            "portable"
+        ],
+        "digestibility": "moderate"
+    },
+    {
+        "id": "veggie_sandwich",
+        "name": "Vegetable Sandwich",
+        "name_hindi": "वेज सैंडविच",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 180,
+            "protein": 5,
+            "carbs": 28,
+            "fats": 6,
+            "fiber": 3
+        },
+        "per_serving": {
+            "grams": 150,
+            "calories": 270,
+            "protein": 8,
+            "carbs": 42,
+            "fats": 9
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack"
+        ],
+        "prep_time_mins": 5,
+        "cost_inr": 30,
+        "tags": [
+            "quick",
+            "budget",
+            "portable"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "greek_yogurt_parfait",
+        "name": "Hung Curd with Fruits",
+        "name_hindi": "हंग कर्ड फ्रूट्स",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 90,
+            "protein": 8,
+            "carbs": 10,
+            "fats": 2.5,
+            "fiber": 1
+        },
+        "per_serving": {
+            "grams": 200,
+            "calories": 180,
+            "protein": 16,
+            "carbs": 20,
+            "fats": 5
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack"
+        ],
+        "prep_time_mins": 5,
+        "cost_inr": 60,
+        "tags": [
+            "quick",
+            "high_protein",
+            "no_cook"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "overnight_oats",
+        "name": "Overnight Oats",
+        "name_hindi": "ओवरनाइट ओट्स",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 130,
+            "protein": 5,
+            "carbs": 20,
+            "fats": 4,
+            "fiber": 3
+        },
+        "per_serving": {
+            "grams": 250,
+            "calories": 325,
+            "protein": 13,
+            "carbs": 50,
+            "fats": 10
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast"
+        ],
+        "prep_time_mins": 5,
+        "cost_inr": 40,
+        "tags": [
+            "quick",
+            "no_cook",
+            "meal_prep",
+            "portable"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "muesli_milk",
+        "name": "Muesli with Milk",
+        "name_hindi": "मूसली दूध",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 145,
+            "protein": 5,
+            "carbs": 22,
+            "fats": 5,
+            "fiber": 3
+        },
+        "per_serving": {
+            "grams": 200,
+            "calories": 290,
+            "protein": 10,
+            "carbs": 44,
+            "fats": 10
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack"
+        ],
+        "prep_time_mins": 2,
+        "cost_inr": 50,
+        "tags": [
+            "quick",
+            "no_cook",
+            "high_fiber"
+        ],
+        "digestibility": "moderate"
+    },
+    {
+        "id": "fruit_bowl",
+        "name": "Mixed Fruit Bowl",
+        "name_hindi": "मिक्स फ्रूट",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 55,
+            "protein": 0.8,
+            "carbs": 13,
+            "fats": 0.3,
+            "fiber": 2
+        },
+        "per_serving": {
+            "grams": 250,
+            "calories": 138,
+            "protein": 2,
+            "carbs": 33,
+            "fats": 1
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack"
+        ],
+        "prep_time_mins": 5,
+        "cost_inr": 50,
+        "tags": [
+            "quick",
+            "no_cook",
+            "raw",
+            "healthy"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "mixed_nuts",
+        "name": "Mixed Nuts",
+        "name_hindi": "मिक्स ड्राई फ्रूट्स",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 580,
+            "protein": 18,
+            "carbs": 22,
+            "fats": 50,
+            "fiber": 8
+        },
+        "per_serving": {
+            "grams": 30,
+            "calories": 174,
+            "protein": 5,
+            "carbs": 7,
+            "fats": 15
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "snack"
+        ],
+        "prep_time_mins": 0,
+        "cost_inr": 40,
+        "tags": [
+            "quick",
+            "no_cook",
+            "portable",
+            "high_protein",
+            "healthy_fats"
+        ],
+        "digestibility": "moderate"
+    },
+    {
+        "id": "roasted_chana",
+        "name": "Roasted Chana",
+        "name_hindi": "भुना चना",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 360,
+            "protein": 20,
+            "carbs": 55,
+            "fats": 5,
+            "fiber": 12
+        },
+        "per_serving": {
+            "grams": 50,
+            "calories": 180,
+            "protein": 10,
+            "carbs": 28,
+            "fats": 3
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "snack"
+        ],
+        "prep_time_mins": 0,
+        "cost_inr": 15,
+        "tags": [
+            "quick",
+            "no_cook",
+            "portable",
+            "high_protein",
+            "budget"
+        ],
+        "digestibility": "moderate"
+    },
+    {
+        "id": "makhana",
+        "name": "Roasted Makhana",
+        "name_hindi": "मखाना",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 350,
+            "protein": 10,
+            "carbs": 65,
+            "fats": 2,
+            "fiber": 5
+        },
+        "per_serving": {
+            "grams": 30,
+            "calories": 105,
+            "protein": 3,
+            "carbs": 20,
+            "fats": 1
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "snack"
+        ],
+        "prep_time_mins": 5,
+        "cost_inr": 35,
+        "tags": [
+            "quick",
+            "portable",
+            "low_fat",
+            "fasting_friendly"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "boiled_eggs",
+        "name": "Boiled Eggs",
+        "name_hindi": "उबले अंडे",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 155,
+            "protein": 13,
+            "carbs": 1,
+            "fats": 11,
+            "fiber": 0
+        },
+        "per_serving": {
+            "grams": 100,
+            "calories": 155,
+            "protein": 13,
+            "carbs": 1,
+            "fats": 11
+        },
+        "diet_types": [
+            "nonveg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack"
+        ],
+        "prep_time_mins": 10,
+        "cost_inr": 20,
+        "tags": [
+            "quick",
+            "high_protein",
+            "budget",
+            "portable",
+            "meal_prep"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "sattu_drink",
+        "name": "Sattu Drink",
+        "name_hindi": "सत्तू शरबत",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 65,
+            "protein": 4,
+            "carbs": 10,
+            "fats": 1,
+            "fiber": 1
+        },
+        "per_serving": {
+            "grams": 300,
+            "calories": 195,
+            "protein": 12,
+            "carbs": 30,
+            "fats": 3
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack"
+        ],
+        "prep_time_mins": 3,
+        "cost_inr": 20,
+        "tags": [
+            "quick",
+            "no_cook",
+            "high_protein",
+            "budget",
+            "traditional"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "khakhra",
+        "name": "Khakhra",
+        "name_hindi": "खाखरा",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 380,
+            "protein": 12,
+            "carbs": 62,
+            "fats": 10,
+            "fiber": 5
+        },
+        "per_serving": {
+            "grams": 40,
+            "calories": 152,
+            "protein": 5,
+            "carbs": 25,
+            "fats": 4
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack"
+        ],
+        "prep_time_mins": 0,
+        "cost_inr": 20,
+        "tags": [
+            "quick",
+            "no_cook",
+            "portable",
+            "budget",
+            "gujarati"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "thepla",
+        "name": "Thepla",
+        "name_hindi": "थेपला",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 280,
+            "protein": 7,
+            "carbs": 38,
+            "fats": 11,
+            "fiber": 4
+        },
+        "per_serving": {
+            "grams": 50,
+            "calories": 140,
+            "protein": 4,
+            "carbs": 19,
+            "fats": 6
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "lunch",
+            "snack"
+        ],
+        "prep_time_mins": 15,
+        "cost_inr": 25,
+        "tags": [
+            "quick",
+            "portable",
+            "travel_friendly",
+            "gujarati"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "dhokla",
+        "name": "Dhokla",
+        "name_hindi": "ढोकला",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 160,
+            "protein": 6,
+            "carbs": 25,
+            "fats": 5,
+            "fiber": 2
+        },
+        "per_serving": {
+            "grams": 100,
+            "calories": 160,
+            "protein": 6,
+            "carbs": 25,
+            "fats": 5
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack"
+        ],
+        "prep_time_mins": 0,
+        "cost_inr": 30,
+        "tags": [
+            "quick",
+            "steamed",
+            "light",
+            "gujarati"
+        ],
+        "digestibility": "easy",
+        "jain_note": "fermented_check"
+    },
+    {
+        "id": "instant_maggi",
+        "name": "Maggi Noodles",
+        "name_hindi": "मैगी",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 420,
+            "protein": 9,
+            "carbs": 60,
+            "fats": 16,
+            "fiber": 2
+        },
+        "per_serving": {
+            "grams": 70,
+            "calories": 294,
+            "protein": 6,
+            "carbs": 42,
+            "fats": 11
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "snack"
+        ],
+        "prep_time_mins": 5,
+        "cost_inr": 15,
+        "tags": [
+            "quick",
+            "budget",
+            "indulgence"
+        ],
+        "digestibility": "moderate",
+        "note": "Occasional treat only"
+    },
+    {
+        "id": "bread_butter",
+        "name": "Bread Butter",
+        "name_hindi": "ब्रेड बटर",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 340,
+            "protein": 8,
+            "carbs": 45,
+            "fats": 14,
+            "fiber": 2
+        },
+        "per_serving": {
+            "grams": 60,
+            "calories": 204,
+            "protein": 5,
+            "carbs": 27,
+            "fats": 8
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack"
+        ],
+        "prep_time_mins": 1,
+        "cost_inr": 15,
+        "tags": [
+            "quick",
+            "no_cook",
+            "budget",
+            "portable"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "sprouts_salad",
+        "name": "Sprouts Salad",
+        "name_hindi": "स्प्राउट्स सलाद",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 80,
+            "protein": 5,
+            "carbs": 10,
+            "fats": 2,
+            "fiber": 3
+        },
+        "per_serving": {
+            "grams": 150,
+            "calories": 120,
+            "protein": 8,
+            "carbs": 15,
+            "fats": 3
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack"
+        ],
+        "prep_time_mins": 5,
+        "cost_inr": 30,
+        "tags": [
+            "quick",
+            "no_cook",
+            "high_protein",
+            "raw",
+            "healthy"
+        ],
+        "digestibility": "moderate",
+        "jain_note": "not_suitable"
+    },
+    {
+        "id": "paneer_tikka_wrap",
+        "name": "Paneer Tikka Wrap",
+        "name_hindi": "पनीर टिक्का रैप",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 210,
+            "protein": 11,
+            "carbs": 20,
+            "fats": 10,
+            "fiber": 2
+        },
+        "per_serving": {
+            "grams": 200,
+            "calories": 420,
+            "protein": 22,
+            "carbs": 40,
+            "fats": 20
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "prep_time_mins": 10,
+        "cost_inr": 80,
+        "tags": [
+            "quick",
+            "high_protein",
+            "portable"
+        ],
+        "digestibility": "moderate"
+    },
+    {
+        "id": "rajma_rice_box",
+        "name": "Rajma Rice (Ready)",
+        "name_hindi": "राजमा चावल",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 145,
+            "protein": 5,
+            "carbs": 24,
+            "fats": 3,
+            "fiber": 3
+        },
+        "per_serving": {
+            "grams": 300,
+            "calories": 435,
+            "protein": 15,
+            "carbs": 72,
+            "fats": 9
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "prep_time_mins": 0,
+        "cost_inr": 100,
+        "tags": [
+            "quick",
+            "ready_to_eat",
+            "north_indian"
+        ],
+        "digestibility": "moderate",
+        "jain_note": "not_suitable"
+    },
+    {
+        "id": "samosa",
+        "name": "Samosa (2 pcs)",
+        "name_hindi": "समोसा",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 280,
+            "protein": 5,
+            "carbs": 30,
+            "fats": 16,
+            "fiber": 2
+        },
+        "per_serving": {
+            "grams": 100,
+            "calories": 280,
+            "protein": 5,
+            "carbs": 30,
+            "fats": 16
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "snack"
+        ],
+        "prep_time_mins": 0,
+        "cost_inr": 20,
+        "tags": [
+            "quick",
+            "street_food",
+            "indulgence",
+            "budget"
+        ],
+        "digestibility": "heavy",
+        "note": "Occasional treat only",
+        "jain_note": "not_suitable"
+    },
+    {
+        "id": "vada_pav",
+        "name": "Vada Pav",
+        "name_hindi": "वडा पाव",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 290,
+            "protein": 6,
+            "carbs": 40,
+            "fats": 12,
+            "fiber": 2
+        },
+        "per_serving": {
+            "grams": 120,
+            "calories": 348,
+            "protein": 7,
+            "carbs": 48,
+            "fats": 14
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "snack"
+        ],
+        "prep_time_mins": 0,
+        "cost_inr": 20,
+        "tags": [
+            "quick",
+            "street_food",
+            "budget",
+            "mumbai"
+        ],
+        "digestibility": "heavy",
+        "jain_note": "not_suitable"
+    },
+    {
+        "id": "dahi_vada",
+        "name": "Dahi Vada (2 pcs)",
+        "name_hindi": "दही वड़ा",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 150,
+            "protein": 5,
+            "carbs": 18,
+            "fats": 7,
+            "fiber": 2
+        },
+        "per_serving": {
+            "grams": 150,
+            "calories": 225,
+            "protein": 8,
+            "carbs": 27,
+            "fats": 11
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "snack"
+        ],
+        "prep_time_mins": 0,
+        "cost_inr": 40,
+        "tags": [
+            "quick",
+            "street_food",
+            "probiotic"
+        ],
+        "digestibility": "moderate"
+    },
+    {
+        "id": "idli_sambar",
+        "name": "Idli Sambar (4 idli)",
+        "name_hindi": "इडली सांभर",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 85,
+            "protein": 3,
+            "carbs": 15,
+            "fats": 1.5,
+            "fiber": 1.5
+        },
+        "per_serving": {
+            "grams": 250,
+            "calories": 213,
+            "protein": 8,
+            "carbs": 38,
+            "fats": 4
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "dinner"
+        ],
+        "prep_time_mins": 0,
+        "cost_inr": 40,
+        "tags": [
+            "quick",
+            "steamed",
+            "south_indian",
+            "light"
+        ],
+        "digestibility": "easy",
+        "jain_note": "fermented_check"
+    },
+    {
+        "id": "medu_vada",
+        "name": "Medu Vada (2 pcs)",
+        "name_hindi": "मेदु वड़ा",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 220,
+            "protein": 8,
+            "carbs": 22,
+            "fats": 12,
+            "fiber": 3
+        },
+        "per_serving": {
+            "grams": 100,
+            "calories": 220,
+            "protein": 8,
+            "carbs": 22,
+            "fats": 12
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack"
+        ],
+        "prep_time_mins": 0,
+        "cost_inr": 35,
+        "tags": [
+            "quick",
+            "high_protein",
+            "south_indian"
+        ],
+        "digestibility": "moderate",
+        "jain_note": "fermented_check"
+    },
+    {
+        "id": "paneer_paratha",
+        "name": "Paneer Paratha",
+        "name_hindi": "पनीर पराठा",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 260,
+            "protein": 10,
+            "carbs": 28,
+            "fats": 13,
+            "fiber": 2
+        },
+        "per_serving": {
+            "grams": 120,
+            "calories": 312,
+            "protein": 12,
+            "carbs": 34,
+            "fats": 16
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "lunch",
+            "dinner"
+        ],
+        "prep_time_mins": 15,
+        "cost_inr": 45,
+        "tags": [
+            "quick",
+            "high_protein",
+            "north_indian",
+            "filling"
+        ],
+        "digestibility": "moderate"
+    },
+    {
+        "id": "aloo_paratha",
+        "name": "Aloo Paratha",
+        "name_hindi": "आलू पराठा",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 240,
+            "protein": 5,
+            "carbs": 32,
+            "fats": 10,
+            "fiber": 2
+        },
+        "per_serving": {
+            "grams": 100,
+            "calories": 240,
+            "protein": 5,
+            "carbs": 32,
+            "fats": 10
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "lunch",
+            "dinner"
+        ],
+        "prep_time_mins": 15,
+        "cost_inr": 30,
+        "tags": [
+            "quick",
+            "north_indian",
+            "filling",
+            "budget"
+        ],
+        "digestibility": "moderate",
+        "jain_note": "not_suitable"
+    },
+    {
+        "id": "egg_curry_rice",
+        "name": "Egg Curry with Rice",
+        "name_hindi": "अंडा करी चावल",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 140,
+            "protein": 7,
+            "carbs": 16,
+            "fats": 5,
+            "fiber": 1
+        },
+        "per_serving": {
+            "grams": 350,
+            "calories": 490,
+            "protein": 25,
+            "carbs": 56,
+            "fats": 18
+        },
+        "diet_types": [
+            "nonveg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "prep_time_mins": 20,
+        "cost_inr": 60,
+        "tags": [
+            "quick",
+            "high_protein",
+            "complete_meal"
+        ],
+        "digestibility": "moderate"
+    },
+    {
+        "id": "dal_khichdi",
+        "name": "Dal Khichdi",
+        "name_hindi": "दाल खिचड़ी",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 125,
+            "protein": 4.5,
+            "carbs": 20,
+            "fats": 3,
+            "fiber": 2
+        },
+        "per_serving": {
+            "grams": 300,
+            "calories": 375,
+            "protein": 14,
+            "carbs": 60,
+            "fats": 9
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "prep_time_mins": 20,
+        "cost_inr": 40,
+        "tags": [
+            "quick",
+            "comfort_food",
+            "easy_digest",
+            "one_pot"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "chapati_sabzi",
+        "name": "Chapati with Sabzi",
+        "name_hindi": "रोटी सब्ज़ी",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 130,
+            "protein": 4,
+            "carbs": 20,
+            "fats": 4,
+            "fiber": 3
+        },
+        "per_serving": {
+            "grams": 250,
+            "calories": 325,
+            "protein": 10,
+            "carbs": 50,
+            "fats": 10
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "prep_time_mins": 20,
+        "cost_inr": 50,
+        "tags": [
+            "quick",
+            "traditional",
+            "balanced"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "chole_rice",
+        "name": "Chole Rice",
+        "name_hindi": "छोले चावल",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 150,
+            "protein": 5,
+            "carbs": 25,
+            "fats": 3,
+            "fiber": 4
+        },
+        "per_serving": {
+            "grams": 350,
+            "calories": 525,
+            "protein": 18,
+            "carbs": 88,
+            "fats": 11
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "prep_time_mins": 0,
+        "cost_inr": 80,
+        "tags": [
+            "quick",
+            "high_protein",
+            "ready_to_eat",
+            "north_indian"
+        ],
+        "digestibility": "moderate",
+        "jain_note": "not_suitable"
+    },
+    {
+        "id": "fruit_yogurt",
+        "name": "Fruit Yogurt",
+        "name_hindi": "फ्रूट योगर्ट",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 95,
+            "protein": 4,
+            "carbs": 14,
+            "fats": 2.5,
+            "fiber": 0.5
+        },
+        "per_serving": {
+            "grams": 150,
+            "calories": 143,
+            "protein": 6,
+            "carbs": 21,
+            "fats": 4
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack"
+        ],
+        "prep_time_mins": 2,
+        "cost_inr": 40,
+        "tags": [
+            "quick",
+            "no_cook",
+            "probiotic",
+            "portable"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "cottage_cheese_salad",
+        "name": "Paneer Salad",
+        "name_hindi": "पनीर सलाद",
+        "category": "quick_meal",
+        "per_100g": {
+            "calories": 145,
+            "protein": 10,
+            "carbs": 5,
+            "fats": 10,
+            "fiber": 2
+        },
+        "per_serving": {
+            "grams": 200,
+            "calories": 290,
+            "protein": 20,
+            "carbs": 10,
+            "fats": 20
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner",
+            "snack"
+        ],
+        "prep_time_mins": 8,
+        "cost_inr": 70,
+        "tags": [
+            "quick",
+            "high_protein",
+            "low_carb",
+            "no_cook",
+            "keto_friendly"
+        ],
+        "digestibility": "easy"
+    }
+]

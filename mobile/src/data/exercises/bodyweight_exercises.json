@@ -1,0 +1,630 @@
+[
+    {
+        "id": "pushup_standard",
+        "name": "Push-Up",
+        "category": "push",
+        "muscle_groups": [
+            "chest",
+            "triceps",
+            "shoulders"
+        ],
+        "difficulty": 3,
+        "beginner_friendly": true,
+        "reps_range": {
+            "min": 5,
+            "max": 20
+        },
+        "sets_range": {
+            "min": 3,
+            "max": 5
+        },
+        "rest_seconds": 60,
+        "description": "Standard push-up with hands shoulder-width apart",
+        "cues": [
+            "Keep core tight",
+            "Lower until chest nearly touches floor",
+            "Full arm extension at top"
+        ],
+        "progressions": [
+            "incline_pushup",
+            "pushup_standard",
+            "diamond_pushup",
+            "archer_pushup"
+        ],
+        "regressions": [
+            "incline_pushup",
+            "knee_pushup"
+        ],
+        "contraindications": [
+            "wrist_injury",
+            "shoulder_injury"
+        ]
+    },
+    {
+        "id": "incline_pushup",
+        "name": "Incline Push-Up",
+        "category": "push",
+        "muscle_groups": [
+            "chest",
+            "triceps",
+            "shoulders"
+        ],
+        "difficulty": 1,
+        "beginner_friendly": true,
+        "reps_range": {
+            "min": 8,
+            "max": 20
+        },
+        "description": "Push-up with hands elevated on surface",
+        "progressions": [
+            "pushup_standard"
+        ]
+    },
+    {
+        "id": "diamond_pushup",
+        "name": "Diamond Push-Up",
+        "category": "push",
+        "muscle_groups": [
+            "triceps",
+            "chest"
+        ],
+        "difficulty": 5,
+        "reps_range": {
+            "min": 5,
+            "max": 15
+        },
+        "description": "Push-up with hands forming diamond shape",
+        "contraindications": [
+            "wrist_injury"
+        ]
+    },
+    {
+        "id": "pike_pushup",
+        "name": "Pike Push-Up",
+        "category": "push",
+        "muscle_groups": [
+            "shoulders",
+            "triceps"
+        ],
+        "difficulty": 5,
+        "reps_range": {
+            "min": 5,
+            "max": 12
+        },
+        "description": "Push-up in pike position targeting shoulders",
+        "progressions": [
+            "pike_pushup",
+            "decline_pike",
+            "wall_handstand_pushup"
+        ]
+    },
+    {
+        "id": "dips_chair",
+        "name": "Chair Dips",
+        "category": "push",
+        "muscle_groups": [
+            "triceps",
+            "chest",
+            "shoulders"
+        ],
+        "difficulty": 4,
+        "reps_range": {
+            "min": 8,
+            "max": 15
+        },
+        "description": "Tricep dips using chair or elevated surface",
+        "contraindications": [
+            "shoulder_injury"
+        ]
+    },
+    {
+        "id": "bodyweight_squat",
+        "name": "Bodyweight Squat",
+        "category": "legs",
+        "muscle_groups": [
+            "quads",
+            "glutes",
+            "hamstrings"
+        ],
+        "difficulty": 2,
+        "beginner_friendly": true,
+        "reps_range": {
+            "min": 10,
+            "max": 25
+        },
+        "sets_range": {
+            "min": 3,
+            "max": 5
+        },
+        "rest_seconds": 60,
+        "description": "Standard squat to parallel or below",
+        "cues": [
+            "Feet shoulder-width",
+            "Knees track over toes",
+            "Keep chest up"
+        ],
+        "progressions": [
+            "bodyweight_squat",
+            "pause_squat",
+            "jump_squat",
+            "pistol_squat"
+        ],
+        "contraindications": [
+            "knee_injury"
+        ]
+    },
+    {
+        "id": "jump_squat",
+        "name": "Jump Squat",
+        "category": "legs",
+        "muscle_groups": [
+            "quads",
+            "glutes",
+            "calves"
+        ],
+        "difficulty": 5,
+        "reps_range": {
+            "min": 8,
+            "max": 15
+        },
+        "description": "Explosive squat with jump at top",
+        "contraindications": [
+            "knee_injury",
+            "ankle_injury"
+        ]
+    },
+    {
+        "id": "lunges",
+        "name": "Forward Lunges",
+        "category": "legs",
+        "muscle_groups": [
+            "quads",
+            "glutes",
+            "hamstrings"
+        ],
+        "difficulty": 3,
+        "beginner_friendly": true,
+        "reps_range": {
+            "min": 8,
+            "max": 15
+        },
+        "description": "Alternating forward lunges",
+        "contraindications": [
+            "knee_injury"
+        ]
+    },
+    {
+        "id": "reverse_lunges",
+        "name": "Reverse Lunges",
+        "category": "legs",
+        "muscle_groups": [
+            "quads",
+            "glutes",
+            "hamstrings"
+        ],
+        "difficulty": 3,
+        "reps_range": {
+            "min": 8,
+            "max": 15
+        },
+        "description": "Step back into lunge position"
+    },
+    {
+        "id": "glute_bridge",
+        "name": "Glute Bridge",
+        "category": "legs",
+        "muscle_groups": [
+            "glutes",
+            "hamstrings"
+        ],
+        "difficulty": 2,
+        "beginner_friendly": true,
+        "reps_range": {
+            "min": 12,
+            "max": 20
+        },
+        "description": "Hip thrust from floor position",
+        "progressions": [
+            "glute_bridge",
+            "single_leg_bridge",
+            "elevated_bridge"
+        ]
+    },
+    {
+        "id": "single_leg_bridge",
+        "name": "Single Leg Glute Bridge",
+        "category": "legs",
+        "muscle_groups": [
+            "glutes",
+            "hamstrings"
+        ],
+        "difficulty": 4,
+        "reps_range": {
+            "min": 8,
+            "max": 15
+        },
+        "description": "Glute bridge on one leg"
+    },
+    {
+        "id": "calf_raises",
+        "name": "Calf Raises",
+        "category": "legs",
+        "muscle_groups": [
+            "calves"
+        ],
+        "difficulty": 2,
+        "beginner_friendly": true,
+        "reps_range": {
+            "min": 15,
+            "max": 25
+        },
+        "description": "Rise onto balls of feet",
+        "progressions": [
+            "calf_raises",
+            "single_leg_calf_raise"
+        ]
+    },
+    {
+        "id": "wall_sit",
+        "name": "Wall Sit",
+        "category": "legs",
+        "muscle_groups": [
+            "quads"
+        ],
+        "difficulty": 3,
+        "reps_range": {
+            "min": 30,
+            "max": 60
+        },
+        "unit": "seconds",
+        "description": "Isometric hold against wall"
+    },
+    {
+        "id": "pullup",
+        "name": "Pull-Up",
+        "category": "pull",
+        "muscle_groups": [
+            "lats",
+            "biceps",
+            "upper_back"
+        ],
+        "difficulty": 7,
+        "reps_range": {
+            "min": 3,
+            "max": 12
+        },
+        "description": "Pull body up with overhand grip",
+        "requires": "pull_up_bar",
+        "home_alternative": "doorframe_rows",
+        "regressions": [
+            "negative_pullup",
+            "band_assisted_pullup"
+        ]
+    },
+    {
+        "id": "doorframe_rows",
+        "name": "Doorframe Rows",
+        "category": "pull",
+        "muscle_groups": [
+            "lats",
+            "biceps",
+            "upper_back"
+        ],
+        "difficulty": 3,
+        "beginner_friendly": true,
+        "reps_range": {
+            "min": 10,
+            "max": 20
+        },
+        "description": "Row using doorframe for grip"
+    },
+    {
+        "id": "inverted_row",
+        "name": "Inverted Row",
+        "category": "pull",
+        "muscle_groups": [
+            "upper_back",
+            "biceps",
+            "rear_delts"
+        ],
+        "difficulty": 4,
+        "reps_range": {
+            "min": 8,
+            "max": 15
+        },
+        "description": "Row using table or low bar",
+        "requires": "table_or_bar"
+    },
+    {
+        "id": "superman",
+        "name": "Superman",
+        "category": "pull",
+        "muscle_groups": [
+            "lower_back",
+            "glutes"
+        ],
+        "difficulty": 2,
+        "beginner_friendly": true,
+        "reps_range": {
+            "min": 10,
+            "max": 15
+        },
+        "description": "Lift arms and legs while lying face down"
+    },
+    {
+        "id": "reverse_snow_angels",
+        "name": "Reverse Snow Angels",
+        "category": "pull",
+        "muscle_groups": [
+            "upper_back",
+            "rear_delts"
+        ],
+        "difficulty": 3,
+        "reps_range": {
+            "min": 10,
+            "max": 15
+        },
+        "description": "Snow angel motion while lying face down"
+    },
+    {
+        "id": "plank",
+        "name": "Plank",
+        "category": "core",
+        "muscle_groups": [
+            "abs",
+            "core"
+        ],
+        "difficulty": 3,
+        "beginner_friendly": true,
+        "reps_range": {
+            "min": 20,
+            "max": 60
+        },
+        "unit": "seconds",
+        "description": "Hold push-up position on forearms"
+    },
+    {
+        "id": "side_plank",
+        "name": "Side Plank",
+        "category": "core",
+        "muscle_groups": [
+            "obliques",
+            "core"
+        ],
+        "difficulty": 4,
+        "reps_range": {
+            "min": 15,
+            "max": 45
+        },
+        "unit": "seconds",
+        "description": "Hold on one forearm, body sideways"
+    },
+    {
+        "id": "dead_bug",
+        "name": "Dead Bug",
+        "category": "core",
+        "muscle_groups": [
+            "abs",
+            "core"
+        ],
+        "difficulty": 3,
+        "beginner_friendly": true,
+        "reps_range": {
+            "min": 10,
+            "max": 20
+        },
+        "description": "Alternating arm/leg extension while on back"
+    },
+    {
+        "id": "mountain_climbers",
+        "name": "Mountain Climbers",
+        "category": "core",
+        "muscle_groups": [
+            "abs",
+            "hip_flexors"
+        ],
+        "difficulty": 4,
+        "reps_range": {
+            "min": 20,
+            "max": 40
+        },
+        "description": "Alternating knee drives in plank position"
+    },
+    {
+        "id": "bicycle_crunches",
+        "name": "Bicycle Crunches",
+        "category": "core",
+        "muscle_groups": [
+            "abs",
+            "obliques"
+        ],
+        "difficulty": 3,
+        "reps_range": {
+            "min": 15,
+            "max": 30
+        },
+        "description": "Alternating elbow to opposite knee"
+    },
+    {
+        "id": "leg_raises",
+        "name": "Leg Raises",
+        "category": "core",
+        "muscle_groups": [
+            "lower_abs",
+            "hip_flexors"
+        ],
+        "difficulty": 4,
+        "reps_range": {
+            "min": 10,
+            "max": 20
+        },
+        "description": "Raise straight legs while lying on back"
+    },
+    {
+        "id": "flutter_kicks",
+        "name": "Flutter Kicks",
+        "category": "core",
+        "muscle_groups": [
+            "lower_abs"
+        ],
+        "difficulty": 3,
+        "reps_range": {
+            "min": 20,
+            "max": 40
+        },
+        "description": "Alternating small leg kicks"
+    },
+    {
+        "id": "burpees",
+        "name": "Burpees",
+        "category": "full_body",
+        "muscle_groups": [
+            "full_body"
+        ],
+        "difficulty": 6,
+        "reps_range": {
+            "min": 5,
+            "max": 15
+        },
+        "description": "Squat thrust with push-up and jump",
+        "contraindications": [
+            "wrist_injury",
+            "knee_injury"
+        ]
+    },
+    {
+        "id": "jumping_jacks",
+        "name": "Jumping Jacks",
+        "category": "cardio",
+        "muscle_groups": [
+            "full_body"
+        ],
+        "difficulty": 2,
+        "beginner_friendly": true,
+        "reps_range": {
+            "min": 30,
+            "max": 60
+        },
+        "description": "Classic jumping jack motion"
+    },
+    {
+        "id": "high_knees",
+        "name": "High Knees",
+        "category": "cardio",
+        "muscle_groups": [
+            "hip_flexors",
+            "quads"
+        ],
+        "difficulty": 3,
+        "reps_range": {
+            "min": 30,
+            "max": 60
+        },
+        "description": "Running in place with high knee lift"
+    },
+    {
+        "id": "cat_cow",
+        "name": "Cat-Cow Stretch",
+        "category": "mobility",
+        "muscle_groups": [
+            "spine"
+        ],
+        "difficulty": 1,
+        "beginner_friendly": true,
+        "reps_range": {
+            "min": 10,
+            "max": 15
+        },
+        "description": "Alternating spine flexion and extension"
+    },
+    {
+        "id": "childs_pose",
+        "name": "Child's Pose",
+        "category": "mobility",
+        "muscle_groups": [
+            "back",
+            "hips"
+        ],
+        "difficulty": 1,
+        "reps_range": {
+            "min": 30,
+            "max": 60
+        },
+        "unit": "seconds",
+        "description": "Resting pose with arms extended"
+    },
+    {
+        "id": "hip_circles",
+        "name": "Hip Circles",
+        "category": "mobility",
+        "muscle_groups": [
+            "hips"
+        ],
+        "difficulty": 1,
+        "reps_range": {
+            "min": 10,
+            "max": 15
+        },
+        "description": "Circular hip rotations each direction"
+    },
+    {
+        "id": "shoulder_circles",
+        "name": "Shoulder Circles",
+        "category": "warmup",
+        "muscle_groups": [
+            "shoulders"
+        ],
+        "difficulty": 1,
+        "beginner_friendly": true,
+        "reps_range": {
+            "min": 10,
+            "max": 15
+        },
+        "description": "Arm circles forward and backward"
+    },
+    {
+        "id": "arm_swings",
+        "name": "Arm Swings",
+        "category": "warmup",
+        "muscle_groups": [
+            "shoulders",
+            "chest"
+        ],
+        "difficulty": 1,
+        "reps_range": {
+            "min": 15,
+            "max": 20
+        },
+        "description": "Horizontal arm swings across body"
+    },
+    {
+        "id": "neck_rolls",
+        "name": "Neck Rolls",
+        "category": "warmup",
+        "muscle_groups": [
+            "neck"
+        ],
+        "difficulty": 1,
+        "reps_range": {
+            "min": 5,
+            "max": 10
+        },
+        "description": "Gentle neck rotation each direction"
+    },
+    {
+        "id": "chin_tuck",
+        "name": "Chin Tuck",
+        "category": "posture",
+        "muscle_groups": [
+            "neck"
+        ],
+        "difficulty": 1,
+        "beginner_friendly": true,
+        "reps_range": {
+            "min": 10,
+            "max": 15
+        },
+        "description": "Retract chin creating double chin, hold 5 seconds",
+        "looksmaxing": true
+    }
+]

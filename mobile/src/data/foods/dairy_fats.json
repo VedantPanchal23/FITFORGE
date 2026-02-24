@@ -1,0 +1,452 @@
+[
+    {
+        "id": "milk_full_fat",
+        "name": "Full Fat Milk",
+        "name_hindi": "फुल क्रीम दूध",
+        "category": "dairy",
+        "per_100g": {
+            "calories": 62,
+            "protein": 3.2,
+            "carbs": 4.8,
+            "fats": 3.3,
+            "fiber": 0,
+            "calcium_mg": 120,
+            "vitamin_b12_mcg": 0.4,
+            "vitamin_d_mcg": 0.1,
+            "vitamin_a_mcg": 46
+        },
+        "household_portions": [
+            {
+                "name": "glass",
+                "ml": 200,
+                "grams": 206,
+                "calories": 128
+            },
+            {
+                "name": "cup",
+                "ml": 240,
+                "grams": 247,
+                "calories": 153
+            }
+        ],
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ]
+    },
+    {
+        "id": "milk_toned",
+        "name": "Toned Milk",
+        "name_hindi": "टोंड दूध",
+        "category": "dairy",
+        "per_100g": {
+            "calories": 42,
+            "protein": 3,
+            "carbs": 4.8,
+            "fats": 1.5,
+            "fiber": 0,
+            "calcium_mg": 120,
+            "vitamin_b12_mcg": 0.4
+        },
+        "household_portions": [
+            {
+                "name": "glass",
+                "ml": 200,
+                "calories": 86
+            }
+        ],
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ]
+    },
+    {
+        "id": "milk_skimmed",
+        "name": "Skimmed Milk",
+        "name_hindi": "स्किम्ड दूध",
+        "category": "dairy",
+        "per_100g": {
+            "calories": 34,
+            "protein": 3.4,
+            "carbs": 5,
+            "fats": 0.1,
+            "fiber": 0,
+            "calcium_mg": 125,
+            "vitamin_b12_mcg": 0.4
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "low_fat",
+            "high_protein_ratio"
+        ]
+    },
+    {
+        "id": "curd_full",
+        "name": "Curd/Yogurt",
+        "name_hindi": "दही",
+        "regional_names": [
+            "thayir",
+            "perugu",
+            "dahi"
+        ],
+        "category": "dairy",
+        "per_100g": {
+            "calories": 60,
+            "protein": 3.5,
+            "carbs": 5,
+            "fats": 3.3,
+            "fiber": 0,
+            "calcium_mg": 110,
+            "vitamin_b12_mcg": 0.5,
+            "probiotics": true
+        },
+        "household_portions": [
+            {
+                "name": "katori",
+                "grams": 100
+            },
+            {
+                "name": "cup",
+                "grams": 200
+            }
+        ],
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "probiotic",
+            "digestion"
+        ]
+    },
+    {
+        "id": "curd_low_fat",
+        "name": "Low Fat Curd",
+        "name_hindi": "लो फैट दही",
+        "category": "dairy",
+        "per_100g": {
+            "calories": 45,
+            "protein": 4,
+            "carbs": 5.5,
+            "fats": 1,
+            "fiber": 0,
+            "calcium_mg": 115,
+            "probiotics": true
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ]
+    },
+    {
+        "id": "greek_yogurt",
+        "name": "Greek Yogurt",
+        "name_hindi": "ग्रीक योगर्ट",
+        "category": "dairy",
+        "per_100g": {
+            "calories": 97,
+            "protein": 9,
+            "carbs": 3.6,
+            "fats": 5,
+            "fiber": 0,
+            "calcium_mg": 110,
+            "probiotics": true
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "high_protein",
+            "probiotic"
+        ]
+    },
+    {
+        "id": "buttermilk",
+        "name": "Buttermilk/Chaas",
+        "name_hindi": "छाछ",
+        "regional_names": [
+            "majjiga",
+            "mor",
+            "taak"
+        ],
+        "category": "dairy",
+        "per_100g": {
+            "calories": 35,
+            "protein": 1.5,
+            "carbs": 4.5,
+            "fats": 1.2,
+            "fiber": 0,
+            "calcium_mg": 60,
+            "probiotics": true
+        },
+        "household_portions": [
+            {
+                "name": "glass",
+                "ml": 200,
+                "calories": 70
+            }
+        ],
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "cooling",
+            "digestion",
+            "hydrating"
+        ]
+    },
+    {
+        "id": "lassi_sweet",
+        "name": "Sweet Lassi",
+        "name_hindi": "मीठी लस्सी",
+        "category": "dairy",
+        "per_100g": {
+            "calories": 90,
+            "protein": 2.5,
+            "carbs": 15,
+            "fats": 2.5,
+            "fiber": 0,
+            "calcium_mg": 80
+        },
+        "household_portions": [
+            {
+                "name": "glass",
+                "ml": 250,
+                "calories": 225
+            }
+        ],
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ]
+    },
+    {
+        "id": "ghee",
+        "name": "Ghee (Clarified Butter)",
+        "name_hindi": "घी",
+        "regional_names": [
+            "nei",
+            "tup",
+            "neyyi"
+        ],
+        "category": "fats",
+        "per_100g": {
+            "calories": 900,
+            "protein": 0,
+            "carbs": 0,
+            "fats": 100,
+            "fiber": 0,
+            "vitamin_a_mcg": 684,
+            "vitamin_d_mcg": 1.5,
+            "vitamin_e_mg": 2.8,
+            "saturated_fat_g": 62,
+            "monounsaturated_fat_g": 29
+        },
+        "household_portions": [
+            {
+                "name": "teaspoon",
+                "grams": 5,
+                "calories": 45
+            },
+            {
+                "name": "tablespoon",
+                "grams": 15,
+                "calories": 135
+            }
+        ],
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "vitamin_a",
+            "cooking_stable",
+            "ayurvedic"
+        ]
+    },
+    {
+        "id": "butter",
+        "name": "Butter",
+        "name_hindi": "मक्खन",
+        "category": "fats",
+        "per_100g": {
+            "calories": 717,
+            "protein": 0.9,
+            "carbs": 0.1,
+            "fats": 81,
+            "fiber": 0,
+            "vitamin_a_mcg": 684,
+            "saturated_fat_g": 51
+        },
+        "household_portions": [
+            {
+                "name": "pat",
+                "grams": 10,
+                "calories": 72
+            }
+        ],
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ]
+    },
+    {
+        "id": "cheese_processed",
+        "name": "Processed Cheese",
+        "name_hindi": "चीज़",
+        "category": "dairy",
+        "per_100g": {
+            "calories": 330,
+            "protein": 20,
+            "carbs": 2,
+            "fats": 27,
+            "fiber": 0,
+            "calcium_mg": 600,
+            "sodium_mg": 1400
+        },
+        "per_slice": {
+            "grams": 20,
+            "calories": 66,
+            "protein": 4
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg"
+        ],
+        "note": "high_sodium"
+    },
+    {
+        "id": "coconut_oil",
+        "name": "Coconut Oil",
+        "name_hindi": "नारियल तेल",
+        "category": "fats",
+        "per_100g": {
+            "calories": 862,
+            "protein": 0,
+            "carbs": 0,
+            "fats": 100,
+            "fiber": 0,
+            "saturated_fat_g": 82,
+            "mct_content": "high"
+        },
+        "household_portions": [
+            {
+                "name": "tablespoon",
+                "grams": 14,
+                "calories": 121
+            }
+        ],
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "mct",
+            "cooking_stable"
+        ]
+    },
+    {
+        "id": "olive_oil",
+        "name": "Olive Oil",
+        "name_hindi": "जैतून का तेल",
+        "category": "fats",
+        "per_100g": {
+            "calories": 884,
+            "protein": 0,
+            "carbs": 0,
+            "fats": 100,
+            "fiber": 0,
+            "monounsaturated_fat_g": 73,
+            "vitamin_e_mg": 14
+        },
+        "household_portions": [
+            {
+                "name": "tablespoon",
+                "grams": 14,
+                "calories": 124
+            }
+        ],
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "heart_healthy",
+            "monounsaturated"
+        ]
+    },
+    {
+        "id": "mustard_oil",
+        "name": "Mustard Oil",
+        "name_hindi": "सरसों का तेल",
+        "category": "fats",
+        "per_100g": {
+            "calories": 884,
+            "protein": 0,
+            "carbs": 0,
+            "fats": 100,
+            "fiber": 0,
+            "omega3_mg": 5900,
+            "monounsaturated_fat_g": 60
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "omega3",
+            "antibacterial"
+        ]
+    },
+    {
+        "id": "groundnut_oil",
+        "name": "Groundnut/Peanut Oil",
+        "name_hindi": "मूंगफली का तेल",
+        "category": "fats",
+        "per_100g": {
+            "calories": 884,
+            "protein": 0,
+            "carbs": 0,
+            "fats": 100,
+            "fiber": 0
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg"
+        ],
+        "jain_forbidden": true
+    }
+]

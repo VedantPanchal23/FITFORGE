@@ -1,0 +1,292 @@
+{
+    "substitution_rules": {
+        "protein_sources": {
+            "paneer": [
+                "tofu",
+                "soya_chunks",
+                "cottage_cheese"
+            ],
+            "chicken_breast": [
+                "fish_rohu",
+                "egg_white",
+                "tofu"
+            ],
+            "egg_whole": [
+                "paneer",
+                "tofu",
+                "soya_chunks"
+            ],
+            "dal_any": [
+                "chickpeas",
+                "rajma",
+                "lobia",
+                "tofu"
+            ],
+            "fish_any": [
+                "chicken_breast",
+                "egg_whole",
+                "paneer"
+            ],
+            "soya_chunks": [
+                "paneer",
+                "tofu",
+                "dal_any"
+            ],
+            "whey_protein": [
+                "paneer",
+                "egg_white",
+                "soya_chunks",
+                "greek_yogurt"
+            ]
+        },
+        "carb_sources": {
+            "rice_white": [
+                "rice_brown",
+                "quinoa",
+                "roti",
+                "oats"
+            ],
+            "roti": [
+                "rice_white",
+                "rice_brown",
+                "oats",
+                "millet_roti"
+            ],
+            "oats": [
+                "poha",
+                "upma",
+                "daliya",
+                "muesli"
+            ],
+            "bread_white": [
+                "bread_brown",
+                "roti",
+                "oats"
+            ],
+            "potato": [
+                "sweet_potato",
+                "rice_white",
+                "oats"
+            ],
+            "pasta": [
+                "rice_white",
+                "quinoa",
+                "daliya"
+            ]
+        },
+        "fat_sources": {
+            "ghee": [
+                "coconut_oil",
+                "olive_oil",
+                "butter"
+            ],
+            "butter": [
+                "ghee",
+                "peanut_butter"
+            ],
+            "almonds": [
+                "walnuts",
+                "cashews",
+                "peanuts"
+            ],
+            "peanut_butter": [
+                "almond_butter",
+                "tahini"
+            ]
+        },
+        "dairy": {
+            "milk_full": [
+                "milk_toned",
+                "soy_milk",
+                "almond_milk"
+            ],
+            "curd": [
+                "greek_yogurt",
+                "buttermilk"
+            ],
+            "cheese": [
+                "paneer",
+                "tofu"
+            ]
+        },
+        "vegetables": {
+            "spinach": [
+                "methi",
+                "palak",
+                "amaranth_leaves"
+            ],
+            "broccoli": [
+                "cauliflower",
+                "cabbage"
+            ],
+            "carrot": [
+                "beetroot",
+                "pumpkin"
+            ],
+            "tomato": [
+                "capsicum",
+                "cucumber"
+            ]
+        }
+    },
+    "jain_substitutions": {
+        "potato": [
+            "raw_banana",
+            "jackfruit",
+            "yam_above_ground"
+        ],
+        "onion": [
+            "asafoetida",
+            "celery"
+        ],
+        "garlic": [
+            "asafoetida",
+            "ginger_powder_dried"
+        ],
+        "ginger": [
+            "dry_ginger_powder"
+        ],
+        "carrot": [
+            "capsicum",
+            "beans"
+        ],
+        "beetroot": [
+            "tomato_for_color"
+        ],
+        "radish": [
+            "cucumber"
+        ]
+    },
+    "seasonal_availability": {
+        "summer": {
+            "abundant": [
+                "mango",
+                "watermelon",
+                "cucumber",
+                "bottle_gourd",
+                "ridge_gourd",
+                "raw_mango",
+                "litchi",
+                "jackfruit"
+            ],
+            "scarce": [
+                "methi",
+                "gajar",
+                "matar"
+            ]
+        },
+        "monsoon": {
+            "abundant": [
+                "corn",
+                "leafy_greens",
+                "bhindi",
+                "karela",
+                "turai"
+            ],
+            "avoid": [
+                "leafy_greens_uncooked",
+                "sprouts_raw"
+            ],
+            "note": "Avoid raw salads, prefer cooked foods"
+        },
+        "winter": {
+            "abundant": [
+                "methi",
+                "palak",
+                "sarson",
+                "gajar",
+                "matar",
+                "mooli",
+                "gobhi",
+                "strawberry",
+                "orange",
+                "guava"
+            ],
+            "best_for": [
+                "green_leafy_vegetables",
+                "root_vegetables"
+            ]
+        },
+        "year_round": [
+            "banana",
+            "apple",
+            "tomato",
+            "onion",
+            "potato",
+            "milk",
+            "eggs",
+            "dal",
+            "rice"
+        ]
+    },
+    "equivalent_portions": {
+        "protein_20g": [
+            {
+                "food": "paneer",
+                "grams": 110
+            },
+            {
+                "food": "chicken_breast",
+                "grams": 65
+            },
+            {
+                "food": "egg_whole",
+                "count": 3
+            },
+            {
+                "food": "dal_cooked",
+                "grams": 270
+            },
+            {
+                "food": "tofu",
+                "grams": 250
+            },
+            {
+                "food": "soya_chunks_cooked",
+                "grams": 40
+            },
+            {
+                "food": "fish_rohu",
+                "grams": 120
+            },
+            {
+                "food": "curd",
+                "grams": 570
+            },
+            {
+                "food": "milk",
+                "ml": 625
+            },
+            {
+                "food": "whey_protein",
+                "scoops": 0.8
+            }
+        ],
+        "carbs_30g": [
+            {
+                "food": "rice_cooked",
+                "grams": 110
+            },
+            {
+                "food": "roti",
+                "pieces": 2
+            },
+            {
+                "food": "oats_cooked",
+                "grams": 250
+            },
+            {
+                "food": "banana",
+                "pieces": 1.5
+            },
+            {
+                "food": "bread",
+                "slices": 2
+            },
+            {
+                "food": "potato_boiled",
+                "grams": 175
+            }
+        ]
+    }
+}

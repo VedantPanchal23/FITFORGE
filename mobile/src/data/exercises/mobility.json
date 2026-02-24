@@ -1,0 +1,616 @@
+[
+    {
+        "id": "neck_stretch_lateral",
+        "name": "Lateral Neck Stretch",
+        "target_muscles": [
+            "neck",
+            "trapezius"
+        ],
+        "type": "static",
+        "duration_secs": 30,
+        "sides": true,
+        "difficulty": 1,
+        "instructions": "Tilt head to one side, ear toward shoulder. Use hand for gentle pressure.",
+        "contraindications": [
+            "neck_injury"
+        ]
+    },
+    {
+        "id": "neck_stretch_forward",
+        "name": "Forward Neck Stretch",
+        "target_muscles": [
+            "neck",
+            "upper_back"
+        ],
+        "type": "static",
+        "duration_secs": 30,
+        "sides": false,
+        "difficulty": 1,
+        "instructions": "Tuck chin to chest, use hands to gently press head down.",
+        "contraindications": [
+            "neck_injury"
+        ]
+    },
+    {
+        "id": "chest_doorway_stretch",
+        "name": "Doorway Chest Stretch",
+        "target_muscles": [
+            "chest",
+            "shoulders"
+        ],
+        "type": "static",
+        "duration_secs": 45,
+        "sides": true,
+        "difficulty": 1,
+        "instructions": "Place forearm on doorframe, lean forward through doorway.",
+        "contraindications": [
+            "shoulder_injury"
+        ]
+    },
+    {
+        "id": "cross_body_shoulder",
+        "name": "Cross-Body Shoulder Stretch",
+        "target_muscles": [
+            "shoulders",
+            "rear_delts"
+        ],
+        "type": "static",
+        "duration_secs": 30,
+        "sides": true,
+        "difficulty": 1,
+        "instructions": "Cross arm across body, use other arm to pull it closer.",
+        "contraindications": []
+    },
+    {
+        "id": "overhead_tricep",
+        "name": "Overhead Tricep Stretch",
+        "target_muscles": [
+            "triceps"
+        ],
+        "type": "static",
+        "duration_secs": 30,
+        "sides": true,
+        "difficulty": 1,
+        "instructions": "Raise arm overhead, bend elbow, reach hand down back. Use other hand to push elbow.",
+        "contraindications": [
+            "shoulder_injury"
+        ]
+    },
+    {
+        "id": "bicep_wall_stretch",
+        "name": "Wall Bicep Stretch",
+        "target_muscles": [
+            "biceps",
+            "chest"
+        ],
+        "type": "static",
+        "duration_secs": 30,
+        "sides": true,
+        "difficulty": 1,
+        "instructions": "Place palm on wall behind you, fingers pointing back, rotate body away.",
+        "contraindications": []
+    },
+    {
+        "id": "wrist_flexor_stretch",
+        "name": "Wrist Flexor Stretch",
+        "target_muscles": [
+            "forearms",
+            "wrists"
+        ],
+        "type": "static",
+        "duration_secs": 20,
+        "sides": true,
+        "difficulty": 1,
+        "instructions": "Extend arm, palm up, use other hand to press fingers down.",
+        "contraindications": [
+            "carpal_tunnel"
+        ]
+    },
+    {
+        "id": "wrist_extensor_stretch",
+        "name": "Wrist Extensor Stretch",
+        "target_muscles": [
+            "forearms",
+            "wrists"
+        ],
+        "type": "static",
+        "duration_secs": 20,
+        "sides": true,
+        "difficulty": 1,
+        "instructions": "Extend arm, palm down, use other hand to press fingers toward body.",
+        "contraindications": [
+            "carpal_tunnel"
+        ]
+    },
+    {
+        "id": "cat_cow_stretch",
+        "name": "Cat-Cow Stretch",
+        "target_muscles": [
+            "spine",
+            "core"
+        ],
+        "type": "dynamic",
+        "reps": 10,
+        "difficulty": 1,
+        "instructions": "On hands and knees, alternate arching and rounding spine.",
+        "contraindications": []
+    },
+    {
+        "id": "childs_pose_stretch",
+        "name": "Child's Pose",
+        "target_muscles": [
+            "back",
+            "hips",
+            "shoulders"
+        ],
+        "type": "static",
+        "duration_secs": 60,
+        "sides": false,
+        "difficulty": 1,
+        "instructions": "Kneel, sit on heels, extend arms forward and lower chest.",
+        "contraindications": [
+            "knee_injury"
+        ]
+    },
+    {
+        "id": "thread_needle",
+        "name": "Thread the Needle",
+        "target_muscles": [
+            "upper_back",
+            "shoulders"
+        ],
+        "type": "static",
+        "duration_secs": 30,
+        "sides": true,
+        "difficulty": 1,
+        "instructions": "On hands and knees, thread one arm under body, rotate torso.",
+        "contraindications": []
+    },
+    {
+        "id": "cobra_stretch",
+        "name": "Cobra Stretch",
+        "target_muscles": [
+            "abs",
+            "hip_flexors",
+            "chest"
+        ],
+        "type": "static",
+        "duration_secs": 30,
+        "sides": false,
+        "difficulty": 1,
+        "instructions": "Lie face down, press up through hands, arch back, keep hips on floor.",
+        "contraindications": [
+            "back_injury"
+        ]
+    },
+    {
+        "id": "sphinx_stretch",
+        "name": "Sphinx Stretch",
+        "target_muscles": [
+            "abs",
+            "lower_back"
+        ],
+        "type": "static",
+        "duration_secs": 45,
+        "sides": false,
+        "difficulty": 1,
+        "instructions": "Lie face down, prop up on forearms, gentle backbend.",
+        "contraindications": [
+            "back_injury"
+        ]
+    },
+    {
+        "id": "standing_quad_stretch",
+        "name": "Standing Quad Stretch",
+        "target_muscles": [
+            "quads",
+            "hip_flexors"
+        ],
+        "type": "static",
+        "duration_secs": 30,
+        "sides": true,
+        "difficulty": 1,
+        "instructions": "Stand on one leg, grab other ankle behind you, pull heel to glutes.",
+        "contraindications": [
+            "knee_injury"
+        ]
+    },
+    {
+        "id": "lying_quad_stretch",
+        "name": "Lying Quad Stretch",
+        "target_muscles": [
+            "quads",
+            "hip_flexors"
+        ],
+        "type": "static",
+        "duration_secs": 45,
+        "sides": true,
+        "difficulty": 2,
+        "instructions": "Lie on side, grab top ankle, pull heel toward glutes.",
+        "contraindications": [
+            "knee_injury"
+        ]
+    },
+    {
+        "id": "standing_hamstring",
+        "name": "Standing Hamstring Stretch",
+        "target_muscles": [
+            "hamstrings"
+        ],
+        "type": "static",
+        "duration_secs": 30,
+        "sides": true,
+        "difficulty": 1,
+        "instructions": "Place heel on low surface, keep leg straight, hinge forward from hips.",
+        "contraindications": [
+            "back_injury"
+        ]
+    },
+    {
+        "id": "seated_hamstring",
+        "name": "Seated Hamstring Stretch",
+        "target_muscles": [
+            "hamstrings",
+            "calves"
+        ],
+        "type": "static",
+        "duration_secs": 45,
+        "sides": false,
+        "difficulty": 1,
+        "instructions": "Sit with legs extended, reach for toes, keep back straight.",
+        "contraindications": []
+    },
+    {
+        "id": "lying_hamstring_strap",
+        "name": "Supine Hamstring Stretch",
+        "target_muscles": [
+            "hamstrings"
+        ],
+        "type": "static",
+        "duration_secs": 45,
+        "sides": true,
+        "difficulty": 1,
+        "instructions": "Lie on back, raise one leg, use strap or hands to pull it toward you.",
+        "contraindications": []
+    },
+    {
+        "id": "hip_flexor_lunge",
+        "name": "Kneeling Hip Flexor Stretch",
+        "target_muscles": [
+            "hip_flexors",
+            "quads"
+        ],
+        "type": "static",
+        "duration_secs": 45,
+        "sides": true,
+        "difficulty": 1,
+        "instructions": "Kneel on one knee, front foot flat, push hips forward.",
+        "contraindications": [
+            "knee_injury"
+        ]
+    },
+    {
+        "id": "couch_stretch",
+        "name": "Couch Stretch",
+        "target_muscles": [
+            "hip_flexors",
+            "quads"
+        ],
+        "type": "static",
+        "duration_secs": 60,
+        "sides": true,
+        "difficulty": 3,
+        "instructions": "Back knee against wall, shin up wall, front foot on floor, stand tall.",
+        "contraindications": [
+            "knee_injury"
+        ]
+    },
+    {
+        "id": "pigeon_pose",
+        "name": "Pigeon Pose",
+        "target_muscles": [
+            "glutes",
+            "hip_rotators",
+            "hip_flexors"
+        ],
+        "type": "static",
+        "duration_secs": 60,
+        "sides": true,
+        "difficulty": 2,
+        "instructions": "Front leg bent in front, back leg extended behind, fold forward.",
+        "contraindications": [
+            "knee_injury"
+        ]
+    },
+    {
+        "id": "figure_four",
+        "name": "Figure-4 Stretch",
+        "target_muscles": [
+            "glutes",
+            "hip_rotators"
+        ],
+        "type": "static",
+        "duration_secs": 45,
+        "sides": true,
+        "difficulty": 1,
+        "instructions": "Lie on back, cross one ankle over opposite knee, pull toward chest.",
+        "contraindications": []
+    },
+    {
+        "id": "90_90_stretch",
+        "name": "90-90 Hip Stretch",
+        "target_muscles": [
+            "hips",
+            "glutes"
+        ],
+        "type": "static",
+        "duration_secs": 60,
+        "sides": true,
+        "difficulty": 2,
+        "instructions": "Sit with both legs at 90 degrees, rotate between internal and external rotation.",
+        "contraindications": [
+            "knee_injury"
+        ]
+    },
+    {
+        "id": "frog_stretch",
+        "name": "Frog Stretch",
+        "target_muscles": [
+            "groin",
+            "inner_thighs"
+        ],
+        "type": "static",
+        "duration_secs": 60,
+        "sides": false,
+        "difficulty": 2,
+        "instructions": "On hands and knees, widen knees, lower hips back and down.",
+        "contraindications": [
+            "groin_injury",
+            "knee_injury"
+        ]
+    },
+    {
+        "id": "butterfly_stretch",
+        "name": "Butterfly Stretch",
+        "target_muscles": [
+            "groin",
+            "inner_thighs",
+            "hips"
+        ],
+        "type": "static",
+        "duration_secs": 60,
+        "sides": false,
+        "difficulty": 1,
+        "instructions": "Sit with soles of feet together, press knees down gently.",
+        "contraindications": []
+    },
+    {
+        "id": "calf_wall_stretch",
+        "name": "Wall Calf Stretch",
+        "target_muscles": [
+            "calves",
+            "gastrocnemius"
+        ],
+        "type": "static",
+        "duration_secs": 30,
+        "sides": true,
+        "difficulty": 1,
+        "instructions": "Hands on wall, one leg back with heel down, lean forward.",
+        "contraindications": []
+    },
+    {
+        "id": "soleus_stretch",
+        "name": "Soleus Stretch",
+        "target_muscles": [
+            "calves",
+            "soleus"
+        ],
+        "type": "static",
+        "duration_secs": 30,
+        "sides": true,
+        "difficulty": 1,
+        "instructions": "Same as calf stretch but with back knee slightly bent.",
+        "contraindications": []
+    },
+    {
+        "id": "downward_dog",
+        "name": "Downward Dog",
+        "target_muscles": [
+            "hamstrings",
+            "calves",
+            "shoulders",
+            "back"
+        ],
+        "type": "static",
+        "duration_secs": 45,
+        "sides": false,
+        "difficulty": 1,
+        "instructions": "Inverted V position, hands and feet on floor, hips high.",
+        "contraindications": [
+            "carpal_tunnel"
+        ]
+    },
+    {
+        "id": "worlds_greatest_stretch",
+        "name": "World's Greatest Stretch",
+        "target_muscles": [
+            "hips",
+            "groin",
+            "thoracic_spine",
+            "hamstrings"
+        ],
+        "type": "dynamic",
+        "reps": 5,
+        "sides": true,
+        "difficulty": 2,
+        "instructions": "Lunge, place same-side elbow to floor, rotate and reach to ceiling.",
+        "contraindications": []
+    },
+    {
+        "id": "supine_twist",
+        "name": "Supine Spinal Twist",
+        "target_muscles": [
+            "spine",
+            "glutes",
+            "lower_back"
+        ],
+        "type": "static",
+        "duration_secs": 45,
+        "sides": true,
+        "difficulty": 1,
+        "instructions": "Lie on back, draw one knee across body, arms in T, look opposite direction.",
+        "contraindications": [
+            "back_injury"
+        ]
+    },
+    {
+        "id": "seated_spinal_twist",
+        "name": "Seated Spinal Twist",
+        "target_muscles": [
+            "spine",
+            "obliques"
+        ],
+        "type": "static",
+        "duration_secs": 30,
+        "sides": true,
+        "difficulty": 1,
+        "instructions": "Sit with one leg extended, cross other foot over, twist toward bent knee.",
+        "contraindications": [
+            "back_injury"
+        ]
+    },
+    {
+        "id": "forward_fold",
+        "name": "Standing Forward Fold",
+        "target_muscles": [
+            "hamstrings",
+            "lower_back"
+        ],
+        "type": "static",
+        "duration_secs": 45,
+        "sides": false,
+        "difficulty": 1,
+        "instructions": "Feet hip-width, fold forward from hips, let head hang.",
+        "contraindications": [
+            "back_injury"
+        ]
+    },
+    {
+        "id": "side_bend_stretch",
+        "name": "Standing Side Bend",
+        "target_muscles": [
+            "obliques",
+            "lats"
+        ],
+        "type": "static",
+        "duration_secs": 30,
+        "sides": true,
+        "difficulty": 1,
+        "instructions": "Stand tall, reach one arm overhead and bend to opposite side.",
+        "contraindications": []
+    },
+    {
+        "id": "lat_stretch_wall",
+        "name": "Wall Lat Stretch",
+        "target_muscles": [
+            "lats",
+            "shoulders"
+        ],
+        "type": "static",
+        "duration_secs": 30,
+        "sides": true,
+        "difficulty": 1,
+        "instructions": "Place hands on wall at hip height, step back and press chest down.",
+        "contraindications": [
+            "shoulder_injury"
+        ]
+    },
+    {
+        "id": "foam_roll_quads",
+        "name": "Foam Roll Quads",
+        "target_muscles": [
+            "quads"
+        ],
+        "type": "self_myofascial",
+        "duration_secs": 60,
+        "sides": true,
+        "difficulty": 2,
+        "equipment": "foam_roller",
+        "instructions": "Lie face down on roller, roll from hip to knee, pause on tender spots.",
+        "contraindications": []
+    },
+    {
+        "id": "foam_roll_it_band",
+        "name": "Foam Roll IT Band",
+        "target_muscles": [
+            "it_band",
+            "outer_thigh"
+        ],
+        "type": "self_myofascial",
+        "duration_secs": 60,
+        "sides": true,
+        "difficulty": 3,
+        "equipment": "foam_roller",
+        "instructions": "Lie on side, roll from hip to knee, pause on tender spots.",
+        "contraindications": []
+    },
+    {
+        "id": "foam_roll_hamstrings",
+        "name": "Foam Roll Hamstrings",
+        "target_muscles": [
+            "hamstrings"
+        ],
+        "type": "self_myofascial",
+        "duration_secs": 60,
+        "sides": true,
+        "difficulty": 2,
+        "equipment": "foam_roller",
+        "instructions": "Sit on roller, roll from glutes to behind knee.",
+        "contraindications": []
+    },
+    {
+        "id": "foam_roll_upper_back",
+        "name": "Foam Roll Upper Back",
+        "target_muscles": [
+            "upper_back",
+            "thoracic_spine"
+        ],
+        "type": "self_myofascial",
+        "duration_secs": 60,
+        "sides": false,
+        "difficulty": 2,
+        "equipment": "foam_roller",
+        "instructions": "Lie on roller at shoulder blade level, arms crossed, roll up and down.",
+        "contraindications": [
+            "rib_injury"
+        ]
+    },
+    {
+        "id": "foam_roll_lats",
+        "name": "Foam Roll Lats",
+        "target_muscles": [
+            "lats"
+        ],
+        "type": "self_myofascial",
+        "duration_secs": 45,
+        "sides": true,
+        "difficulty": 2,
+        "equipment": "foam_roller",
+        "instructions": "Lie on side with roller under armpit, roll along lat muscle.",
+        "contraindications": []
+    },
+    {
+        "id": "foam_roll_calves",
+        "name": "Foam Roll Calves",
+        "target_muscles": [
+            "calves"
+        ],
+        "type": "self_myofascial",
+        "duration_secs": 45,
+        "sides": true,
+        "difficulty": 2,
+        "equipment": "foam_roller",
+        "instructions": "Sit with calf on roller, roll from ankle to knee.",
+        "contraindications": []
+    }
+]

@@ -1,0 +1,552 @@
+[
+    {
+        "id": "banana",
+        "name": "Banana",
+        "name_hindi": "केला",
+        "category": "fruits",
+        "per_100g": {
+            "calories": 89,
+            "protein": 1.1,
+            "carbs": 23,
+            "fats": 0.3,
+            "fiber": 2.6,
+            "potassium_mg": 358,
+            "vitamin_b6_mg": 0.4,
+            "vitamin_c_mg": 9,
+            "magnesium_mg": 27
+        },
+        "per_piece": {
+            "grams": 120,
+            "calories": 107,
+            "carbs": 27
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack",
+            "pre_workout"
+        ],
+        "benefits": [
+            "potassium",
+            "energy",
+            "pre_workout"
+        ]
+    },
+    {
+        "id": "apple",
+        "name": "Apple",
+        "name_hindi": "सेब",
+        "category": "fruits",
+        "per_100g": {
+            "calories": 52,
+            "protein": 0.3,
+            "carbs": 14,
+            "fats": 0.2,
+            "fiber": 2.4,
+            "vitamin_c_mg": 4.6
+        },
+        "per_piece": {
+            "grams": 180,
+            "calories": 94
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "fiber",
+            "polyphenols"
+        ]
+    },
+    {
+        "id": "mango",
+        "name": "Mango",
+        "name_hindi": "आम",
+        "category": "fruits",
+        "per_100g": {
+            "calories": 60,
+            "protein": 0.8,
+            "carbs": 15,
+            "fats": 0.4,
+            "fiber": 1.6,
+            "vitamin_a_mcg": 54,
+            "vitamin_c_mg": 36
+        },
+        "per_piece": {
+            "grams": 200,
+            "calories": 120,
+            "description": "1 medium"
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "seasonal": "summer"
+    },
+    {
+        "id": "papaya",
+        "name": "Papaya",
+        "name_hindi": "पपीता",
+        "category": "fruits",
+        "per_100g": {
+            "calories": 43,
+            "protein": 0.5,
+            "carbs": 11,
+            "fats": 0.3,
+            "fiber": 1.7,
+            "vitamin_c_mg": 60,
+            "vitamin_a_mcg": 47,
+            "papain": true
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "digestion",
+            "vitamin_c"
+        ]
+    },
+    {
+        "id": "orange",
+        "name": "Orange",
+        "name_hindi": "संतरा",
+        "category": "fruits",
+        "per_100g": {
+            "calories": 47,
+            "protein": 0.9,
+            "carbs": 12,
+            "fats": 0.1,
+            "fiber": 2.4,
+            "vitamin_c_mg": 53,
+            "folate_mcg": 30
+        },
+        "per_piece": {
+            "grams": 130,
+            "calories": 61
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "seasonal": "winter",
+        "benefits": [
+            "vitamin_c",
+            "immunity"
+        ]
+    },
+    {
+        "id": "guava",
+        "name": "Guava",
+        "name_hindi": "अमरूद",
+        "category": "fruits",
+        "per_100g": {
+            "calories": 68,
+            "protein": 2.6,
+            "carbs": 14,
+            "fats": 1,
+            "fiber": 5.4,
+            "vitamin_c_mg": 228,
+            "vitamin_a_mcg": 31
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "seasonal": "winter",
+        "benefits": [
+            "highest_vitamin_c_fruit",
+            "high_fiber"
+        ]
+    },
+    {
+        "id": "pomegranate",
+        "name": "Pomegranate",
+        "name_hindi": "अनार",
+        "category": "fruits",
+        "per_100g": {
+            "calories": 83,
+            "protein": 1.7,
+            "carbs": 19,
+            "fats": 1.2,
+            "fiber": 4,
+            "vitamin_c_mg": 10,
+            "iron_mg": 0.3
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "antioxidants",
+            "heart_health"
+        ]
+    },
+    {
+        "id": "watermelon",
+        "name": "Watermelon",
+        "name_hindi": "तरबूज",
+        "category": "fruits",
+        "per_100g": {
+            "calories": 30,
+            "protein": 0.6,
+            "carbs": 8,
+            "fats": 0.2,
+            "fiber": 0.4,
+            "vitamin_c_mg": 8,
+            "lycopene_mg": 4.5
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "seasonal": "summer",
+        "benefits": [
+            "hydrating",
+            "lycopene"
+        ]
+    },
+    {
+        "id": "grapes",
+        "name": "Grapes",
+        "name_hindi": "अंगूर",
+        "category": "fruits",
+        "per_100g": {
+            "calories": 69,
+            "protein": 0.7,
+            "carbs": 18,
+            "fats": 0.2,
+            "fiber": 0.9,
+            "vitamin_c_mg": 3.2
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ]
+    },
+    {
+        "id": "dates",
+        "name": "Dates (Khajoor)",
+        "name_hindi": "खजूर",
+        "category": "fruits",
+        "per_100g": {
+            "calories": 282,
+            "protein": 2.5,
+            "carbs": 75,
+            "fats": 0.4,
+            "fiber": 8,
+            "iron_mg": 1,
+            "potassium_mg": 656,
+            "magnesium_mg": 43
+        },
+        "per_piece": {
+            "grams": 8,
+            "calories": 23
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "energy",
+            "iron",
+            "natural_sugar"
+        ]
+    },
+    {
+        "id": "almonds",
+        "name": "Almonds",
+        "name_hindi": "बादाम",
+        "category": "nuts",
+        "per_100g": {
+            "calories": 579,
+            "protein": 21,
+            "carbs": 22,
+            "fats": 50,
+            "fiber": 12,
+            "vitamin_e_mg": 25.6,
+            "magnesium_mg": 270,
+            "calcium_mg": 264,
+            "zinc_mg": 3.1
+        },
+        "per_piece": {
+            "grams": 1.2,
+            "calories": 7
+        },
+        "household_portions": [
+            {
+                "name": "handful",
+                "grams": 28,
+                "pieces": 23,
+                "calories": 162
+            }
+        ],
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "vitamin_e",
+            "heart_healthy"
+        ]
+    },
+    {
+        "id": "walnuts",
+        "name": "Walnuts",
+        "name_hindi": "अखरोट",
+        "category": "nuts",
+        "per_100g": {
+            "calories": 654,
+            "protein": 15,
+            "carbs": 14,
+            "fats": 65,
+            "fiber": 7,
+            "omega3_mg": 9080,
+            "magnesium_mg": 158,
+            "zinc_mg": 3.1
+        },
+        "household_portions": [
+            {
+                "name": "handful",
+                "grams": 28,
+                "calories": 183
+            }
+        ],
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "highest_omega3_nut",
+            "brain_health"
+        ]
+    },
+    {
+        "id": "cashews",
+        "name": "Cashews",
+        "name_hindi": "काजू",
+        "category": "nuts",
+        "per_100g": {
+            "calories": 553,
+            "protein": 18,
+            "carbs": 30,
+            "fats": 44,
+            "fiber": 3.3,
+            "iron_mg": 6.7,
+            "magnesium_mg": 292,
+            "zinc_mg": 5.8
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "iron_rich",
+            "magnesium"
+        ]
+    },
+    {
+        "id": "peanuts",
+        "name": "Peanuts",
+        "name_hindi": "मूंगफली",
+        "category": "nuts",
+        "per_100g": {
+            "calories": 567,
+            "protein": 26,
+            "carbs": 16,
+            "fats": 49,
+            "fiber": 8.5,
+            "iron_mg": 4.6,
+            "magnesium_mg": 168
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg"
+        ],
+        "jain_forbidden": true,
+        "benefits": [
+            "high_protein",
+            "affordable"
+        ]
+    },
+    {
+        "id": "flaxseeds",
+        "name": "Flaxseeds (Alsi)",
+        "name_hindi": "अलसी",
+        "category": "seeds",
+        "per_100g": {
+            "calories": 534,
+            "protein": 18,
+            "carbs": 29,
+            "fats": 42,
+            "fiber": 27,
+            "omega3_mg": 22800,
+            "magnesium_mg": 392
+        },
+        "household_portions": [
+            {
+                "name": "tablespoon",
+                "grams": 10,
+                "calories": 53
+            }
+        ],
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "highest_plant_omega3",
+            "fiber"
+        ]
+    },
+    {
+        "id": "chia_seeds",
+        "name": "Chia Seeds",
+        "name_hindi": "चिया बीज",
+        "category": "seeds",
+        "per_100g": {
+            "calories": 486,
+            "protein": 17,
+            "carbs": 42,
+            "fats": 31,
+            "fiber": 34,
+            "omega3_mg": 17800,
+            "calcium_mg": 631,
+            "iron_mg": 7.7
+        },
+        "household_portions": [
+            {
+                "name": "tablespoon",
+                "grams": 12,
+                "calories": 58
+            }
+        ],
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "omega3",
+            "calcium_rich",
+            "fiber"
+        ]
+    },
+    {
+        "id": "pumpkin_seeds",
+        "name": "Pumpkin Seeds",
+        "name_hindi": "कद्दू के बीज",
+        "category": "seeds",
+        "per_100g": {
+            "calories": 559,
+            "protein": 30,
+            "carbs": 11,
+            "fats": 49,
+            "fiber": 6,
+            "zinc_mg": 7.8,
+            "magnesium_mg": 592,
+            "iron_mg": 8.8
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "highest_zinc",
+            "prostate_health"
+        ]
+    },
+    {
+        "id": "sunflower_seeds",
+        "name": "Sunflower Seeds",
+        "name_hindi": "सूरजमुखी बीज",
+        "category": "seeds",
+        "per_100g": {
+            "calories": 584,
+            "protein": 21,
+            "carbs": 20,
+            "fats": 51,
+            "fiber": 8.6,
+            "vitamin_e_mg": 35,
+            "magnesium_mg": 325,
+            "selenium_mcg": 53
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "vitamin_e",
+            "selenium"
+        ]
+    },
+    {
+        "id": "makhana",
+        "name": "Makhana (Fox Nuts)",
+        "name_hindi": "मखाना",
+        "category": "snacks",
+        "per_100g": {
+            "calories": 347,
+            "protein": 9.7,
+            "carbs": 77,
+            "fats": 0.1,
+            "fiber": 14.5,
+            "calcium_mg": 60,
+            "iron_mg": 1.4
+        },
+        "household_portions": [
+            {
+                "name": "cup",
+                "grams": 30,
+                "calories": 104
+            }
+        ],
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "low_fat",
+            "fasting_food"
+        ]
+    }
+]

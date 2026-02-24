@@ -1,0 +1,1109 @@
+[
+    {
+        "id": "rice_white",
+        "name": "White Rice (Cooked)",
+        "name_hindi": "सफेद चावल",
+        "category": "grains",
+        "per_100g": {
+            "calories": 130,
+            "protein": 2.7,
+            "carbs": 28,
+            "fats": 0.3,
+            "fiber": 0.4
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "digestibility": "easy",
+        "glycemic_index": "high"
+    },
+    {
+        "id": "rice_brown",
+        "name": "Brown Rice (Cooked)",
+        "name_hindi": "ब्राउन चावल",
+        "category": "grains",
+        "per_100g": {
+            "calories": 112,
+            "protein": 2.6,
+            "carbs": 24,
+            "fats": 0.9,
+            "fiber": 1.8
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "digestibility": "moderate",
+        "glycemic_index": "medium"
+    },
+    {
+        "id": "roti_wheat",
+        "name": "Wheat Roti",
+        "name_hindi": "गेहूं की रोटी",
+        "category": "grains",
+        "per_100g": {
+            "calories": 297,
+            "protein": 9.8,
+            "carbs": 56,
+            "fats": 3.7,
+            "fiber": 9.1
+        },
+        "per_piece": {
+            "grams": 30,
+            "calories": 89,
+            "protein": 2.9,
+            "carbs": 16.8,
+            "fats": 1.1
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "lunch",
+            "dinner"
+        ],
+        "digestibility": "moderate"
+    },
+    {
+        "id": "dal_moong",
+        "name": "Moong Dal (Cooked)",
+        "name_hindi": "मूंग दाल",
+        "category": "legumes",
+        "per_100g": {
+            "calories": 105,
+            "protein": 7.5,
+            "carbs": 17,
+            "fats": 0.5,
+            "fiber": 4
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "digestibility": "easy",
+        "protein_quality": "high"
+    },
+    {
+        "id": "dal_toor",
+        "name": "Toor Dal (Cooked)",
+        "name_hindi": "तूर दाल",
+        "category": "legumes",
+        "per_100g": {
+            "calories": 120,
+            "protein": 7,
+            "carbs": 20,
+            "fats": 0.5,
+            "fiber": 5
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "digestibility": "moderate"
+    },
+    {
+        "id": "dal_chana",
+        "name": "Chana Dal (Cooked)",
+        "name_hindi": "चना दाल",
+        "category": "legumes",
+        "per_100g": {
+            "calories": 130,
+            "protein": 8,
+            "carbs": 22,
+            "fats": 1.5,
+            "fiber": 5
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "digestibility": "moderate"
+    },
+    {
+        "id": "paneer",
+        "name": "Paneer (Cottage Cheese)",
+        "name_hindi": "पनीर",
+        "category": "dairy",
+        "per_100g": {
+            "calories": 265,
+            "protein": 18,
+            "carbs": 3,
+            "fats": 21,
+            "fiber": 0
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "lunch",
+            "dinner",
+            "snack"
+        ],
+        "digestibility": "moderate",
+        "protein_quality": "complete"
+    },
+    {
+        "id": "curd",
+        "name": "Curd/Yogurt",
+        "name_hindi": "दही",
+        "category": "dairy",
+        "per_100g": {
+            "calories": 60,
+            "protein": 3.5,
+            "carbs": 5,
+            "fats": 3.3,
+            "fiber": 0
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "lunch",
+            "dinner",
+            "snack"
+        ],
+        "digestibility": "easy",
+        "probiotic": true
+    },
+    {
+        "id": "milk_full",
+        "name": "Full Fat Milk",
+        "name_hindi": "दूध",
+        "category": "dairy",
+        "per_100g": {
+            "calories": 62,
+            "protein": 3.2,
+            "carbs": 4.8,
+            "fats": 3.3,
+            "fiber": 0
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack"
+        ],
+        "digestibility": "moderate"
+    },
+    {
+        "id": "milk_toned",
+        "name": "Toned Milk",
+        "name_hindi": "टोंड दूध",
+        "category": "dairy",
+        "per_100g": {
+            "calories": 42,
+            "protein": 3,
+            "carbs": 4.8,
+            "fats": 1.5,
+            "fiber": 0
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack"
+        ],
+        "digestibility": "moderate"
+    },
+    {
+        "id": "egg_whole",
+        "name": "Whole Egg (Boiled)",
+        "name_hindi": "अंडा",
+        "category": "protein",
+        "per_100g": {
+            "calories": 155,
+            "protein": 13,
+            "carbs": 1.1,
+            "fats": 11,
+            "fiber": 0
+        },
+        "per_piece": {
+            "grams": 50,
+            "calories": 78,
+            "protein": 6.5,
+            "carbs": 0.5,
+            "fats": 5.5
+        },
+        "diet_types": [
+            "nonveg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "lunch",
+            "snack"
+        ],
+        "digestibility": "easy",
+        "protein_quality": "complete"
+    },
+    {
+        "id": "egg_white",
+        "name": "Egg White",
+        "name_hindi": "अंडे का सफेद",
+        "category": "protein",
+        "per_100g": {
+            "calories": 52,
+            "protein": 11,
+            "carbs": 0.7,
+            "fats": 0.2,
+            "fiber": 0
+        },
+        "per_piece": {
+            "grams": 33,
+            "calories": 17,
+            "protein": 3.6,
+            "carbs": 0.2,
+            "fats": 0.1
+        },
+        "diet_types": [
+            "nonveg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "lunch",
+            "snack"
+        ],
+        "digestibility": "easy",
+        "protein_quality": "complete"
+    },
+    {
+        "id": "chicken_breast",
+        "name": "Chicken Breast (Grilled)",
+        "name_hindi": "चिकन ब्रेस्ट",
+        "category": "protein",
+        "per_100g": {
+            "calories": 165,
+            "protein": 31,
+            "carbs": 0,
+            "fats": 3.6,
+            "fiber": 0
+        },
+        "diet_types": [
+            "nonveg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "digestibility": "moderate",
+        "protein_quality": "complete"
+    },
+    {
+        "id": "chicken_thigh",
+        "name": "Chicken Thigh",
+        "name_hindi": "चिकन थाई",
+        "category": "protein",
+        "per_100g": {
+            "calories": 209,
+            "protein": 26,
+            "carbs": 0,
+            "fats": 11,
+            "fiber": 0
+        },
+        "diet_types": [
+            "nonveg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "digestibility": "moderate",
+        "protein_quality": "complete"
+    },
+    {
+        "id": "fish_rohu",
+        "name": "Rohu Fish",
+        "name_hindi": "रोहू मछली",
+        "category": "protein",
+        "per_100g": {
+            "calories": 97,
+            "protein": 17,
+            "carbs": 0,
+            "fats": 3,
+            "fiber": 0
+        },
+        "diet_types": [
+            "nonveg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "digestibility": "easy",
+        "omega3": true
+    },
+    {
+        "id": "soyabean_chunks",
+        "name": "Soya Chunks (Cooked)",
+        "name_hindi": "सोया चंक्स",
+        "category": "protein",
+        "per_100g": {
+            "calories": 345,
+            "protein": 52,
+            "carbs": 33,
+            "fats": 0.5,
+            "fiber": 13
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "digestibility": "moderate",
+        "protein_quality": "high"
+    },
+    {
+        "id": "tofu",
+        "name": "Tofu",
+        "name_hindi": "टोफू",
+        "category": "protein",
+        "per_100g": {
+            "calories": 76,
+            "protein": 8,
+            "carbs": 1.9,
+            "fats": 4.8,
+            "fiber": 0.3
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "digestibility": "easy",
+        "protein_quality": "complete"
+    },
+    {
+        "id": "banana",
+        "name": "Banana",
+        "name_hindi": "केला",
+        "category": "fruits",
+        "per_100g": {
+            "calories": 89,
+            "protein": 1.1,
+            "carbs": 23,
+            "fats": 0.3,
+            "fiber": 2.6
+        },
+        "per_piece": {
+            "grams": 120,
+            "calories": 107,
+            "protein": 1.3,
+            "carbs": 27,
+            "fats": 0.4
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack",
+            "pre_workout"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "apple",
+        "name": "Apple",
+        "name_hindi": "सेब",
+        "category": "fruits",
+        "per_100g": {
+            "calories": 52,
+            "protein": 0.3,
+            "carbs": 14,
+            "fats": 0.2,
+            "fiber": 2.4
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "spinach",
+        "name": "Spinach (Cooked)",
+        "name_hindi": "पालक",
+        "category": "vegetables",
+        "per_100g": {
+            "calories": 23,
+            "protein": 2.9,
+            "carbs": 3.6,
+            "fats": 0.4,
+            "fiber": 2.2
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "digestibility": "easy",
+        "iron_rich": true
+    },
+    {
+        "id": "broccoli",
+        "name": "Broccoli",
+        "name_hindi": "ब्रोकली",
+        "category": "vegetables",
+        "per_100g": {
+            "calories": 35,
+            "protein": 2.4,
+            "carbs": 7,
+            "fats": 0.4,
+            "fiber": 2.6
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "digestibility": "moderate"
+    },
+    {
+        "id": "cucumber",
+        "name": "Cucumber",
+        "name_hindi": "खीरा",
+        "category": "vegetables",
+        "per_100g": {
+            "calories": 15,
+            "protein": 0.7,
+            "carbs": 3.6,
+            "fats": 0.1,
+            "fiber": 0.5
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner",
+            "snack"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "tomato",
+        "name": "Tomato",
+        "name_hindi": "टमाटर",
+        "category": "vegetables",
+        "per_100g": {
+            "calories": 18,
+            "protein": 0.9,
+            "carbs": 3.9,
+            "fats": 0.2,
+            "fiber": 1.2
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "almonds",
+        "name": "Almonds",
+        "name_hindi": "बादाम",
+        "category": "nuts",
+        "per_100g": {
+            "calories": 579,
+            "protein": 21,
+            "carbs": 22,
+            "fats": 50,
+            "fiber": 12
+        },
+        "per_piece": {
+            "grams": 1.2,
+            "calories": 7,
+            "protein": 0.25,
+            "carbs": 0.26,
+            "fats": 0.6
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack"
+        ],
+        "digestibility": "moderate"
+    },
+    {
+        "id": "walnuts",
+        "name": "Walnuts",
+        "name_hindi": "अखरोट",
+        "category": "nuts",
+        "per_100g": {
+            "calories": 654,
+            "protein": 15,
+            "carbs": 14,
+            "fats": 65,
+            "fiber": 7
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack"
+        ],
+        "digestibility": "moderate",
+        "omega3": true
+    },
+    {
+        "id": "oats",
+        "name": "Oats (Cooked)",
+        "name_hindi": "ओट्स",
+        "category": "grains",
+        "per_100g": {
+            "calories": 71,
+            "protein": 2.5,
+            "carbs": 12,
+            "fats": 1.5,
+            "fiber": 1.7
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "breakfast"
+        ],
+        "digestibility": "easy",
+        "glycemic_index": "low"
+    },
+    {
+        "id": "ghee",
+        "name": "Ghee",
+        "name_hindi": "घी",
+        "category": "fats",
+        "per_100g": {
+            "calories": 900,
+            "protein": 0,
+            "carbs": 0,
+            "fats": 100,
+            "fiber": 0
+        },
+        "per_tsp": {
+            "grams": 5,
+            "calories": 45,
+            "protein": 0,
+            "carbs": 0,
+            "fats": 5
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "lunch",
+            "dinner"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "coconut_oil",
+        "name": "Coconut Oil",
+        "name_hindi": "नारियल तेल",
+        "category": "fats",
+        "per_100g": {
+            "calories": 862,
+            "protein": 0,
+            "carbs": 0,
+            "fats": 100,
+            "fiber": 0
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "lunch",
+            "dinner"
+        ]
+    },
+    {
+        "id": "whey_protein",
+        "name": "Whey Protein",
+        "name_hindi": "व्हे प्रोटीन",
+        "category": "supplements",
+        "per_100g": {
+            "calories": 380,
+            "protein": 80,
+            "carbs": 8,
+            "fats": 4,
+            "fiber": 0
+        },
+        "per_scoop": {
+            "grams": 30,
+            "calories": 114,
+            "protein": 24,
+            "carbs": 2.4,
+            "fats": 1.2
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "post_workout",
+            "snack"
+        ],
+        "protein_quality": "complete"
+    },
+    {
+        "id": "idli",
+        "name": "Idli",
+        "name_hindi": "इडली",
+        "category": "grains",
+        "per_100g": {
+            "calories": 58,
+            "protein": 2.1,
+            "carbs": 11,
+            "fats": 0.4,
+            "fiber": 0.8
+        },
+        "per_piece": {
+            "grams": 40,
+            "calories": 23,
+            "protein": 0.8,
+            "carbs": 4.4,
+            "fats": 0.2
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg"
+        ],
+        "jain_note": "fermented_check",
+        "meal_suitability": [
+            "breakfast"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "dosa",
+        "name": "Plain Dosa",
+        "name_hindi": "डोसा",
+        "category": "grains",
+        "per_100g": {
+            "calories": 168,
+            "protein": 3.9,
+            "carbs": 28,
+            "fats": 4.7,
+            "fiber": 1.5
+        },
+        "per_piece": {
+            "grams": 75,
+            "calories": 126,
+            "protein": 2.9,
+            "carbs": 21,
+            "fats": 3.5
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg"
+        ],
+        "jain_note": "fermented_check",
+        "meal_suitability": [
+            "breakfast",
+            "dinner"
+        ],
+        "digestibility": "moderate"
+    },
+    {
+        "id": "upma",
+        "name": "Upma",
+        "name_hindi": "उपमा",
+        "category": "grains",
+        "per_100g": {
+            "calories": 115,
+            "protein": 3.5,
+            "carbs": 18,
+            "fats": 3.5,
+            "fiber": 2
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "breakfast"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "poha",
+        "name": "Poha",
+        "name_hindi": "पोहा",
+        "category": "grains",
+        "per_100g": {
+            "calories": 110,
+            "protein": 2.5,
+            "carbs": 22,
+            "fats": 1.5,
+            "fiber": 1
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "breakfast"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "rajma",
+        "name": "Rajma (Kidney Beans)",
+        "name_hindi": "राजमा",
+        "category": "legumes",
+        "per_100g": {
+            "calories": 127,
+            "protein": 8.7,
+            "carbs": 23,
+            "fats": 0.5,
+            "fiber": 6.4
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "digestibility": "moderate"
+    },
+    {
+        "id": "chole",
+        "name": "Chole (Chickpeas)",
+        "name_hindi": "छोले",
+        "category": "legumes",
+        "per_100g": {
+            "calories": 164,
+            "protein": 9,
+            "carbs": 27,
+            "fats": 2.6,
+            "fiber": 8
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "digestibility": "moderate"
+    },
+    {
+        "id": "sprouts_moong",
+        "name": "Moong Sprouts",
+        "name_hindi": "मूंग अंकुरित",
+        "category": "legumes",
+        "per_100g": {
+            "calories": 31,
+            "protein": 3,
+            "carbs": 6,
+            "fats": 0.2,
+            "fiber": 1.8
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "sweet_potato",
+        "name": "Sweet Potato",
+        "name_hindi": "शकरकंद",
+        "category": "vegetables",
+        "per_100g": {
+            "calories": 86,
+            "protein": 1.6,
+            "carbs": 20,
+            "fats": 0.1,
+            "fiber": 3
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg"
+        ],
+        "jain_forbidden": true,
+        "meal_suitability": [
+            "breakfast",
+            "pre_workout"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "makhana",
+        "name": "Makhana (Fox Nuts)",
+        "name_hindi": "मखाना",
+        "category": "snacks",
+        "per_100g": {
+            "calories": 347,
+            "protein": 9.7,
+            "carbs": 77,
+            "fats": 0.1,
+            "fiber": 14.5
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "snack"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "dates",
+        "name": "Dates",
+        "name_hindi": "खजूर",
+        "category": "fruits",
+        "per_100g": {
+            "calories": 282,
+            "protein": 2.5,
+            "carbs": 75,
+            "fats": 0.4,
+            "fiber": 8
+        },
+        "per_piece": {
+            "grams": 8,
+            "calories": 23,
+            "protein": 0.2,
+            "carbs": 6,
+            "fats": 0
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack",
+            "pre_workout"
+        ],
+        "digestibility": "easy"
+    },
+    {
+        "id": "sattu",
+        "name": "Sattu",
+        "name_hindi": "सत्तू",
+        "category": "grains",
+        "per_100g": {
+            "calories": 406,
+            "protein": 25,
+            "carbs": 65,
+            "fats": 5.8,
+            "fiber": 7
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack"
+        ],
+        "digestibility": "easy",
+        "protein_quality": "moderate"
+    },
+    {
+        "id": "flaxseeds",
+        "name": "Flaxseeds",
+        "name_hindi": "अलसी",
+        "category": "seeds",
+        "per_100g": {
+            "calories": 534,
+            "protein": 18,
+            "carbs": 29,
+            "fats": 42,
+            "fiber": 27
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack"
+        ],
+        "omega3": true
+    },
+    {
+        "id": "chia_seeds",
+        "name": "Chia Seeds",
+        "name_hindi": "चिया बीज",
+        "category": "seeds",
+        "per_100g": {
+            "calories": 486,
+            "protein": 17,
+            "carbs": 42,
+            "fats": 31,
+            "fiber": 34
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "snack"
+        ],
+        "omega3": true
+    },
+    {
+        "id": "pumpkin_seeds",
+        "name": "Pumpkin Seeds",
+        "name_hindi": "कद्दू के बीज",
+        "category": "seeds",
+        "per_100g": {
+            "calories": 559,
+            "protein": 30,
+            "carbs": 11,
+            "fats": 49,
+            "fiber": 6
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg",
+            "jain"
+        ],
+        "meal_suitability": [
+            "snack"
+        ],
+        "zinc_rich": true
+    }
+]

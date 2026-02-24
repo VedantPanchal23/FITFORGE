@@ -1,0 +1,453 @@
+[
+    {
+        "id": "chicken_breast_raw",
+        "name": "Chicken Breast (Raw)",
+        "name_hindi": "चिकन ब्रेस्ट",
+        "category": "protein",
+        "state": "raw",
+        "per_100g": {
+            "calories": 120,
+            "protein": 23,
+            "carbs": 0,
+            "fats": 2.6,
+            "fiber": 0,
+            "iron_mg": 0.4,
+            "zinc_mg": 0.7,
+            "vitamin_b12_mcg": 0.3,
+            "vitamin_b6_mg": 0.6
+        },
+        "diet_types": [
+            "nonveg"
+        ]
+    },
+    {
+        "id": "chicken_breast_grilled",
+        "name": "Chicken Breast (Grilled)",
+        "name_hindi": "चिकन ब्रेस्ट (ग्रिल्ड)",
+        "category": "protein",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 165,
+            "protein": 31,
+            "carbs": 0,
+            "fats": 3.6,
+            "fiber": 0,
+            "iron_mg": 0.5,
+            "zinc_mg": 0.9,
+            "vitamin_b12_mcg": 0.3,
+            "vitamin_b6_mg": 0.6
+        },
+        "household_portions": [
+            {
+                "name": "piece",
+                "grams": 85,
+                "description": "palm-sized"
+            },
+            {
+                "name": "large_piece",
+                "grams": 150
+            }
+        ],
+        "diet_types": [
+            "nonveg"
+        ],
+        "benefits": [
+            "lean_protein",
+            "low_fat"
+        ]
+    },
+    {
+        "id": "chicken_curry",
+        "name": "Chicken Curry",
+        "name_hindi": "चिकन करी",
+        "category": "protein",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 180,
+            "protein": 18,
+            "carbs": 6,
+            "fats": 10,
+            "fiber": 1,
+            "iron_mg": 1.2,
+            "zinc_mg": 2
+        },
+        "household_portions": [
+            {
+                "name": "katori",
+                "grams": 150
+            }
+        ],
+        "diet_types": [
+            "nonveg"
+        ],
+        "jain_forbidden": true
+    },
+    {
+        "id": "chicken_thigh",
+        "name": "Chicken Thigh",
+        "name_hindi": "चिकन थाई",
+        "category": "protein",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 209,
+            "protein": 26,
+            "carbs": 0,
+            "fats": 11,
+            "fiber": 0,
+            "iron_mg": 0.9,
+            "zinc_mg": 2.4
+        },
+        "diet_types": [
+            "nonveg"
+        ]
+    },
+    {
+        "id": "egg_whole_boiled",
+        "name": "Whole Egg (Boiled)",
+        "name_hindi": "उबला अंडा",
+        "category": "protein",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 155,
+            "protein": 13,
+            "carbs": 1.1,
+            "fats": 11,
+            "fiber": 0,
+            "iron_mg": 1.2,
+            "zinc_mg": 1.1,
+            "vitamin_b12_mcg": 1.1,
+            "vitamin_d_mcg": 2,
+            "vitamin_a_mcg": 140,
+            "selenium_mcg": 30,
+            "choline_mg": 294
+        },
+        "per_piece": {
+            "grams": 50,
+            "calories": 78,
+            "protein": 6.5,
+            "carbs": 0.5,
+            "fats": 5.5
+        },
+        "diet_types": [
+            "nonveg",
+            "veg_egg"
+        ],
+        "benefits": [
+            "complete_protein",
+            "vitamin_d",
+            "choline"
+        ]
+    },
+    {
+        "id": "egg_white_boiled",
+        "name": "Egg White (Boiled)",
+        "name_hindi": "अंडे का सफेद भाग",
+        "category": "protein",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 52,
+            "protein": 11,
+            "carbs": 0.7,
+            "fats": 0.2,
+            "fiber": 0,
+            "iron_mg": 0.1,
+            "zinc_mg": 0.03
+        },
+        "per_piece": {
+            "grams": 33,
+            "calories": 17,
+            "protein": 3.6,
+            "carbs": 0.2,
+            "fats": 0.1
+        },
+        "diet_types": [
+            "nonveg",
+            "veg_egg"
+        ],
+        "benefits": [
+            "pure_protein",
+            "zero_fat"
+        ]
+    },
+    {
+        "id": "egg_omelette",
+        "name": "Egg Omelette",
+        "name_hindi": "अंडा ऑमलेट",
+        "category": "protein",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 180,
+            "protein": 11,
+            "carbs": 1.5,
+            "fats": 14,
+            "fiber": 0
+        },
+        "per_piece": {
+            "grams": 60,
+            "calories": 108,
+            "protein": 6.6,
+            "fats": 8.4,
+            "description": "1 egg omelette"
+        },
+        "diet_types": [
+            "nonveg",
+            "veg_egg"
+        ]
+    },
+    {
+        "id": "fish_rohu",
+        "name": "Rohu Fish",
+        "name_hindi": "रोहू मछली",
+        "category": "protein",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 97,
+            "protein": 17,
+            "carbs": 0,
+            "fats": 3,
+            "fiber": 0,
+            "iron_mg": 0.6,
+            "zinc_mg": 0.8,
+            "omega3_mg": 400,
+            "vitamin_b12_mcg": 2
+        },
+        "household_portions": [
+            {
+                "name": "piece",
+                "grams": 100
+            }
+        ],
+        "diet_types": [
+            "nonveg"
+        ],
+        "benefits": [
+            "omega3",
+            "lean_protein"
+        ]
+    },
+    {
+        "id": "fish_pomfret",
+        "name": "Pomfret",
+        "name_hindi": "पापलेट",
+        "category": "protein",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 120,
+            "protein": 20,
+            "carbs": 0,
+            "fats": 4.5,
+            "fiber": 0,
+            "omega3_mg": 350,
+            "vitamin_b12_mcg": 1.5
+        },
+        "diet_types": [
+            "nonveg"
+        ],
+        "benefits": [
+            "omega3"
+        ]
+    },
+    {
+        "id": "fish_salmon",
+        "name": "Salmon",
+        "name_hindi": "सालमन",
+        "category": "protein",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 208,
+            "protein": 20,
+            "carbs": 0,
+            "fats": 13,
+            "fiber": 0,
+            "omega3_mg": 2260,
+            "vitamin_d_mcg": 11,
+            "vitamin_b12_mcg": 3.2
+        },
+        "diet_types": [
+            "nonveg"
+        ],
+        "benefits": [
+            "highest_omega3",
+            "vitamin_d"
+        ]
+    },
+    {
+        "id": "fish_sardine",
+        "name": "Sardine",
+        "name_hindi": "सार्डिन",
+        "category": "protein",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 208,
+            "protein": 25,
+            "carbs": 0,
+            "fats": 11,
+            "fiber": 0,
+            "iron_mg": 2.9,
+            "calcium_mg": 382,
+            "omega3_mg": 1480,
+            "vitamin_b12_mcg": 8.9
+        },
+        "diet_types": [
+            "nonveg"
+        ],
+        "benefits": [
+            "omega3",
+            "calcium_rich",
+            "iron_rich"
+        ]
+    },
+    {
+        "id": "prawns",
+        "name": "Prawns/Shrimp",
+        "name_hindi": "झींगा",
+        "category": "protein",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 99,
+            "protein": 24,
+            "carbs": 0.2,
+            "fats": 0.3,
+            "fiber": 0,
+            "iron_mg": 2.4,
+            "zinc_mg": 1.3,
+            "selenium_mcg": 40
+        },
+        "diet_types": [
+            "nonveg"
+        ],
+        "benefits": [
+            "very_lean",
+            "selenium_rich"
+        ]
+    },
+    {
+        "id": "mutton_curry",
+        "name": "Mutton Curry",
+        "name_hindi": "मटन करी",
+        "category": "protein",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 230,
+            "protein": 18,
+            "carbs": 5,
+            "fats": 15,
+            "fiber": 0.5,
+            "iron_mg": 2.5,
+            "zinc_mg": 4.5,
+            "vitamin_b12_mcg": 2.6
+        },
+        "household_portions": [
+            {
+                "name": "katori",
+                "grams": 150
+            }
+        ],
+        "diet_types": [
+            "nonveg"
+        ],
+        "jain_forbidden": true,
+        "benefits": [
+            "iron_rich",
+            "zinc_rich"
+        ]
+    },
+    {
+        "id": "paneer",
+        "name": "Paneer (Cottage Cheese)",
+        "name_hindi": "पनीर",
+        "category": "protein",
+        "per_100g": {
+            "calories": 265,
+            "protein": 18,
+            "carbs": 3,
+            "fats": 21,
+            "fiber": 0,
+            "calcium_mg": 480,
+            "zinc_mg": 2.7,
+            "vitamin_b12_mcg": 0.8,
+            "vitamin_a_mcg": 165
+        },
+        "household_portions": [
+            {
+                "name": "piece",
+                "grams": 40,
+                "description": "1 cube"
+            },
+            {
+                "name": "katori",
+                "grams": 100
+            }
+        ],
+        "diet_types": [
+            "veg",
+            "veg_egg",
+            "jain"
+        ],
+        "benefits": [
+            "complete_protein",
+            "calcium_rich"
+        ]
+    },
+    {
+        "id": "paneer_bhurji",
+        "name": "Paneer Bhurji",
+        "name_hindi": "पनीर भुर्जी",
+        "category": "protein",
+        "state": "cooked",
+        "per_100g": {
+            "calories": 290,
+            "protein": 16,
+            "carbs": 6,
+            "fats": 22,
+            "fiber": 1,
+            "calcium_mg": 350
+        },
+        "household_portions": [
+            {
+                "name": "katori",
+                "grams": 120
+            }
+        ],
+        "diet_types": [
+            "veg",
+            "veg_egg"
+        ],
+        "jain_forbidden": true
+    },
+    {
+        "id": "whey_protein",
+        "name": "Whey Protein",
+        "name_hindi": "व्हे प्रोटीन",
+        "category": "supplements",
+        "per_100g": {
+            "calories": 380,
+            "protein": 80,
+            "carbs": 8,
+            "fats": 4,
+            "fiber": 0,
+            "calcium_mg": 500
+        },
+        "per_scoop": {
+            "grams": 30,
+            "calories": 114,
+            "protein": 24,
+            "carbs": 2.4,
+            "fats": 1.2
+        },
+        "diet_types": [
+            "veg",
+            "nonveg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "post_workout",
+            "snack"
+        ],
+        "benefits": [
+            "fast_absorbing",
+            "complete_aminos"
+        ]
+    }
+]

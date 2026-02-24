@@ -1,0 +1,802 @@
+[
+    {
+        "id": "whey_protein",
+        "name": "Whey Protein",
+        "name_hindi": "व्हे प्रोटीन",
+        "category": "sports_nutrition",
+        "type": "protein_supplement",
+        "best_time": [
+            "post_workout",
+            "morning",
+            "between_meals"
+        ],
+        "timing_notes": "Best within 30 mins post-workout or as meal replacement",
+        "with_food": "optional",
+        "empty_stomach_allowed": true,
+        "dosage": {
+            "beginner": "20-25g",
+            "intermediate": "25-30g",
+            "advanced": "30-40g",
+            "max_daily": "2 scoops"
+        },
+        "benefits": [
+            "Muscle protein synthesis",
+            "Recovery",
+            "Convenient protein source"
+        ],
+        "avoid_with": [],
+        "synergy_with": [
+            "creatine",
+            "bcaa"
+        ],
+        "side_effects": [
+            "Bloating in lactose intolerant",
+            "Acne in some"
+        ],
+        "notes": "Choose isolate if lactose intolerant. Can be mixed with milk or water.",
+        "vegetarian": true,
+        "jain_suitable": false,
+        "indian_brands": [
+            "MuscleBlaze",
+            "Optimum Nutrition",
+            "MyProtein",
+            "AS-IT-IS"
+        ],
+        "price_range_inr": "1500-4000 per kg"
+    },
+    {
+        "id": "creatine",
+        "name": "Creatine Monohydrate",
+        "name_hindi": "क्रिएटिन",
+        "category": "sports_nutrition",
+        "type": "performance_supplement",
+        "best_time": [
+            "post_workout",
+            "with_meal"
+        ],
+        "timing_notes": "Timing is flexible. Consistency matters more than timing.",
+        "with_food": "recommended",
+        "empty_stomach_allowed": true,
+        "dosage": {
+            "loading_phase": "20g daily for 5-7 days (optional)",
+            "maintenance": "3-5g daily",
+            "max_daily": "5g"
+        },
+        "benefits": [
+            "Increased strength",
+            "Muscle volume",
+            "Better recovery",
+            "Enhanced ATP production"
+        ],
+        "avoid_with": [
+            "caffeine_high_doses"
+        ],
+        "synergy_with": [
+            "whey_protein",
+            "carbs"
+        ],
+        "side_effects": [
+            "Water retention",
+            "Slight weight gain"
+        ],
+        "notes": "Most researched supplement. Micronized form mixes better. Stay well hydrated.",
+        "vegetarian": true,
+        "jain_suitable": true,
+        "indian_brands": [
+            "MuscleBlaze",
+            "AS-IT-IS",
+            "Optimum Nutrition",
+            "HealthKart"
+        ],
+        "price_range_inr": "400-800 for 250g"
+    },
+    {
+        "id": "vitamin_d3",
+        "name": "Vitamin D3",
+        "name_hindi": "विटामिन डी3",
+        "category": "vitamin",
+        "type": "essential_vitamin",
+        "best_time": [
+            "with_breakfast",
+            "with_meal"
+        ],
+        "timing_notes": "Take with fatty meal for better absorption",
+        "with_food": "required",
+        "empty_stomach_allowed": false,
+        "dosage": {
+            "deficiency": "60,000 IU weekly (doctor supervised)",
+            "maintenance": "1000-2000 IU daily",
+            "max_daily": "4000 IU"
+        },
+        "benefits": [
+            "Bone health",
+            "Immune function",
+            "Mood regulation",
+            "Muscle function"
+        ],
+        "avoid_with": [],
+        "synergy_with": [
+            "vitamin_k2",
+            "calcium",
+            "magnesium"
+        ],
+        "side_effects": [
+            "Toxicity at very high doses"
+        ],
+        "notes": "Very common deficiency in India. Get blood test to check levels. Take with K2 for best results.",
+        "vegetarian": true,
+        "jain_suitable": true,
+        "indian_brands": [
+            "HealthKart",
+            "Cipla",
+            "Mankind",
+            "Sun Pharma"
+        ],
+        "price_range_inr": "150-400 for 60 caps"
+    },
+    {
+        "id": "vitamin_b12",
+        "name": "Vitamin B12",
+        "name_hindi": "विटामिन बी12",
+        "category": "vitamin",
+        "type": "essential_vitamin",
+        "best_time": [
+            "morning",
+            "with_breakfast"
+        ],
+        "timing_notes": "Morning preferred as it can affect sleep if taken late",
+        "with_food": "optional",
+        "empty_stomach_allowed": true,
+        "dosage": {
+            "deficiency": "1000-2000 mcg daily",
+            "maintenance": "250-500 mcg daily",
+            "max_daily": "2000 mcg"
+        },
+        "benefits": [
+            "Energy production",
+            "Nervous system health",
+            "Red blood cell formation",
+            "Brain function"
+        ],
+        "avoid_with": [],
+        "synergy_with": [
+            "folate",
+            "iron"
+        ],
+        "side_effects": [
+            "Generally safe even at high doses"
+        ],
+        "notes": "Essential for vegetarians/vegans. Methylcobalamin form is better absorbed.",
+        "vegetarian": true,
+        "jain_suitable": true,
+        "indian_brands": [
+            "HealthKart",
+            "Himalaya",
+            "NOW Foods",
+            "Nature Made"
+        ],
+        "price_range_inr": "200-500 for 60 caps"
+    },
+    {
+        "id": "omega_3",
+        "name": "Omega-3 Fish Oil",
+        "name_hindi": "ओमेगा-3 फिश ऑयल",
+        "category": "essential_fats",
+        "type": "fatty_acid",
+        "best_time": [
+            "with_meal"
+        ],
+        "timing_notes": "Take with largest meal of the day for best absorption",
+        "with_food": "required",
+        "empty_stomach_allowed": false,
+        "dosage": {
+            "general": "1000-2000mg EPA+DHA daily",
+            "therapeutic": "2000-4000mg daily",
+            "max_daily": "4000mg EPA+DHA"
+        },
+        "benefits": [
+            "Heart health",
+            "Brain function",
+            "Reduced inflammation",
+            "Joint health"
+        ],
+        "avoid_with": [
+            "blood_thinners"
+        ],
+        "synergy_with": [
+            "vitamin_d3",
+            "vitamin_e"
+        ],
+        "side_effects": [
+            "Fishy burps",
+            "Mild GI upset"
+        ],
+        "notes": "Look for high EPA+DHA content. Store in refrigerator. Vegetarians can use algae-based.",
+        "vegetarian": false,
+        "jain_suitable": false,
+        "indian_brands": [
+            "HealthKart",
+            "MuscleBlaze",
+            "Himalaya",
+            "Nature Made"
+        ],
+        "price_range_inr": "500-1500 for 60 caps"
+    },
+    {
+        "id": "omega_3_veg",
+        "name": "Algae Omega-3 (Veg)",
+        "name_hindi": "शाकाहारी ओमेगा-3",
+        "category": "essential_fats",
+        "type": "fatty_acid",
+        "best_time": [
+            "with_meal"
+        ],
+        "timing_notes": "Take with largest meal containing fats",
+        "with_food": "required",
+        "empty_stomach_allowed": false,
+        "dosage": {
+            "general": "500-1000mg DHA daily",
+            "max_daily": "2000mg"
+        },
+        "benefits": [
+            "Brain health",
+            "Heart health",
+            "Eye health"
+        ],
+        "avoid_with": [
+            "blood_thinners"
+        ],
+        "synergy_with": [
+            "vitamin_d3"
+        ],
+        "side_effects": [
+            "Mild GI upset possible"
+        ],
+        "notes": "Vegetarian/vegan alternative to fish oil. Sourced from algae.",
+        "vegetarian": true,
+        "jain_suitable": true,
+        "indian_brands": [
+            "Naturewise",
+            "iwi",
+            "Nordic Naturals"
+        ],
+        "price_range_inr": "1000-2500 for 60 caps"
+    },
+    {
+        "id": "zinc",
+        "name": "Zinc",
+        "name_hindi": "जिंक",
+        "category": "mineral",
+        "type": "essential_mineral",
+        "best_time": [
+            "with_dinner",
+            "before_bed"
+        ],
+        "timing_notes": "Take 1-2 hours away from meals containing phytates (grains, legumes)",
+        "with_food": "optional",
+        "empty_stomach_allowed": false,
+        "dosage": {
+            "men": "11-15mg daily",
+            "women": "8-12mg daily",
+            "max_daily": "40mg"
+        },
+        "benefits": [
+            "Immune function",
+            "Testosterone support",
+            "Wound healing",
+            "Protein synthesis"
+        ],
+        "avoid_with": [
+            "iron",
+            "calcium"
+        ],
+        "synergy_with": [
+            "magnesium",
+            "vitamin_b6"
+        ],
+        "side_effects": [
+            "Nausea if taken on empty stomach",
+            "Copper depletion with long-term use"
+        ],
+        "notes": "Don't take with iron or calcium supplements. Zinc picolinate/citrate better absorbed.",
+        "vegetarian": true,
+        "jain_suitable": true,
+        "indian_brands": [
+            "HealthKart",
+            "NOW Foods",
+            "Thorne",
+            "Himalaya"
+        ],
+        "price_range_inr": "150-400 for 60 caps"
+    },
+    {
+        "id": "magnesium",
+        "name": "Magnesium",
+        "name_hindi": "मैग्नीशियम",
+        "category": "mineral",
+        "type": "essential_mineral",
+        "best_time": [
+            "before_bed",
+            "with_dinner"
+        ],
+        "timing_notes": "Evening/bedtime is ideal for sleep benefits",
+        "with_food": "optional",
+        "empty_stomach_allowed": true,
+        "dosage": {
+            "men": "400-420mg daily",
+            "women": "310-320mg daily",
+            "max_daily": "500mg from supplements"
+        },
+        "benefits": [
+            "Muscle relaxation",
+            "Sleep quality",
+            "Energy production",
+            "Stress reduction"
+        ],
+        "avoid_with": [],
+        "synergy_with": [
+            "zinc",
+            "vitamin_d3",
+            "calcium"
+        ],
+        "side_effects": [
+            "Loose stools at high doses",
+            "Drowsiness"
+        ],
+        "notes": "Glycinate form is best for sleep and absorption. Citrate good for constipation.",
+        "vegetarian": true,
+        "jain_suitable": true,
+        "indian_brands": [
+            "HealthKart",
+            "NOW Foods",
+            "Doctor's Best",
+            "BiOptimizers"
+        ],
+        "price_range_inr": "300-800 for 60 caps"
+    },
+    {
+        "id": "iron",
+        "name": "Iron",
+        "name_hindi": "आयरन",
+        "category": "mineral",
+        "type": "essential_mineral",
+        "best_time": [
+            "empty_stomach_morning",
+            "between_meals"
+        ],
+        "timing_notes": "Best absorbed on empty stomach. Take 2 hours away from meals.",
+        "with_food": "avoid_if_possible",
+        "empty_stomach_allowed": true,
+        "dosage": {
+            "deficiency": "100-200mg daily (doctor supervised)",
+            "maintenance_women": "18mg daily",
+            "maintenance_men": "8mg daily",
+            "max_daily": "45mg (without supervision)"
+        },
+        "benefits": [
+            "Red blood cell production",
+            "Oxygen transport",
+            "Energy levels",
+            "Cognitive function"
+        ],
+        "avoid_with": [
+            "calcium",
+            "zinc",
+            "coffee",
+            "tea",
+            "dairy"
+        ],
+        "synergy_with": [
+            "vitamin_c"
+        ],
+        "side_effects": [
+            "Constipation",
+            "Nausea",
+            "Dark stools"
+        ],
+        "notes": "Take with Vitamin C for better absorption. Avoid with tea/coffee. Women pre-menopause often deficient.",
+        "vegetarian": true,
+        "jain_suitable": true,
+        "indian_brands": [
+            "Mankind Ferrazone",
+            "HealthKart",
+            "Himalaya",
+            "NOW Foods"
+        ],
+        "price_range_inr": "150-350 for 60 caps"
+    },
+    {
+        "id": "calcium",
+        "name": "Calcium",
+        "name_hindi": "कैल्शियम",
+        "category": "mineral",
+        "type": "essential_mineral",
+        "best_time": [
+            "with_meals"
+        ],
+        "timing_notes": "Split doses (500mg at a time max) for better absorption",
+        "with_food": "required",
+        "empty_stomach_allowed": false,
+        "dosage": {
+            "general": "500-1000mg daily",
+            "max_daily": "2500mg"
+        },
+        "benefits": [
+            "Bone health",
+            "Muscle function",
+            "Nerve transmission"
+        ],
+        "avoid_with": [
+            "iron",
+            "zinc"
+        ],
+        "synergy_with": [
+            "vitamin_d3",
+            "vitamin_k2",
+            "magnesium"
+        ],
+        "side_effects": [
+            "Constipation",
+            "Kidney stones at very high doses"
+        ],
+        "notes": "Citrate form better absorbed than carbonate. Always take with Vitamin D3.",
+        "vegetarian": true,
+        "jain_suitable": true,
+        "indian_brands": [
+            "Himalaya",
+            "HealthKart",
+            "Mankind",
+            "Abbott"
+        ],
+        "price_range_inr": "200-500 for 60 tablets"
+    },
+    {
+        "id": "multivitamin",
+        "name": "Multivitamin",
+        "name_hindi": "मल्टीविटामिन",
+        "category": "vitamin",
+        "type": "comprehensive",
+        "best_time": [
+            "with_breakfast"
+        ],
+        "timing_notes": "Take with first meal of the day",
+        "with_food": "required",
+        "empty_stomach_allowed": false,
+        "dosage": {
+            "general": "1 tablet daily",
+            "max_daily": "As per label"
+        },
+        "benefits": [
+            "Fill nutritional gaps",
+            "General health support",
+            "Energy",
+            "Immune support"
+        ],
+        "avoid_with": [],
+        "synergy_with": [
+            "omega_3"
+        ],
+        "side_effects": [
+            "Nausea if taken on empty stomach",
+            "May cause bright yellow urine"
+        ],
+        "notes": "Choose gender-specific formula. Look for methylated B vitamins. Not a substitute for whole foods.",
+        "vegetarian": true,
+        "jain_suitable": true,
+        "indian_brands": [
+            "HealthKart",
+            "Centrum",
+            "Supradyn",
+            "MuscleBlaze Daily"
+        ],
+        "price_range_inr": "400-1200 for 60 tablets"
+    },
+    {
+        "id": "ashwagandha",
+        "name": "Ashwagandha",
+        "name_hindi": "अश्वगंधा",
+        "category": "herbal",
+        "type": "adaptogen",
+        "best_time": [
+            "morning",
+            "before_bed"
+        ],
+        "timing_notes": "Morning for energy, or bedtime for sleep. Can split dose.",
+        "with_food": "recommended",
+        "empty_stomach_allowed": true,
+        "dosage": {
+            "general": "300-600mg daily",
+            "ksm_66": "300mg twice daily",
+            "max_daily": "1200mg"
+        },
+        "benefits": [
+            "Stress reduction",
+            "Cortisol management",
+            "Sleep quality",
+            "Muscle recovery",
+            "Testosterone support"
+        ],
+        "avoid_with": [
+            "thyroid_medication"
+        ],
+        "synergy_with": [
+            "rhodiola",
+            "magnesium"
+        ],
+        "side_effects": [
+            "Drowsiness",
+            "Mild stomach upset",
+            "May lower blood pressure"
+        ],
+        "notes": "KSM-66 and Sensoril are standardized extracts. Traditional Indian herb. Avoid during pregnancy.",
+        "vegetarian": true,
+        "jain_suitable": true,
+        "indian_brands": [
+            "Himalaya",
+            "Dabur",
+            "Kapiva",
+            "Organic India"
+        ],
+        "price_range_inr": "200-600 for 60 caps"
+    },
+    {
+        "id": "bcaa",
+        "name": "BCAA (Branched Chain Amino Acids)",
+        "name_hindi": "बीसीएए",
+        "category": "sports_nutrition",
+        "type": "amino_acids",
+        "best_time": [
+            "during_workout",
+            "pre_workout",
+            "post_workout"
+        ],
+        "timing_notes": "Best during training or between meals. Less needed if eating enough protein.",
+        "with_food": "optional",
+        "empty_stomach_allowed": true,
+        "dosage": {
+            "general": "5-10g per serving",
+            "intra_workout": "10g",
+            "max_daily": "20g"
+        },
+        "benefits": [
+            "Reduces muscle breakdown",
+            "Endurance",
+            "Recovery support"
+        ],
+        "avoid_with": [],
+        "synergy_with": [
+            "whey_protein",
+            "creatine"
+        ],
+        "side_effects": [
+            "Generally well tolerated"
+        ],
+        "notes": "Useful during fasted training or long workouts. Less important if protein intake is adequate.",
+        "vegetarian": true,
+        "jain_suitable": true,
+        "indian_brands": [
+            "MuscleBlaze",
+            "Scivation Xtend",
+            "ON",
+            "AS-IT-IS"
+        ],
+        "price_range_inr": "800-2000 for 300g"
+    },
+    {
+        "id": "vitamin_c",
+        "name": "Vitamin C",
+        "name_hindi": "विटामिन सी",
+        "category": "vitamin",
+        "type": "antioxidant",
+        "best_time": [
+            "morning",
+            "with_meals"
+        ],
+        "timing_notes": "Can take any time. Split large doses for better absorption.",
+        "with_food": "optional",
+        "empty_stomach_allowed": true,
+        "dosage": {
+            "general": "500-1000mg daily",
+            "immune_boost": "1000-2000mg daily",
+            "max_daily": "2000mg"
+        },
+        "benefits": [
+            "Immune support",
+            "Antioxidant",
+            "Collagen production",
+            "Iron absorption"
+        ],
+        "avoid_with": [],
+        "synergy_with": [
+            "iron",
+            "vitamin_e"
+        ],
+        "side_effects": [
+            "GI upset at high doses",
+            "Loose stools"
+        ],
+        "notes": "Take with iron supplements for better absorption. Ester-C is gentler on stomach.",
+        "vegetarian": true,
+        "jain_suitable": true,
+        "indian_brands": [
+            "Limcee",
+            "Celin",
+            "HealthKart",
+            "NOW Foods"
+        ],
+        "price_range_inr": "100-300 for 60 tablets"
+    },
+    {
+        "id": "vitamin_k2",
+        "name": "Vitamin K2",
+        "name_hindi": "विटामिन के2",
+        "category": "vitamin",
+        "type": "essential_vitamin",
+        "best_time": [
+            "with_meal",
+            "with_vitamin_d"
+        ],
+        "timing_notes": "Take with Vitamin D3 and a fatty meal",
+        "with_food": "required",
+        "empty_stomach_allowed": false,
+        "dosage": {
+            "general": "100-200mcg daily",
+            "max_daily": "300mcg"
+        },
+        "benefits": [
+            "Directs calcium to bones",
+            "Arterial health",
+            "Works with D3"
+        ],
+        "avoid_with": [
+            "blood_thinners"
+        ],
+        "synergy_with": [
+            "vitamin_d3",
+            "calcium"
+        ],
+        "side_effects": [
+            "Generally safe"
+        ],
+        "notes": "MK-7 form is best. Essential companion to Vitamin D3. Helps prevent calcium deposits in arteries.",
+        "vegetarian": true,
+        "jain_suitable": true,
+        "indian_brands": [
+            "HealthKart",
+            "NOW Foods",
+            "Life Extension",
+            "Thorne"
+        ],
+        "price_range_inr": "400-900 for 60 caps"
+    },
+    {
+        "id": "melatonin",
+        "name": "Melatonin",
+        "name_hindi": "मेलाटोनिन",
+        "category": "sleep",
+        "type": "hormone",
+        "best_time": [
+            "before_bed"
+        ],
+        "timing_notes": "30-60 minutes before sleep",
+        "with_food": "optional",
+        "empty_stomach_allowed": true,
+        "dosage": {
+            "general": "0.5-3mg",
+            "jet_lag": "3-5mg",
+            "max_daily": "5mg"
+        },
+        "benefits": [
+            "Sleep onset",
+            "Jet lag recovery",
+            "Sleep quality"
+        ],
+        "avoid_with": [
+            "sedatives",
+            "blood_pressure_meds"
+        ],
+        "synergy_with": [
+            "magnesium"
+        ],
+        "side_effects": [
+            "Grogginess",
+            "Vivid dreams",
+            "Headache possible"
+        ],
+        "notes": "Start with lowest dose. Use short-term only. Not for every night use.",
+        "vegetarian": true,
+        "jain_suitable": true,
+        "indian_brands": [
+            "HealthKart",
+            "Himalaya (Tagara)",
+            "NOW Foods",
+            "Natrol"
+        ],
+        "price_range_inr": "300-600 for 60 caps"
+    },
+    {
+        "id": "probiotics",
+        "name": "Probiotics",
+        "name_hindi": "प्रोबायोटिक्स",
+        "category": "gut_health",
+        "type": "beneficial_bacteria",
+        "best_time": [
+            "with_breakfast",
+            "morning"
+        ],
+        "timing_notes": "Take with first meal of the day on a semi-empty stomach",
+        "with_food": "preferred",
+        "empty_stomach_allowed": true,
+        "dosage": {
+            "general": "10-50 billion CFU daily",
+            "max_daily": "100 billion CFU"
+        },
+        "benefits": [
+            "Gut health",
+            "Digestion",
+            "Immune support",
+            "Nutrient absorption"
+        ],
+        "avoid_with": [],
+        "synergy_with": [
+            "prebiotics",
+            "fiber"
+        ],
+        "side_effects": [
+            "Initial bloating",
+            "Gas (usually temporary)"
+        ],
+        "notes": "Look for multiple strains. Store according to label (some need refrigeration).",
+        "vegetarian": true,
+        "jain_suitable": true,
+        "indian_brands": [
+            "Yakult",
+            "Darolac",
+            "Sporlac",
+            "HealthKart"
+        ],
+        "price_range_inr": "300-800 for 30 caps"
+    },
+    {
+        "id": "glutamine",
+        "name": "L-Glutamine",
+        "name_hindi": "ग्लूटामीन",
+        "category": "sports_nutrition",
+        "type": "amino_acid",
+        "best_time": [
+            "post_workout",
+            "before_bed"
+        ],
+        "timing_notes": "Post-workout or before bed for recovery",
+        "with_food": "optional",
+        "empty_stomach_allowed": true,
+        "dosage": {
+            "general": "5g daily",
+            "intense_training": "10g daily (split doses)",
+            "max_daily": "10g"
+        },
+        "benefits": [
+            "Gut health",
+            "Recovery",
+            "Immune support during intense training"
+        ],
+        "avoid_with": [],
+        "synergy_with": [
+            "whey_protein",
+            "bcaa"
+        ],
+        "side_effects": [
+            "Generally well tolerated"
+        ],
+        "notes": "Unflavored powder mixes easily. Useful during intense training phases.",
+        "vegetarian": true,
+        "jain_suitable": true,
+        "indian_brands": [
+            "MuscleBlaze",
+            "AS-IT-IS",
+            "NOW Foods",
+            "Optimum Nutrition"
+        ],
+        "price_range_inr": "600-1200 for 250g"
+    }
+]

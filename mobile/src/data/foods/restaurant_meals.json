@@ -1,0 +1,1193 @@
+[
+    {
+        "id": "paneer_butter_masala",
+        "name": "Paneer Butter Masala",
+        "name_hindi": "पनीर बटर मसाला",
+        "category": "restaurant",
+        "restaurant_type": "north_indian",
+        "per_100g": {
+            "calories": 220,
+            "protein": 10,
+            "carbs": 12,
+            "fats": 15,
+            "fiber": 1
+        },
+        "per_serving": {
+            "grams": 200,
+            "calories": 440,
+            "protein": 20,
+            "carbs": 24,
+            "fats": 30
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "cost_inr": 200,
+        "tags": [
+            "restaurant",
+            "north_indian",
+            "high_protein",
+            "rich"
+        ],
+        "portion_tip": "Ask for less butter/cream",
+        "healthier_swap": "paneer_tikka"
+    },
+    {
+        "id": "dal_makhani",
+        "name": "Dal Makhani",
+        "name_hindi": "दाल मखनी",
+        "category": "restaurant",
+        "restaurant_type": "north_indian",
+        "per_100g": {
+            "calories": 130,
+            "protein": 6,
+            "carbs": 12,
+            "fats": 7,
+            "fiber": 3
+        },
+        "per_serving": {
+            "grams": 200,
+            "calories": 260,
+            "protein": 12,
+            "carbs": 24,
+            "fats": 14
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "cost_inr": 180,
+        "tags": [
+            "restaurant",
+            "north_indian",
+            "high_protein",
+            "comfort"
+        ],
+        "portion_tip": "High calorie due to butter - moderate portion",
+        "jain_note": "not_suitable"
+    },
+    {
+        "id": "palak_paneer",
+        "name": "Palak Paneer",
+        "name_hindi": "पालक पनीर",
+        "category": "restaurant",
+        "restaurant_type": "north_indian",
+        "per_100g": {
+            "calories": 165,
+            "protein": 9,
+            "carbs": 7,
+            "fats": 12,
+            "fiber": 2
+        },
+        "per_serving": {
+            "grams": 200,
+            "calories": 330,
+            "protein": 18,
+            "carbs": 14,
+            "fats": 24
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "cost_inr": 190,
+        "tags": [
+            "restaurant",
+            "north_indian",
+            "high_protein",
+            "iron_rich"
+        ],
+        "portion_tip": "Good choice - iron rich greens"
+    },
+    {
+        "id": "chole_bhature",
+        "name": "Chole Bhature",
+        "name_hindi": "छोले भटूरे",
+        "category": "restaurant",
+        "restaurant_type": "north_indian",
+        "per_100g": {
+            "calories": 280,
+            "protein": 7,
+            "carbs": 35,
+            "fats": 13,
+            "fiber": 4
+        },
+        "per_serving": {
+            "grams": 350,
+            "calories": 980,
+            "protein": 25,
+            "carbs": 123,
+            "fats": 46
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "lunch"
+        ],
+        "cost_inr": 120,
+        "tags": [
+            "restaurant",
+            "north_indian",
+            "heavy",
+            "indulgence"
+        ],
+        "portion_tip": "Very high calorie - occasional treat only",
+        "healthier_swap": "chole_rice",
+        "jain_note": "not_suitable"
+    },
+    {
+        "id": "butter_naan",
+        "name": "Butter Naan",
+        "name_hindi": "बटर नान",
+        "category": "restaurant",
+        "restaurant_type": "north_indian",
+        "per_100g": {
+            "calories": 320,
+            "protein": 8,
+            "carbs": 48,
+            "fats": 11,
+            "fiber": 2
+        },
+        "per_serving": {
+            "grams": 80,
+            "calories": 256,
+            "protein": 6,
+            "carbs": 38,
+            "fats": 9
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "cost_inr": 50,
+        "tags": [
+            "restaurant",
+            "bread",
+            "north_indian"
+        ],
+        "portion_tip": "Limit to 1-2. Ask for tandoori roti instead"
+    },
+    {
+        "id": "tandoori_roti",
+        "name": "Tandoori Roti",
+        "name_hindi": "तंदूरी रोटी",
+        "category": "restaurant",
+        "restaurant_type": "north_indian",
+        "per_100g": {
+            "calories": 260,
+            "protein": 8,
+            "carbs": 50,
+            "fats": 3,
+            "fiber": 3
+        },
+        "per_serving": {
+            "grams": 50,
+            "calories": 130,
+            "protein": 4,
+            "carbs": 25,
+            "fats": 2
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "cost_inr": 30,
+        "tags": [
+            "restaurant",
+            "bread",
+            "north_indian",
+            "healthy_choice"
+        ],
+        "portion_tip": "Better choice than naan"
+    },
+    {
+        "id": "chicken_tikka",
+        "name": "Chicken Tikka",
+        "name_hindi": "चिकन टिक्का",
+        "category": "restaurant",
+        "restaurant_type": "north_indian",
+        "per_100g": {
+            "calories": 180,
+            "protein": 25,
+            "carbs": 5,
+            "fats": 7,
+            "fiber": 0.5
+        },
+        "per_serving": {
+            "grams": 200,
+            "calories": 360,
+            "protein": 50,
+            "carbs": 10,
+            "fats": 14
+        },
+        "diet_types": [
+            "nonveg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "cost_inr": 280,
+        "tags": [
+            "restaurant",
+            "high_protein",
+            "low_carb",
+            "grilled",
+            "healthy_choice"
+        ]
+    },
+    {
+        "id": "butter_chicken",
+        "name": "Butter Chicken",
+        "name_hindi": "बटर चिकन",
+        "category": "restaurant",
+        "restaurant_type": "north_indian",
+        "per_100g": {
+            "calories": 195,
+            "protein": 14,
+            "carbs": 8,
+            "fats": 12,
+            "fiber": 1
+        },
+        "per_serving": {
+            "grams": 250,
+            "calories": 488,
+            "protein": 35,
+            "carbs": 20,
+            "fats": 30
+        },
+        "diet_types": [
+            "nonveg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "cost_inr": 300,
+        "tags": [
+            "restaurant",
+            "high_protein",
+            "rich",
+            "north_indian"
+        ],
+        "portion_tip": "High fat - moderate gravy intake",
+        "healthier_swap": "chicken_tikka"
+    },
+    {
+        "id": "tandoori_chicken",
+        "name": "Tandoori Chicken (Half)",
+        "name_hindi": "तंदूरी चिकन",
+        "category": "restaurant",
+        "restaurant_type": "north_indian",
+        "per_100g": {
+            "calories": 165,
+            "protein": 26,
+            "carbs": 3,
+            "fats": 6,
+            "fiber": 0
+        },
+        "per_serving": {
+            "grams": 300,
+            "calories": 495,
+            "protein": 78,
+            "carbs": 9,
+            "fats": 18
+        },
+        "diet_types": [
+            "nonveg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "cost_inr": 250,
+        "tags": [
+            "restaurant",
+            "high_protein",
+            "grilled",
+            "healthy_choice",
+            "keto_friendly"
+        ]
+    },
+    {
+        "id": "fish_tikka",
+        "name": "Fish Tikka",
+        "name_hindi": "फिश टिक्का",
+        "category": "restaurant",
+        "restaurant_type": "north_indian",
+        "per_100g": {
+            "calories": 140,
+            "protein": 22,
+            "carbs": 4,
+            "fats": 4,
+            "fiber": 0
+        },
+        "per_serving": {
+            "grams": 200,
+            "calories": 280,
+            "protein": 44,
+            "carbs": 8,
+            "fats": 8
+        },
+        "diet_types": [
+            "nonveg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "cost_inr": 320,
+        "tags": [
+            "restaurant",
+            "high_protein",
+            "low_fat",
+            "grilled",
+            "omega3",
+            "healthy_choice"
+        ]
+    },
+    {
+        "id": "biryani_veg",
+        "name": "Veg Biryani",
+        "name_hindi": "वेज बिरयानी",
+        "category": "restaurant",
+        "restaurant_type": "mughlai",
+        "per_100g": {
+            "calories": 180,
+            "protein": 4,
+            "carbs": 28,
+            "fats": 6,
+            "fiber": 2
+        },
+        "per_serving": {
+            "grams": 350,
+            "calories": 630,
+            "protein": 14,
+            "carbs": 98,
+            "fats": 21
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "cost_inr": 200,
+        "tags": [
+            "restaurant",
+            "mughlai",
+            "complete_meal",
+            "rice_based"
+        ],
+        "portion_tip": "High carb - consider half portion",
+        "jain_note": "not_suitable"
+    },
+    {
+        "id": "biryani_chicken",
+        "name": "Chicken Biryani",
+        "name_hindi": "चिकन बिरयानी",
+        "category": "restaurant",
+        "restaurant_type": "mughlai",
+        "per_100g": {
+            "calories": 195,
+            "protein": 10,
+            "carbs": 22,
+            "fats": 8,
+            "fiber": 1
+        },
+        "per_serving": {
+            "grams": 400,
+            "calories": 780,
+            "protein": 40,
+            "carbs": 88,
+            "fats": 32
+        },
+        "diet_types": [
+            "nonveg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "cost_inr": 280,
+        "tags": [
+            "restaurant",
+            "mughlai",
+            "high_protein",
+            "complete_meal"
+        ],
+        "portion_tip": "Very calorie dense - consider sharing"
+    },
+    {
+        "id": "dosa_masala",
+        "name": "Masala Dosa",
+        "name_hindi": "मसाला डोसा",
+        "category": "restaurant",
+        "restaurant_type": "south_indian",
+        "per_100g": {
+            "calories": 165,
+            "protein": 4,
+            "carbs": 25,
+            "fats": 6,
+            "fiber": 2
+        },
+        "per_serving": {
+            "grams": 200,
+            "calories": 330,
+            "protein": 8,
+            "carbs": 50,
+            "fats": 12
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "lunch",
+            "dinner"
+        ],
+        "cost_inr": 100,
+        "tags": [
+            "restaurant",
+            "south_indian",
+            "fermented"
+        ],
+        "jain_note": "fermented_check"
+    },
+    {
+        "id": "uttapam",
+        "name": "Uttapam",
+        "name_hindi": "उत्तपम",
+        "category": "restaurant",
+        "restaurant_type": "south_indian",
+        "per_100g": {
+            "calories": 145,
+            "protein": 4,
+            "carbs": 22,
+            "fats": 5,
+            "fiber": 2
+        },
+        "per_serving": {
+            "grams": 180,
+            "calories": 261,
+            "protein": 7,
+            "carbs": 40,
+            "fats": 9
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "lunch"
+        ],
+        "cost_inr": 90,
+        "tags": [
+            "restaurant",
+            "south_indian",
+            "healthy_choice"
+        ],
+        "jain_note": "fermented_check"
+    },
+    {
+        "id": "set_dosa",
+        "name": "Set Dosa (3 pcs)",
+        "name_hindi": "सेट डोसा",
+        "category": "restaurant",
+        "restaurant_type": "south_indian",
+        "per_100g": {
+            "calories": 130,
+            "protein": 3,
+            "carbs": 22,
+            "fats": 3.5,
+            "fiber": 1
+        },
+        "per_serving": {
+            "grams": 150,
+            "calories": 195,
+            "protein": 5,
+            "carbs": 33,
+            "fats": 5
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "dinner"
+        ],
+        "cost_inr": 80,
+        "tags": [
+            "restaurant",
+            "south_indian",
+            "light"
+        ],
+        "jain_note": "fermented_check"
+    },
+    {
+        "id": "rava_dosa",
+        "name": "Rava Dosa",
+        "name_hindi": "रवा डोसा",
+        "category": "restaurant",
+        "restaurant_type": "south_indian",
+        "per_100g": {
+            "calories": 180,
+            "protein": 4,
+            "carbs": 26,
+            "fats": 7,
+            "fiber": 1
+        },
+        "per_serving": {
+            "grams": 150,
+            "calories": 270,
+            "protein": 6,
+            "carbs": 39,
+            "fats": 11
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "breakfast",
+            "lunch",
+            "dinner"
+        ],
+        "cost_inr": 110,
+        "tags": [
+            "restaurant",
+            "south_indian",
+            "crispy"
+        ],
+        "jain_note": "typically_suitable"
+    },
+    {
+        "id": "thali_veg",
+        "name": "Veg Thali",
+        "name_hindi": "वेज थाली",
+        "category": "restaurant",
+        "restaurant_type": "indian",
+        "per_100g": {
+            "calories": 135,
+            "protein": 5,
+            "carbs": 18,
+            "fats": 5,
+            "fiber": 3
+        },
+        "per_serving": {
+            "grams": 600,
+            "calories": 810,
+            "protein": 30,
+            "carbs": 108,
+            "fats": 30
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "cost_inr": 180,
+        "tags": [
+            "restaurant",
+            "balanced",
+            "complete_meal",
+            "variety"
+        ],
+        "portion_tip": "Take extra roti instead of rice for lower GI",
+        "jain_note": "check_individual_items"
+    },
+    {
+        "id": "thali_nonveg",
+        "name": "Non-Veg Thali",
+        "name_hindi": "नॉन वेज थाली",
+        "category": "restaurant",
+        "restaurant_type": "indian",
+        "per_100g": {
+            "calories": 155,
+            "protein": 8,
+            "carbs": 16,
+            "fats": 7,
+            "fiber": 2
+        },
+        "per_serving": {
+            "grams": 650,
+            "calories": 1008,
+            "protein": 52,
+            "carbs": 104,
+            "fats": 46
+        },
+        "diet_types": [
+            "nonveg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "cost_inr": 250,
+        "tags": [
+            "restaurant",
+            "high_protein",
+            "complete_meal"
+        ],
+        "portion_tip": "Skip the sweet item to reduce calories"
+    },
+    {
+        "id": "pav_bhaji",
+        "name": "Pav Bhaji",
+        "name_hindi": "पाव भाजी",
+        "category": "restaurant",
+        "restaurant_type": "mumbai",
+        "per_100g": {
+            "calories": 195,
+            "protein": 5,
+            "carbs": 28,
+            "fats": 8,
+            "fiber": 3
+        },
+        "per_serving": {
+            "grams": 350,
+            "calories": 683,
+            "protein": 18,
+            "carbs": 98,
+            "fats": 28
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "cost_inr": 120,
+        "tags": [
+            "restaurant",
+            "mumbai",
+            "street_food_style"
+        ],
+        "portion_tip": "Ask for less butter on pav",
+        "jain_note": "not_suitable"
+    },
+    {
+        "id": "paneer_tikka",
+        "name": "Paneer Tikka",
+        "name_hindi": "पनीर टिक्का",
+        "category": "restaurant",
+        "restaurant_type": "north_indian",
+        "per_100g": {
+            "calories": 250,
+            "protein": 16,
+            "carbs": 8,
+            "fats": 18,
+            "fiber": 1
+        },
+        "per_serving": {
+            "grams": 200,
+            "calories": 500,
+            "protein": 32,
+            "carbs": 16,
+            "fats": 36
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner",
+            "snack"
+        ],
+        "cost_inr": 220,
+        "tags": [
+            "restaurant",
+            "high_protein",
+            "grilled",
+            "healthy_choice",
+            "keto_friendly"
+        ]
+    },
+    {
+        "id": "chinese_veg_manchurian",
+        "name": "Veg Manchurian",
+        "name_hindi": "वेज मंचूरियन",
+        "category": "restaurant",
+        "restaurant_type": "indo_chinese",
+        "per_100g": {
+            "calories": 185,
+            "protein": 5,
+            "carbs": 22,
+            "fats": 9,
+            "fiber": 2
+        },
+        "per_serving": {
+            "grams": 200,
+            "calories": 370,
+            "protein": 10,
+            "carbs": 44,
+            "fats": 18
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "cost_inr": 180,
+        "tags": [
+            "restaurant",
+            "indo_chinese",
+            "fried"
+        ],
+        "portion_tip": "Deep fried - occasional treat only",
+        "jain_note": "not_suitable"
+    },
+    {
+        "id": "chinese_fried_rice",
+        "name": "Veg Fried Rice",
+        "name_hindi": "वेज फ्राइड राइस",
+        "category": "restaurant",
+        "restaurant_type": "indo_chinese",
+        "per_100g": {
+            "calories": 165,
+            "protein": 4,
+            "carbs": 26,
+            "fats": 5,
+            "fiber": 1.5
+        },
+        "per_serving": {
+            "grams": 300,
+            "calories": 495,
+            "protein": 12,
+            "carbs": 78,
+            "fats": 15
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "cost_inr": 150,
+        "tags": [
+            "restaurant",
+            "indo_chinese",
+            "rice_based"
+        ],
+        "portion_tip": "Ask for more vegetables, less oil",
+        "jain_note": "not_suitable"
+    },
+    {
+        "id": "chinese_chilli_paneer",
+        "name": "Chilli Paneer",
+        "name_hindi": "चिल्ली पनीर",
+        "category": "restaurant",
+        "restaurant_type": "indo_chinese",
+        "per_100g": {
+            "calories": 230,
+            "protein": 12,
+            "carbs": 15,
+            "fats": 14,
+            "fiber": 1
+        },
+        "per_serving": {
+            "grams": 200,
+            "calories": 460,
+            "protein": 24,
+            "carbs": 30,
+            "fats": 28
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "cost_inr": 200,
+        "tags": [
+            "restaurant",
+            "indo_chinese",
+            "high_protein"
+        ],
+        "portion_tip": "Ask for dry version instead of gravy"
+    },
+    {
+        "id": "pizza_veg",
+        "name": "Veg Pizza (Medium)",
+        "name_hindi": "वेज पिज़्ज़ा",
+        "category": "restaurant",
+        "restaurant_type": "italian",
+        "per_100g": {
+            "calories": 260,
+            "protein": 10,
+            "carbs": 32,
+            "fats": 11,
+            "fiber": 2
+        },
+        "per_serving": {
+            "grams": 300,
+            "calories": 780,
+            "protein": 30,
+            "carbs": 96,
+            "fats": 33
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "cost_inr": 350,
+        "tags": [
+            "restaurant",
+            "italian",
+            "western",
+            "indulgence"
+        ],
+        "portion_tip": "Share or save half for next meal",
+        "jain_note": "check_toppings"
+    },
+    {
+        "id": "pasta_white",
+        "name": "White Sauce Pasta",
+        "name_hindi": "व्हाइट सॉस पास्ता",
+        "category": "restaurant",
+        "restaurant_type": "italian",
+        "per_100g": {
+            "calories": 175,
+            "protein": 6,
+            "carbs": 22,
+            "fats": 7,
+            "fiber": 1.5
+        },
+        "per_serving": {
+            "grams": 300,
+            "calories": 525,
+            "protein": 18,
+            "carbs": 66,
+            "fats": 21
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "cost_inr": 250,
+        "tags": [
+            "restaurant",
+            "italian",
+            "western",
+            "creamy"
+        ],
+        "healthier_swap": "pasta_red"
+    },
+    {
+        "id": "pasta_red",
+        "name": "Red Sauce Pasta",
+        "name_hindi": "रेड सॉस पास्ता",
+        "category": "restaurant",
+        "restaurant_type": "italian",
+        "per_100g": {
+            "calories": 140,
+            "protein": 5,
+            "carbs": 24,
+            "fats": 3,
+            "fiber": 2
+        },
+        "per_serving": {
+            "grams": 300,
+            "calories": 420,
+            "protein": 15,
+            "carbs": 72,
+            "fats": 9
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "cost_inr": 220,
+        "tags": [
+            "restaurant",
+            "italian",
+            "western",
+            "healthy_choice"
+        ],
+        "portion_tip": "Better choice than white/pink sauce"
+    },
+    {
+        "id": "burger_veg",
+        "name": "Veg Burger",
+        "name_hindi": "वेज बर्गर",
+        "category": "restaurant",
+        "restaurant_type": "fast_food",
+        "per_100g": {
+            "calories": 235,
+            "protein": 8,
+            "carbs": 28,
+            "fats": 10,
+            "fiber": 2
+        },
+        "per_serving": {
+            "grams": 200,
+            "calories": 470,
+            "protein": 16,
+            "carbs": 56,
+            "fats": 20
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "cost_inr": 150,
+        "tags": [
+            "restaurant",
+            "fast_food",
+            "western"
+        ],
+        "portion_tip": "Skip fries or share",
+        "jain_note": "not_suitable"
+    },
+    {
+        "id": "wrap_chicken",
+        "name": "Chicken Wrap",
+        "name_hindi": "चिकन रैप",
+        "category": "restaurant",
+        "restaurant_type": "fast_food",
+        "per_100g": {
+            "calories": 210,
+            "protein": 14,
+            "carbs": 20,
+            "fats": 8,
+            "fiber": 2
+        },
+        "per_serving": {
+            "grams": 200,
+            "calories": 420,
+            "protein": 28,
+            "carbs": 40,
+            "fats": 16
+        },
+        "diet_types": [
+            "nonveg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "cost_inr": 180,
+        "tags": [
+            "restaurant",
+            "fast_food",
+            "high_protein",
+            "portable"
+        ],
+        "portion_tip": "Better choice than burger with fries"
+    },
+    {
+        "id": "salad_caesar",
+        "name": "Caesar Salad",
+        "name_hindi": "सीज़र सलाद",
+        "category": "restaurant",
+        "restaurant_type": "continental",
+        "per_100g": {
+            "calories": 95,
+            "protein": 4,
+            "carbs": 6,
+            "fats": 6,
+            "fiber": 2
+        },
+        "per_serving": {
+            "grams": 250,
+            "calories": 238,
+            "protein": 10,
+            "carbs": 15,
+            "fats": 15
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "cost_inr": 220,
+        "tags": [
+            "restaurant",
+            "salad",
+            "low_carb",
+            "healthy_choice"
+        ],
+        "portion_tip": "Ask for dressing on the side",
+        "jain_note": "typically_suitable"
+    },
+    {
+        "id": "grilled_fish",
+        "name": "Grilled Fish with Veggies",
+        "name_hindi": "ग्रिल्ड फिश",
+        "category": "restaurant",
+        "restaurant_type": "continental",
+        "per_100g": {
+            "calories": 120,
+            "protein": 20,
+            "carbs": 4,
+            "fats": 3,
+            "fiber": 1
+        },
+        "per_serving": {
+            "grams": 300,
+            "calories": 360,
+            "protein": 60,
+            "carbs": 12,
+            "fats": 9
+        },
+        "diet_types": [
+            "nonveg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "cost_inr": 400,
+        "tags": [
+            "restaurant",
+            "high_protein",
+            "low_carb",
+            "omega3",
+            "healthy_choice",
+            "keto_friendly"
+        ]
+    },
+    {
+        "id": "soup_tomato",
+        "name": "Tomato Soup",
+        "name_hindi": "टमाटर सूप",
+        "category": "restaurant",
+        "restaurant_type": "continental",
+        "per_100g": {
+            "calories": 45,
+            "protein": 1,
+            "carbs": 8,
+            "fats": 1,
+            "fiber": 1
+        },
+        "per_serving": {
+            "grams": 250,
+            "calories": 113,
+            "protein": 3,
+            "carbs": 20,
+            "fats": 3
+        },
+        "diet_types": [
+            "veg",
+            "jain",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "cost_inr": 100,
+        "tags": [
+            "restaurant",
+            "soup",
+            "light",
+            "starter"
+        ],
+        "portion_tip": "Good starter - fills you up before main"
+    },
+    {
+        "id": "soup_sweet_corn",
+        "name": "Sweet Corn Soup",
+        "name_hindi": "स्वीट कॉर्न सूप",
+        "category": "restaurant",
+        "restaurant_type": "indo_chinese",
+        "per_100g": {
+            "calories": 55,
+            "protein": 2,
+            "carbs": 10,
+            "fats": 1,
+            "fiber": 1
+        },
+        "per_serving": {
+            "grams": 250,
+            "calories": 138,
+            "protein": 5,
+            "carbs": 25,
+            "fats": 3
+        },
+        "diet_types": [
+            "veg",
+            "veg_egg"
+        ],
+        "meal_suitability": [
+            "lunch",
+            "dinner"
+        ],
+        "cost_inr": 90,
+        "tags": [
+            "restaurant",
+            "soup",
+            "indo_chinese",
+            "light"
+        ],
+        "jain_note": "typically_suitable"
+    }
+]
