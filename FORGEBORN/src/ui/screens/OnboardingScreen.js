@@ -106,11 +106,11 @@ const OnboardingScreen = ({ onComplete }) => {
     const [age, setAge] = useState('');
     const [weight, setWeight] = useState('');
     const [height, setHeight] = useState('');
-    const [fitnessGoal, setFitnessGoal] = useState(null);
+    const [fitnessGoals, setFitnessGoals] = useState([]);
     const [experienceLevel, setExperienceLevel] = useState(null);
     const [trainingDays, setTrainingDays] = useState(5);
     const [wantsCardio, setWantsCardio] = useState(null);
-    const [cardioType, setCardioType] = useState(null);
+    const [cardioTypes, setCardioTypes] = useState([]);
     const [wantsYoga, setWantsYoga] = useState(null);
     const [injuries, setInjuries] = useState([InjuryArea.NONE]);
     const [dietPreference, setDietPreference] = useState(null);
@@ -150,7 +150,7 @@ const OnboardingScreen = ({ onComplete }) => {
             case 0: return name.trim().length >= 2;
             case 1: return gender !== null;
             case 2: return age && weight && height;
-            case 3: return fitnessGoal !== null;
+            case 3: return fitnessGoals.length > 0;
             case 4: return experienceLevel !== null;
             case 5: return trainingDays >= 3 && trainingDays <= 7;
             case 6: return wantsCardio !== null; // must choose yes or no
@@ -169,11 +169,11 @@ const OnboardingScreen = ({ onComplete }) => {
             age: parseInt(age, 10),
             weight: parseFloat(weight),
             height: parseFloat(height),
-            fitnessGoal,
+            fitnessGoal: fitnessGoals,
             experienceLevel,
             trainingDaysPerWeek: trainingDays,
             wantsCardio: wantsCardio === true,
-            cardioType: wantsCardio === true ? cardioType : null,
+            cardioTypes: wantsCardio === true ? cardioTypes : [],
             wantsYoga: wantsYoga === true,
             injuries,
             dietPreference,
@@ -254,7 +254,7 @@ const OnboardingScreen = ({ onComplete }) => {
     const renderStep3_Goal = () => (
         <View style={styles.stepContent}>
             <Text style={styles.stepTitle}>WHAT DO YOU{'\n'}WANT TO BUILD?</Text>
-            <Text style={styles.stepSubtitle}>Choose your path.</Text>
+            <Text style={styles.stepSubtitle}>Choose your path. Select multiple.</Text>
             <ScrollView style={styles.optionsList} showsVerticalScrollIndicator={false} nestedScrollEnabled>
                 {[
                     { key: FitnessGoal.FULL_BODY, label: 'FULL BODY', sub: 'Complete balanced training' },
@@ -272,8 +272,15 @@ const OnboardingScreen = ({ onComplete }) => {
                         key={item.key}
                         label={item.label}
                         sublabel={item.sub}
-                        selected={fitnessGoal === item.key}
-                        onPress={() => { setFitnessGoal(item.key); Vibration.vibrate(30); }}
+                        selected={fitnessGoals.includes(item.key)}
+                        onPress={() => {
+                            Vibration.vibrate(30);
+                            setFitnessGoals(prev =>
+                                prev.includes(item.key)
+                                    ? prev.filter(g => g !== item.key)
+                                    : [...prev, item.key]
+                            );
+                        }}
                     />
                 ))}
                 <View style={{ height: 40 }} />
@@ -357,7 +364,7 @@ const OnboardingScreen = ({ onComplete }) => {
                 <OptionButton
                     label="NO"
                     selected={wantsCardio === false}
-                    onPress={() => { setWantsCardio(false); setCardioType(null); Vibration.vibrate(30); }}
+                    onPress={() => { setWantsCardio(false); setCardioTypes([]); Vibration.vibrate(30); }}
                     containerStyle={styles.toggleButton}
                 />
             </View>
@@ -365,7 +372,7 @@ const OnboardingScreen = ({ onComplete }) => {
             {wantsCardio && (
                 <>
                     <Text style={[styles.stepSubtitle, { marginTop: spacing[4] }]}>
-                        CHOOSE YOUR WEAPON
+                        CHOOSE YOUR WEAPONS (select multiple)
                     </Text>
                     <View style={styles.optionsGrid}>
                         {[
@@ -380,8 +387,15 @@ const OnboardingScreen = ({ onComplete }) => {
                                 key={item.key}
                                 label={item.label}
                                 sublabel={item.sub}
-                                selected={cardioType === item.key}
-                                onPress={() => { setCardioType(item.key); Vibration.vibrate(30); }}
+                                selected={cardioTypes.includes(item.key)}
+                                onPress={() => {
+                                    Vibration.vibrate(30);
+                                    setCardioTypes(prev =>
+                                        prev.includes(item.key)
+                                            ? prev.filter(c => c !== item.key)
+                                            : [...prev, item.key]
+                                    );
+                                }}
                             />
                         ))}
                     </View>
