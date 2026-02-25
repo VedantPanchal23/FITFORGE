@@ -1,24 +1,22 @@
 /**
  * FORGEBORN — APP ENTRY POINT
  * 
- * The system starts here.
- * 
  * Flow:
  * 1. If not committed → Creed Screen
- * 2. If locked (obligation due) → Lock Screen
- * 3. If committed → Main Screen
- * 
- * Commitment is PERMANENT.
- * Lock is INESCAPABLE.
+ * 2. If not onboarded → Onboarding Screen 
+ * 3. If locked (obligation due) → Lock Screen
+ * 4. If committed + onboarded → Main Screen
  */
 
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import CreedScreen from './src/ui/screens/CreedScreen';
+import OnboardingScreen from './src/ui/screens/OnboardingScreen';
 import MainScreen from './src/ui/screens/MainScreen';
 import LockScreen from './src/ui/screens/LockScreen';
 import CreateObligationScreen from './src/ui/screens/CreateObligationScreen';
 import useCommitmentStore from './src/store/commitmentStore';
+import useUserStore from './src/store/userStore';
 import useObligationStore from './src/store/obligationStore';
 import { colors } from './src/ui/theme/colors';
 
@@ -30,41 +28,30 @@ export default function App() {
   const hasCommitted = useCommitmentStore((s) => s.hasCommitted);
   const commit = useCommitmentStore((s) => s.commit);
 
+  // Onboarding state
+  const hasCompletedOnboarding = useUserStore((s) => s.hasCompletedOnboarding);
+
   // Lock state
   const activeLock = useObligationStore((s) => s.activeLock);
   const tick = useObligationStore((s) => s.tick);
 
   useEffect(() => {
-    // Brief loading to hydrate stores
     const timer = setTimeout(() => {
       setIsLoading(false);
-      // Initial tick to check for any pending locks
       tick();
     }, 500);
-
     return () => clearTimeout(timer);
   }, []);
 
   // Tick every second to update obligation statuses
   useEffect(() => {
-    if (!hasCommitted) return;
+    if (!hasCommitted || !hasCompletedOnboarding) return;
 
     const interval = setInterval(() => {
       tick();
     }, 1000);
-
     return () => clearInterval(interval);
-  }, [hasCommitted]);
-
-  const handleCommit = () => {
-    commit();
-  };
-
-  const handleCreateComplete = () => {
-    setShowCreate(false);
-    // Tick immediately to check if we need to lock
-    tick();
-  };
+  }, [hasCommitted, hasCompletedOnboarding]);
 
   if (isLoading) {
     return (
@@ -74,32 +61,33 @@ export default function App() {
     );
   }
 
-  // PRIORITY 1: Creed screen for first-time users
+  // PRIORITY 1: Creed
   if (!hasCommitted) {
-    return <CreedScreen onCommit={handleCommit} />;
+    return <CreedScreen onCommit={() => commit()} />;
   }
 
-  // PRIORITY 2: Lock screen when obligation is due
+  // PRIORITY 2: Onboarding
+  if (!hasCompletedOnboarding) {
+    return <OnboardingScreen onComplete={() => { }} />;
+  }
+
+  // PRIORITY 3: Lock
   if (activeLock) {
     return <LockScreen />;
   }
 
-  // Show create screen
+  // Create obligation
   if (showCreate) {
     return (
       <CreateObligationScreen
-        onComplete={handleCreateComplete}
+        onComplete={() => { setShowCreate(false); tick(); }}
         onCancel={() => setShowCreate(false)}
       />
     );
   }
 
-  // Default: Main screen
-  return (
-    <MainScreen
-      onCreateObligation={() => setShowCreate(true)}
-    />
-  );
+  // Main
+  return <MainScreen onCreateObligation={() => setShowCreate(true)} />;
 }
 
 const styles = StyleSheet.create({
