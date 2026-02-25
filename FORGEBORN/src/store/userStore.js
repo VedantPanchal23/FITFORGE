@@ -82,36 +82,36 @@ export const useUserStore = create(
         age: null,
         weight: null,      // in kg
         height: null,      // in cm
-        
+
         // Fitness goals
-        fitnessGoal: null,
+        fitnessGoal: [],             // ARRAY — multi-select
         experienceLevel: null,
         trainingDaysPerWeek: 5,
-        
+
         // Preferences
         wantsCardio: false,
-        cardioType: null,
+        cardioTypes: [],              // ARRAY — multi-select
         wantsYoga: false,
         injuries: [InjuryArea.NONE],
-        
+
         // Nutrition
         dietPreference: null,
         mealsPerDay: 4,
       },
-      
+
       // Actions
       updateProfile: (updates) => {
         set((state) => ({
           profile: { ...state.profile, ...updates },
         }));
       },
-      
+
       completeOnboarding: () => {
         const { profile } = get();
         console.log('[FORGEBORN] Onboarding complete:', profile.name);
         set({ hasCompletedOnboarding: true });
       },
-      
+
       // Computed values
       getBMI: () => {
         const { profile } = get();
@@ -119,7 +119,7 @@ export const useUserStore = create(
         const heightM = profile.height / 100;
         return Math.round((profile.weight / (heightM * heightM)) * 10) / 10;
       },
-      
+
       // DEV ONLY
       __devReset: () => {
         set({
@@ -130,11 +130,11 @@ export const useUserStore = create(
             age: null,
             weight: null,
             height: null,
-            fitnessGoal: null,
+            fitnessGoal: [],
             experienceLevel: null,
             trainingDaysPerWeek: 5,
             wantsCardio: false,
-            cardioType: null,
+            cardioTypes: [],
             wantsYoga: false,
             injuries: [InjuryArea.NONE],
             dietPreference: null,
