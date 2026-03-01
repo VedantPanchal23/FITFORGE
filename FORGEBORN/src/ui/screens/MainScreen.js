@@ -22,6 +22,7 @@ import { colors } from '../theme/colors';
 import { textStyles } from '../theme/typography';
 import { spacing, screen } from '../theme/spacing';
 import useCommitmentStore from '../../store/commitmentStore';
+import useUserStore from '../../store/userStore';
 import useObligationStore, { ObligationStatus } from '../../store/obligationStore';
 
 const MainScreen = ({ onCreateObligation }) => {
@@ -34,6 +35,11 @@ const MainScreen = ({ onCreateObligation }) => {
     const getPendingObligations = useObligationStore((s) => s.getPendingObligations);
     const getNextObligation = useObligationStore((s) => s.getNextObligation);
     const tick = useObligationStore((s) => s.tick);
+
+    // DEV reset functions
+    const resetUser = useUserStore((s) => s.__devReset);
+    const resetCommitment = useCommitmentStore((s) => s.__devReset);
+    const resetObligations = useObligationStore((s) => s.__devClearAll);
 
     const pendingObligations = getPendingObligations();
     const nextObligation = getNextObligation();
@@ -187,6 +193,18 @@ const MainScreen = ({ onCreateObligation }) => {
             {/* Footer creed */}
             <View style={styles.footer}>
                 <Text style={styles.footerText}>I DO NOT LOSE. I EXECUTE.</Text>
+                <TouchableOpacity
+                    style={styles.devResetButton}
+                    onLongPress={() => {
+                        resetUser();
+                        resetCommitment();
+                        resetObligations();
+                    }}
+                    delayLongPress={2000}
+                    activeOpacity={0.5}
+                >
+                    <Text style={styles.devResetText}>HOLD 2s TO RESET (DEV)</Text>
+                </TouchableOpacity>
             </View>
         </View>
     );
@@ -412,6 +430,16 @@ const styles = StyleSheet.create({
     footerText: {
         ...textStyles.caption,
         color: colors.primary,
+    },
+    devResetButton: {
+        marginTop: spacing[1],
+        paddingVertical: spacing[1],
+        paddingHorizontal: spacing[3],
+    },
+    devResetText: {
+        ...textStyles.caption,
+        color: colors.textMuted,
+        fontSize: 8,
     },
 });
 
