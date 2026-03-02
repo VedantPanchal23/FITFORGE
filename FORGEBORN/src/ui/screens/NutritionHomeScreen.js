@@ -1,11 +1,17 @@
 /**
- * FORGEBORN — NUTRITION HOME SCREEN (Placeholder)
+ * FORGEBORN — NUTRITION HOME SCREEN
  * 
- * Daily meal plan, macro tracking, water intake.
- * Phase 2C will add the full nutrition engine.
+ * Daily nutrition dashboard with:
+ * - Calorie progress ring
+ * - Macro bars (protein/carbs/fats)
+ * - Meal slots (breakfast/lunch/snack/dinner)
+ * - Water tracker (glass by glass)
+ * - Per-meal calorie breakdown
+ * 
+ * Inspired by: MacroFactor (clean UI), HealthifyMe (Indian meals), MFP (macro pie)
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     View,
     Text,
@@ -13,35 +19,80 @@ import {
     ScrollView,
     StatusBar,
     TouchableOpacity,
+    Vibration,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../theme/colors';
 import { textStyles } from '../theme/typography';
 import { spacing, screen } from '../theme/spacing';
 import useUserStore from '../../store/userStore';
+import useNutritionStore from '../../store/nutritionStore';
+import MealLogScreen from './MealLogScreen';
+
+const MEAL_SLOTS = [
+    { type: 'BREAKFAST', label: 'BREAKFAST', icon: '🌅', time: '8:00 AM' },
+    { type: 'LUNCH', label: 'LUNCH', icon: '☀️', time: '1:00 PM' },
+    { type: 'SNACK', label: 'SNACK', icon: '🍎', time: '4:00 PM' },
+    { type: 'DINNER', label: 'DINNER', icon: '🌙', time: '8:00 PM' },
+];
 
 const NutritionHomeScreen = () => {
     const profile = useUserStore((s) => s.profile);
-    const getBMI = useUserStore((s) => s.getBMI);
-    const bmi = getBMI();
+    const nutritionPlan = useNutritionStore((s) => s.nutritionPlan);
+    const generatePlan = useNutritionStore((s) => s.generatePlan);
+    const getTodaysTotals = useNutritionStore((s) => s.getTodaysTotals);
+    const getMealsByType = useNutritionStore((s) => s.getMealsByType);
+    const addWater = useNutritionStore((s) => s.addWater);
+    const removeFood = useNutritionStore((s) => s.removeFood);
+    const getWeekSummary = useNutritionStore((s) => s.getWeekSummary);
 
-    // Calculate estimated TDEE
-    const weight = profile?.weight || 70;
-    const height = profile?.height || 175;
-    const age = profile?.age || 22;
-    const gender = profile?.gender;
+    const [showMealLog, setShowMealLog] = useState(null); // meal type or null
+    const [refreshKey, setRefreshKey] = useState(0);
 
-    let bmr = 0;
-    if (gender === 'MALE') {
-        bmr = 10 * weight + 6.25 * height - 5 * age + 5;
-    } else {
-        bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+    // Generate plan if not exists
+    useEffect(() => {
+        if (!nutritionPlan && profile) {
+            generatePlan(profile);
+        }
+    }, [profile, nutritionPlan]);
+
+    if (showMealLog) {
+        return (
+            <MealLogScreen
+                mealType={showMealLog}
+                onClose={() => {
+                    setShowMealLog(null);
+                    setRefreshKey(k => k + 1);
+                }}
+            />
+        );
     }
-    const tdee = Math.round(bmr * 1.55); // Moderate activity
-    const protein = Math.round(weight * 2.2); // 2.2g per kg
-    const fats = Math.round(weight * 0.8); // 0.8g per kg
-    const carbCals = tdee - (protein * 4) - (fats * 9);
-    const carbs = Math.round(carbCals / 4);
+
+    const plan = nutritionPlan || {
+        targetCalories: 2200,
+        macros: { protein: 140, carbs: 250, fats: 70 },
+        waterGlasses: 10,
+        tdee: 2200,
+        bmr: 1700,
+        deficit: 0,
+    };
+
+    const totals = getTodaysTotals();
+    const weekSummary = getWeekSummary();
+
+    // Progress calculations
+    const calProgress = Math.min(1, totals.calories / plan.targetCalories);
+    const proteinProgress = Math.min(1, totals.protein / plan.macros.protein);
+    const carbsProgress = Math.min(1, totals.carbs / plan.macros.carbs);
+    const fatsProgress = Math.min(1, totals.fats / plan.macros.fats);
+    const waterProgress = Math.min(1, totals.water / plan.waterGlasses);
+    const remainingCals = plan.targetCalories - totals.calories;
+
+    const handleAddWater = () => {
+        addWater(1);
+        Vibration.vibrate(30);
+        setRefreshKey(k => k + 1);
+    };
 
     return (
         <View style={styles.container}>
@@ -51,88 +102,244 @@ const NutritionHomeScreen = () => {
                 contentContainerStyle={styles.scrollContent}
                 showsVerticalScrollIndicator={false}
             >
+                {/* Header */}
                 <Text style={styles.title}>NUTRITION</Text>
-                <Text style={styles.subtitle}>FUEL THE MACHINE</Text>
+                <Text style={styles.subtitle}>
+                    {plan.deficit < 0 ? `${Math.abs(plan.deficit)} CAL DEFICIT` :
+                        plan.deficit > 0 ? `${plan.deficit} CAL SURPLUS` : 'MAINTENANCE'}
+                </Text>
 
-                {/* TDEE Card */}
-                <View style={styles.tdeeCard}>
-                    <Text style={styles.tdeeLabel}>DAILY TARGET</Text>
-                    <Text style={styles.tdeeValue}>{tdee}</Text>
-                    <Text style={styles.tdeeUnit}>CALORIES</Text>
+                {/* Calorie Ring Card */}
+                <View style={styles.calorieCard}>
+                    <View style={styles.calorieRing}>
+                        {/* Pseudo ring using border */}
+                        <View style={[styles.ringOuter, {
+                            borderColor: calProgress >= 1 ? colors.success : colors.primary,
+                        }]}>
+                            <View style={styles.ringInner}>
+                                <Text style={styles.calorieNum}>{totals.calories}</Text>
+                                <Text style={styles.calorieLabel}>CONSUMED</Text>
+                            </View>
+                        </View>
+                    </View>
+                    <View style={styles.calorieStats}>
+                        <View style={styles.calStatRow}>
+                            <Text style={styles.calStatLabel}>TARGET</Text>
+                            <Text style={styles.calStatVal}>{plan.targetCalories}</Text>
+                        </View>
+                        <View style={styles.calStatRow}>
+                            <Text style={styles.calStatLabel}>CONSUMED</Text>
+                            <Text style={[styles.calStatVal, { color: colors.primary }]}>{totals.calories}</Text>
+                        </View>
+                        <View style={styles.calStatRow}>
+                            <Text style={styles.calStatLabel}>REMAINING</Text>
+                            <Text style={[styles.calStatVal, {
+                                color: remainingCals < 0 ? colors.danger : colors.success
+                            }]}>{remainingCals}</Text>
+                        </View>
+                        <View style={[styles.calStatRow, { marginTop: spacing[2], borderTopWidth: 1, borderTopColor: colors.border, paddingTop: spacing[2] }]}>
+                            <Text style={styles.calStatLabel}>BMR</Text>
+                            <Text style={[styles.calStatVal, { fontSize: 11 }]}>{plan.bmr}</Text>
+                        </View>
+                        <View style={styles.calStatRow}>
+                            <Text style={styles.calStatLabel}>TDEE</Text>
+                            <Text style={[styles.calStatVal, { fontSize: 11 }]}>{plan.tdee}</Text>
+                        </View>
+                    </View>
                 </View>
 
-                {/* Macros Row */}
-                <View style={styles.macrosRow}>
-                    <View style={[styles.macroCard, { borderColor: colors.primary }]}>
-                        <Text style={[styles.macroValue, { color: colors.primary }]}>{protein}g</Text>
-                        <Text style={styles.macroLabel}>PROTEIN</Text>
-                        <Text style={styles.macroSub}>{protein * 4} cal</Text>
+                {/* Macro Bars */}
+                <Text style={styles.sectionLabel}>MACROS</Text>
+                <View style={styles.macroCard}>
+                    {/* Protein */}
+                    <View style={styles.macroRow}>
+                        <View style={styles.macroInfo}>
+                            <Text style={[styles.macroName, { color: '#FF6B6B' }]}>PROTEIN</Text>
+                            <Text style={styles.macroGrams}>
+                                {totals.protein}g / {plan.macros.protein}g
+                            </Text>
+                        </View>
+                        <View style={styles.macroBarBg}>
+                            <View style={[styles.macroBarFill, {
+                                width: `${proteinProgress * 100}%`,
+                                backgroundColor: '#FF6B6B',
+                            }]} />
+                        </View>
                     </View>
-                    <View style={[styles.macroCard, { borderColor: colors.warning }]}>
-                        <Text style={[styles.macroValue, { color: colors.warning }]}>{carbs}g</Text>
-                        <Text style={styles.macroLabel}>CARBS</Text>
-                        <Text style={styles.macroSub}>{carbs * 4} cal</Text>
-                    </View>
-                    <View style={[styles.macroCard, { borderColor: colors.success }]}>
-                        <Text style={[styles.macroValue, { color: colors.success }]}>{fats}g</Text>
-                        <Text style={styles.macroLabel}>FATS</Text>
-                        <Text style={styles.macroSub}>{fats * 9} cal</Text>
-                    </View>
-                </View>
 
-                {/* Stats */}
-                <View style={styles.statsCard}>
-                    <View style={styles.statRow}>
-                        <Text style={styles.statLabel}>BMI</Text>
-                        <Text style={styles.statValue}>{bmi || '—'}</Text>
+                    {/* Carbs */}
+                    <View style={styles.macroRow}>
+                        <View style={styles.macroInfo}>
+                            <Text style={[styles.macroName, { color: '#FFAA33' }]}>CARBS</Text>
+                            <Text style={styles.macroGrams}>
+                                {totals.carbs}g / {plan.macros.carbs}g
+                            </Text>
+                        </View>
+                        <View style={styles.macroBarBg}>
+                            <View style={[styles.macroBarFill, {
+                                width: `${carbsProgress * 100}%`,
+                                backgroundColor: '#FFAA33',
+                            }]} />
+                        </View>
                     </View>
-                    <View style={styles.statRow}>
-                        <Text style={styles.statLabel}>DIET</Text>
-                        <Text style={styles.statValue}>{profile?.dietPreference || '—'}</Text>
-                    </View>
-                    <View style={styles.statRow}>
-                        <Text style={styles.statLabel}>MEALS/DAY</Text>
-                        <Text style={styles.statValue}>{profile?.mealsPerDay || 4}</Text>
+
+                    {/* Fats */}
+                    <View style={styles.macroRow}>
+                        <View style={styles.macroInfo}>
+                            <Text style={[styles.macroName, { color: '#4ECDC4' }]}>FATS</Text>
+                            <Text style={styles.macroGrams}>
+                                {totals.fats}g / {plan.macros.fats}g
+                            </Text>
+                        </View>
+                        <View style={styles.macroBarBg}>
+                            <View style={[styles.macroBarFill, {
+                                width: `${fatsProgress * 100}%`,
+                                backgroundColor: '#4ECDC4',
+                            }]} />
+                        </View>
                     </View>
                 </View>
 
                 {/* Meal Slots */}
-                <Text style={styles.sectionLabel}>TODAY'S MEALS</Text>
+                <Text style={styles.sectionLabel}>MEALS</Text>
+                {MEAL_SLOTS.map((slot) => {
+                    const meals = getMealsByType(slot.type);
+                    const slotCals = meals.reduce((sum, m) => sum + m.calories, 0);
+                    const slotProtein = meals.reduce((sum, m) => sum + m.protein, 0);
 
-                {Array.from({ length: profile?.mealsPerDay || 4 }, (_, i) => {
-                    const mealNames = ['BREAKFAST', 'LUNCH', 'SNACK', 'DINNER', 'POST-WORKOUT', 'LATE SNACK'];
                     return (
-                        <TouchableOpacity key={i} style={styles.mealCard} activeOpacity={0.7}>
-                            <View style={styles.mealLeft}>
-                                <Ionicons name="restaurant-outline" size={20} color={colors.textDim} />
-                                <View>
-                                    <Text style={styles.mealName}>{mealNames[i] || `MEAL ${i + 1}`}</Text>
-                                    <Text style={styles.mealCals}>~{Math.round(tdee / (profile?.mealsPerDay || 4))} cal target</Text>
+                        <View key={slot.type} style={styles.mealSlot}>
+                            <View style={styles.mealSlotHeader}>
+                                <View style={styles.mealSlotLeft}>
+                                    <Text style={styles.mealSlotIcon}>{slot.icon}</Text>
+                                    <View>
+                                        <Text style={styles.mealSlotName}>{slot.label}</Text>
+                                        <Text style={styles.mealSlotTime}>{slot.time}</Text>
+                                    </View>
+                                </View>
+                                <View style={styles.mealSlotRight}>
+                                    {slotCals > 0 && (
+                                        <Text style={styles.slotCals}>{slotCals} cal</Text>
+                                    )}
+                                    <TouchableOpacity
+                                        style={styles.addMealBtn}
+                                        onPress={() => setShowMealLog(slot.type)}
+                                    >
+                                        <Ionicons name="add" size={18} color={colors.primary} />
+                                    </TouchableOpacity>
                                 </View>
                             </View>
-                            <Ionicons name="add-circle" size={28} color={colors.primary} />
-                        </TouchableOpacity>
+
+                            {/* Logged items */}
+                            {meals.map((meal) => (
+                                <TouchableOpacity
+                                    key={meal.id}
+                                    style={styles.loggedItem}
+                                    onLongPress={() => {
+                                        removeFood(meal.id);
+                                        setRefreshKey(k => k + 1);
+                                        Vibration.vibrate(30);
+                                    }}
+                                >
+                                    <View style={styles.loggedItemLeft}>
+                                        <Text style={styles.loggedItemName}>{meal.name}</Text>
+                                        <Text style={styles.loggedItemMacro}>
+                                            P:{Math.round(meal.protein)}g  C:{Math.round(meal.carbs)}g  F:{Math.round(meal.fats)}g
+                                        </Text>
+                                    </View>
+                                    <Text style={styles.loggedItemCals}>{meal.calories}</Text>
+                                </TouchableOpacity>
+                            ))}
+
+                            {meals.length === 0 && (
+                                <TouchableOpacity
+                                    style={styles.emptySlot}
+                                    onPress={() => setShowMealLog(slot.type)}
+                                >
+                                    <Ionicons name="add-circle-outline" size={16} color={colors.textDim} />
+                                    <Text style={styles.emptySlotText}>Tap to log {slot.label.toLowerCase()}</Text>
+                                </TouchableOpacity>
+                            )}
+                        </View>
                     );
                 })}
 
-                {/* Water */}
+                {/* Water Tracker */}
                 <Text style={styles.sectionLabel}>HYDRATION</Text>
                 <View style={styles.waterCard}>
-                    <Ionicons name="water" size={28} color="#4FC3F7" />
-                    <View style={styles.waterInfo}>
-                        <Text style={styles.waterText}>0 / 8 GLASSES</Text>
-                        <View style={styles.waterBar}>
-                            <View style={[styles.waterFill, { width: '0%' }]} />
+                    <View style={styles.waterHeader}>
+                        <View>
+                            <Text style={styles.waterTitle}>💧 WATER</Text>
+                            <Text style={styles.waterCount}>
+                                {totals.water} / {plan.waterGlasses} glasses
+                            </Text>
                         </View>
+                        <Text style={styles.waterMl}>
+                            {totals.water * 250}ml / {plan.waterGlasses * 250}ml
+                        </Text>
                     </View>
-                    <TouchableOpacity style={styles.waterAdd}>
-                        <Ionicons name="add" size={20} color={colors.text} />
+
+                    {/* Water progress */}
+                    <View style={styles.waterBarBg}>
+                        <View style={[styles.waterBarFill, {
+                            width: `${waterProgress * 100}%`,
+                        }]} />
+                    </View>
+
+                    {/* Water glasses */}
+                    <View style={styles.glassRow}>
+                        {Array.from({ length: Math.min(plan.waterGlasses, 12) }, (_, i) => (
+                            <View
+                                key={i}
+                                style={[styles.glass,
+                                i < totals.water && styles.glassFilled
+                                ]}
+                            >
+                                <Text style={styles.glassIcon}>
+                                    {i < totals.water ? '💧' : '○'}
+                                </Text>
+                            </View>
+                        ))}
+                    </View>
+
+                    <TouchableOpacity
+                        style={styles.addWaterBtn}
+                        onPress={handleAddWater}
+                        activeOpacity={0.7}
+                    >
+                        <Ionicons name="add" size={18} color="#000" />
+                        <Text style={styles.addWaterText}>ADD GLASS</Text>
                     </TouchableOpacity>
                 </View>
 
-                <Text style={styles.comingSoon}>
-                    Full nutrition engine with food database coming in Phase 2C
-                </Text>
+                {/* Week Overview */}
+                <Text style={styles.sectionLabel}>THIS WEEK</Text>
+                <View style={styles.weekCard}>
+                    {weekSummary.map((day, i) => {
+                        const dayProgress = day.calories > 0
+                            ? Math.min(1, day.calories / plan.targetCalories)
+                            : 0;
+                        const isToday = i === 6;
+
+                        return (
+                            <View key={day.date} style={[styles.weekDay, isToday && styles.weekDayActive]}>
+                                <Text style={[styles.weekDayLabel, isToday && { color: colors.primary }]}>
+                                    {day.day}
+                                </Text>
+                                <View style={styles.weekBarBg}>
+                                    <View style={[styles.weekBarFill, {
+                                        height: `${dayProgress * 100}%`,
+                                        backgroundColor: isToday ? colors.primary :
+                                            dayProgress >= 0.8 ? colors.success : colors.textDim,
+                                    }]} />
+                                </View>
+                                <Text style={styles.weekDayCals}>
+                                    {day.calories > 0 ? day.calories : '–'}
+                                </Text>
+                            </View>
+                        );
+                    })}
+                </View>
 
                 <View style={{ height: 30 }} />
             </ScrollView>
@@ -141,174 +348,318 @@ const NutritionHomeScreen = () => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: colors.background,
-    },
+    container: { flex: 1, backgroundColor: colors.background },
     scrollView: { flex: 1 },
     scrollContent: {
         paddingHorizontal: screen.paddingHorizontal,
         paddingTop: spacing[12],
         paddingBottom: spacing[4],
     },
+
+    // Header
     title: {
         ...textStyles.h1,
-        color: colors.success,
+        color: colors.primary,
         fontSize: 28,
     },
     subtitle: {
         ...textStyles.caption,
         color: colors.textDim,
-        marginBottom: spacing[5],
-    },
-
-    // TDEE
-    tdeeCard: {
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.success,
-        padding: spacing[5],
-        alignItems: 'center',
         marginBottom: spacing[4],
     },
-    tdeeLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-    },
-    tdeeValue: {
-        fontSize: 56,
-        fontWeight: '900',
-        color: colors.text,
-    },
-    tdeeUnit: {
-        ...textStyles.caption,
-        color: colors.textDim,
-    },
 
-    // Macros
-    macrosRow: {
-        flexDirection: 'row',
-        gap: spacing[2],
-        marginBottom: spacing[4],
-    },
-    macroCard: {
-        flex: 1,
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        padding: spacing[3],
-        alignItems: 'center',
-    },
-    macroValue: {
-        fontSize: 20,
-        fontWeight: '900',
-    },
-    macroLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 9,
-        marginTop: 4,
-    },
-    macroSub: {
-        ...textStyles.caption,
-        color: colors.textMuted,
-        fontSize: 8,
-        marginTop: 2,
-    },
-
-    // Stats
-    statsCard: {
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        padding: spacing[3],
-        marginBottom: spacing[5],
-    },
-    statRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingVertical: spacing[1],
-    },
-    statLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-    },
-    statValue: {
-        ...textStyles.label,
-        color: colors.text,
-    },
-
-    // Meals
     sectionLabel: {
         ...textStyles.caption,
         color: colors.textDim,
-        marginBottom: spacing[3],
+        marginTop: spacing[5],
+        marginBottom: spacing[2],
     },
-    mealCard: {
+
+    // Calorie Card
+    calorieCard: {
         flexDirection: 'row',
+        backgroundColor: colors.surface,
+        borderWidth: 2,
+        borderColor: colors.primary,
+        padding: spacing[4],
+        gap: spacing[4],
+    },
+    calorieRing: {
         alignItems: 'center',
+        justifyContent: 'center',
+    },
+    ringOuter: {
+        width: 110,
+        height: 110,
+        borderRadius: 55,
+        borderWidth: 6,
+        borderColor: colors.primary,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    ringInner: {
+        alignItems: 'center',
+    },
+    calorieNum: {
+        fontSize: 26,
+        fontWeight: '900',
+        color: colors.text,
+    },
+    calorieLabel: {
+        ...textStyles.caption,
+        color: colors.textDim,
+        fontSize: 8,
+    },
+    calorieStats: {
+        flex: 1,
+        justifyContent: 'center',
+    },
+    calStatRow: {
+        flexDirection: 'row',
         justifyContent: 'space-between',
+        marginBottom: 4,
+    },
+    calStatLabel: {
+        ...textStyles.caption,
+        color: colors.textDim,
+        fontSize: 10,
+    },
+    calStatVal: {
+        fontSize: 13,
+        fontWeight: '900',
+        color: colors.text,
+    },
+
+    // Macros
+    macroCard: {
         backgroundColor: colors.surface,
         borderWidth: 1,
         borderColor: colors.border,
         padding: spacing[3],
-        marginBottom: spacing[2],
-    },
-    mealLeft: {
-        flexDirection: 'row',
-        alignItems: 'center',
         gap: spacing[3],
     },
-    mealName: {
+    macroRow: {},
+    macroInfo: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: spacing[1],
+    },
+    macroName: {
+        ...textStyles.label,
+        fontSize: 11,
+    },
+    macroGrams: {
+        ...textStyles.caption,
+        color: colors.textSecondary,
+        fontSize: 10,
+    },
+    macroBarBg: {
+        height: 8,
+        backgroundColor: colors.background,
+        overflow: 'hidden',
+    },
+    macroBarFill: {
+        height: '100%',
+    },
+
+    // Meals
+    mealSlot: {
+        backgroundColor: colors.surface,
+        borderWidth: 1,
+        borderColor: colors.border,
+        marginBottom: spacing[2],
+        overflow: 'hidden',
+    },
+    mealSlotHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: spacing[3],
+    },
+    mealSlotLeft: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: spacing[2],
+    },
+    mealSlotIcon: { fontSize: 20 },
+    mealSlotName: {
         ...textStyles.label,
         color: colors.text,
         fontSize: 12,
     },
-    mealCals: {
+    mealSlotTime: {
         ...textStyles.caption,
         color: colors.textDim,
         fontSize: 9,
-        marginTop: 2,
+    },
+    mealSlotRight: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: spacing[2],
+    },
+    slotCals: {
+        ...textStyles.label,
+        color: colors.textSecondary,
+        fontSize: 12,
+    },
+    addMealBtn: {
+        width: 30,
+        height: 30,
+        borderWidth: 1,
+        borderColor: colors.primary,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    // Logged items
+    loggedItem: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: spacing[3],
+        paddingVertical: spacing[2],
+        borderTopWidth: 1,
+        borderTopColor: colors.border,
+    },
+    loggedItemLeft: { flex: 1 },
+    loggedItemName: {
+        ...textStyles.caption,
+        color: colors.textSecondary,
+        fontSize: 11,
+    },
+    loggedItemMacro: {
+        ...textStyles.caption,
+        color: colors.textDim,
+        fontSize: 8,
+        marginTop: 1,
+    },
+    loggedItemCals: {
+        fontSize: 13,
+        fontWeight: '700',
+        color: colors.text,
+    },
+
+    emptySlot: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: spacing[2],
+        padding: spacing[2],
+        paddingHorizontal: spacing[3],
+        borderTopWidth: 1,
+        borderTopColor: colors.border,
+    },
+    emptySlotText: {
+        ...textStyles.caption,
+        color: colors.textDim,
+        fontSize: 10,
     },
 
     // Water
     waterCard: {
-        flexDirection: 'row',
-        alignItems: 'center',
         backgroundColor: colors.surface,
         borderWidth: 1,
         borderColor: colors.border,
         padding: spacing[3],
-        gap: spacing[3],
-        marginBottom: spacing[4],
     },
-    waterInfo: { flex: 1 },
-    waterText: {
+    waterHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+        marginBottom: spacing[2],
+    },
+    waterTitle: {
         ...textStyles.label,
+        color: colors.text,
+        fontSize: 13,
+    },
+    waterCount: {
+        ...textStyles.caption,
+        color: colors.textDim,
+        fontSize: 10,
+    },
+    waterMl: {
+        ...textStyles.caption,
         color: colors.textSecondary,
-        fontSize: 11,
-        marginBottom: 4,
+        fontSize: 10,
     },
-    waterBar: {
-        height: 4,
-        backgroundColor: colors.surfaceLight,
+    waterBarBg: {
+        height: 6,
+        backgroundColor: colors.background,
+        marginBottom: spacing[2],
+        overflow: 'hidden',
     },
-    waterFill: {
+    waterBarFill: {
         height: '100%',
-        backgroundColor: '#4FC3F7',
+        backgroundColor: '#4FA4FF',
     },
-    waterAdd: {
-        width: 36,
-        height: 36,
-        backgroundColor: colors.surfaceLight,
+    glassRow: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: spacing[1],
+        marginBottom: spacing[3],
+    },
+    glass: {
+        width: 28,
+        height: 28,
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: colors.background,
     },
-    comingSoon: {
+    glassFilled: {
+        backgroundColor: 'rgba(79, 164, 255, 0.15)',
+    },
+    glassIcon: {
+        fontSize: 14,
+    },
+    addWaterBtn: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#4FA4FF',
+        padding: spacing[2],
+        gap: spacing[1],
+    },
+    addWaterText: {
+        ...textStyles.button,
+        color: '#000',
+        fontSize: 11,
+    },
+
+    // Week
+    weekCard: {
+        flexDirection: 'row',
+        backgroundColor: colors.surface,
+        borderWidth: 1,
+        borderColor: colors.border,
+        padding: spacing[3],
+        justifyContent: 'space-between',
+    },
+    weekDay: {
+        alignItems: 'center',
+        flex: 1,
+    },
+    weekDayActive: {},
+    weekDayLabel: {
         ...textStyles.caption,
-        color: colors.textMuted,
-        textAlign: 'center',
-        marginTop: spacing[2],
+        color: colors.textDim,
         fontSize: 9,
+        marginBottom: spacing[1],
+    },
+    weekBarBg: {
+        width: 12,
+        height: 50,
+        backgroundColor: colors.background,
+        overflow: 'hidden',
+        justifyContent: 'flex-end',
+    },
+    weekBarFill: {
+        width: '100%',
+    },
+    weekDayCals: {
+        ...textStyles.caption,
+        color: colors.textDim,
+        fontSize: 7,
+        marginTop: spacing[1],
     },
 });
 
