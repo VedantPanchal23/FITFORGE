@@ -3,6 +3,7 @@
  * 
  * The warrior's command center.
  * Everything you need for today — at a glance.
+ * Connected to ALL real stores: workout, nutrition, habits, lookmaxx.
  */
 
 import React, { useEffect, useState } from 'react';
@@ -13,18 +14,18 @@ import {
     StyleSheet,
     ScrollView,
     StatusBar,
-    Dimensions,
-    Animated,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../theme/colors';
-import { textStyles, fontSize } from '../theme/typography';
+import { textStyles } from '../theme/typography';
 import { spacing, screen } from '../theme/spacing';
 import useCommitmentStore from '../../store/commitmentStore';
 import useUserStore from '../../store/userStore';
 import useObligationStore, { ObligationStatus } from '../../store/obligationStore';
-
-const { width } = Dimensions.get('window');
+import useWorkoutStore from '../../store/workoutStore';
+import useNutritionStore from '../../store/nutritionStore';
+import useHabitStore from '../../store/habitStore';
+import useLookmaxxStore from '../../store/lookmaxxStore';
 
 const DashboardScreen = () => {
     const [greeting, setGreeting] = useState('');
@@ -33,28 +34,37 @@ const DashboardScreen = () => {
     const profile = useUserStore((s) => s.profile);
     const userName = profile?.name || 'WARRIOR';
 
-    // Commitment data
+    // Commitment
     const getDaysSinceCommitment = useCommitmentStore((s) => s.getDaysSinceCommitment);
     const days = getDaysSinceCommitment();
 
-    // Obligation data
+    // Obligations
     const obligations = useObligationStore((s) => s.obligations);
     const debtUnits = useObligationStore((s) => s.debtUnits);
     const failureCount = useObligationStore((s) => s.failureCount);
     const getNextObligation = useObligationStore((s) => s.getNextObligation);
-    const getPendingObligations = useObligationStore((s) => s.getPendingObligations);
     const tick = useObligationStore((s) => s.tick);
-
     const nextObligation = getNextObligation();
-    const pendingCount = getPendingObligations().length;
 
-    // Stats
-    const completedToday = obligations.filter(
-        o => o.status === ObligationStatus.EXECUTED &&
-            new Date(o.createdAt).toDateString() === new Date().toDateString()
-    ).length;
+    // Workout data
+    const totalWorkouts = useWorkoutStore((s) => s.totalWorkoutsCompleted);
+    const workoutStreak = useWorkoutStore((s) => s.currentStreak);
+    const currentPlan = useWorkoutStore((s) => s.currentPlan);
+    const activeWorkout = useWorkoutStore((s) => s.activeWorkout);
 
-    const totalExecuted = obligations.filter(o => o.status === ObligationStatus.EXECUTED).length;
+    // Nutrition data
+    const nutritionPlan = useNutritionStore((s) => s.nutritionPlan);
+    const getTodaysTotals = useNutritionStore((s) => s.getTodaysTotals);
+    const nutritionTotals = getTodaysTotals();
+
+    // Habit data
+    const getTodaysStatus = useHabitStore((s) => s.getTodaysStatus);
+    const habitLevel = useHabitStore((s) => s.level);
+    const habitStatus = getTodaysStatus();
+
+    // Lookmaxx data
+    const getTodaysRoutineStatus = useLookmaxxStore((s) => s.getTodaysRoutineStatus);
+    const routineStatus = getTodaysRoutineStatus();
 
     useEffect(() => {
         const hour = new Date().getHours();
@@ -65,7 +75,7 @@ const DashboardScreen = () => {
         else setGreeting('NIGHT OPS');
 
         tick();
-        const interval = setInterval(tick, 1000);
+        const interval = setInterval(tick, 60000); // Every minute
         return () => clearInterval(interval);
     }, []);
 
@@ -86,6 +96,15 @@ const DashboardScreen = () => {
     };
 
     const status = getStatusInfo();
+
+    // Calculate real progress
+    const calTarget = nutritionPlan?.targetCalories || 2200;
+    const calProgress = Math.min(1, nutritionTotals.calories / calTarget);
+    const habitProgress = habitStatus.progress;
+
+    // Today's workout info
+    const todayPlanName = currentPlan?.schedule?.[new Date().getDay()]?.name;
+    const workoutDone = activeWorkout === null && totalWorkouts > 0;
 
     return (
         <View style={styles.container}>
@@ -114,6 +133,8 @@ const DashboardScreen = () => {
                         <Text style={[styles.statusText, { color: status.color }]}>
                             {status.text}
                         </Text>
+                        <View style={{ flex: 1 }} />
+                        <Text style={styles.levelBadge}>LVL {habitLevel}</Text>
                     </View>
                     {debtUnits > 0 && (
                         <Text style={styles.debtText}>
@@ -125,27 +146,34 @@ const DashboardScreen = () => {
                 {/* Quick Stats Row */}
                 <View style={styles.statsRow}>
                     <View style={styles.statCard}>
-                        <Ionicons name="checkmark-circle" size={24} color={colors.success} />
-                        <Text style={styles.statNumber}>{totalExecuted}</Text>
-                        <Text style={styles.statLabel}>EXECUTED</Text>
+                        <Ionicons name="barbell" size={20} color={colors.primary} />
+                        <Text style={styles.statNumber}>{totalWorkouts}</Text>
+                        <Text style={styles.statLabel}>WORKOUTS</Text>
                     </View>
                     <View style={styles.statCard}>
-                        <Ionicons name="flame" size={24} color={colors.primary} />
-                        <Text style={styles.statNumber}>{completedToday}</Text>
-                        <Text style={styles.statLabel}>TODAY</Text>
+                        <Ionicons name="flame" size={20} color="#FF6B6B" />
+                        <Text style={styles.statNumber}>{workoutStreak}</Text>
+                        <Text style={styles.statLabel}>STREAK</Text>
                     </View>
                     <View style={styles.statCard}>
-                        <Ionicons name="hourglass" size={24} color={colors.warning} />
-                        <Text style={styles.statNumber}>{pendingCount}</Text>
-                        <Text style={styles.statLabel}>PENDING</Text>
+                        <Ionicons name="flash" size={20} color={colors.warning} />
+                        <Text style={styles.statNumber}>
+                            {habitStatus.completed}/{habitStatus.total}
+                        </Text>
+                        <Text style={styles.statLabel}>HABITS</Text>
+                    </View>
+                    <View style={styles.statCard}>
+                        <Ionicons name="water" size={20} color="#4FA4FF" />
+                        <Text style={styles.statNumber}>{nutritionTotals.water}</Text>
+                        <Text style={styles.statLabel}>WATER 💧</Text>
                     </View>
                 </View>
 
-                {/* Today's Sections */}
+                {/* Today's Mission */}
                 <Text style={styles.sectionTitle}>TODAY'S MISSION</Text>
 
                 {/* Workout Card */}
-                <TouchableOpacity style={styles.missionCard} activeOpacity={0.7}>
+                <View style={styles.missionCard}>
                     <View style={styles.missionHeader}>
                         <View style={styles.missionIconBox}>
                             <Ionicons name="barbell" size={24} color={colors.primary} />
@@ -153,23 +181,26 @@ const DashboardScreen = () => {
                         <View style={styles.missionInfo}>
                             <Text style={styles.missionTitle}>WORKOUT</Text>
                             <Text style={styles.missionSub}>
-                                {profile?.fitnessGoal?.length > 0
-                                    ? profile.fitnessGoal.join(' • ')
-                                    : 'Set up your plan'}
+                                {todayPlanName || profile?.fitnessGoal?.join(' • ') || 'Generate a plan'}
                             </Text>
                         </View>
                         <Ionicons name="chevron-forward" size={20} color={colors.textDim} />
                     </View>
                     <View style={styles.missionProgress}>
                         <View style={styles.progressBar}>
-                            <View style={[styles.progressFill, { width: '0%' }]} />
+                            <View style={[styles.progressFill, {
+                                width: activeWorkout ? '50%' : workoutDone ? '100%' : '0%',
+                                backgroundColor: workoutDone ? colors.success : colors.primary,
+                            }]} />
                         </View>
-                        <Text style={styles.progressText}>Not started</Text>
+                        <Text style={styles.progressText}>
+                            {activeWorkout ? 'IN PROGRESS' : workoutDone ? 'COMPLETE ✅' : 'Not started'}
+                        </Text>
                     </View>
-                </TouchableOpacity>
+                </View>
 
                 {/* Nutrition Card */}
-                <TouchableOpacity style={styles.missionCard} activeOpacity={0.7}>
+                <View style={styles.missionCard}>
                     <View style={styles.missionHeader}>
                         <View style={[styles.missionIconBox, { borderColor: colors.success }]}>
                             <Ionicons name="nutrition" size={24} color={colors.success} />
@@ -177,38 +208,79 @@ const DashboardScreen = () => {
                         <View style={styles.missionInfo}>
                             <Text style={styles.missionTitle}>NUTRITION</Text>
                             <Text style={styles.missionSub}>
-                                {profile?.dietPreference || 'Track your meals'}
+                                {nutritionTotals.calories} / {calTarget} cal
                             </Text>
                         </View>
                         <Ionicons name="chevron-forward" size={20} color={colors.textDim} />
                     </View>
                     <View style={styles.missionProgress}>
                         <View style={styles.progressBar}>
-                            <View style={[styles.progressFill, { width: '0%', backgroundColor: colors.success }]} />
+                            <View style={[styles.progressFill, {
+                                width: `${calProgress * 100}%`,
+                                backgroundColor: calProgress >= 0.9 ? colors.success : '#4ECDC4',
+                            }]} />
                         </View>
-                        <Text style={styles.progressText}>0 / {profile?.mealsPerDay || 4} meals</Text>
+                        <Text style={styles.progressText}>
+                            {nutritionTotals.mealsLogged} meals logged
+                        </Text>
                     </View>
-                </TouchableOpacity>
+                    {/* Macro mini */}
+                    <View style={styles.macroMini}>
+                        <Text style={[styles.macroMiniText, { color: '#FF6B6B' }]}>
+                            P: {nutritionTotals.protein}g
+                        </Text>
+                        <Text style={[styles.macroMiniText, { color: '#FFAA33' }]}>
+                            C: {nutritionTotals.carbs}g
+                        </Text>
+                        <Text style={[styles.macroMiniText, { color: '#4ECDC4' }]}>
+                            F: {nutritionTotals.fats}g
+                        </Text>
+                    </View>
+                </View>
 
                 {/* Habits Card */}
-                <TouchableOpacity style={styles.missionCard} activeOpacity={0.7}>
+                <View style={styles.missionCard}>
                     <View style={styles.missionHeader}>
                         <View style={[styles.missionIconBox, { borderColor: colors.warning }]}>
                             <Ionicons name="flash" size={24} color={colors.warning} />
                         </View>
                         <View style={styles.missionInfo}>
                             <Text style={styles.missionTitle}>DISCIPLINE</Text>
-                            <Text style={styles.missionSub}>Daily habits & obligations</Text>
+                            <Text style={styles.missionSub}>
+                                {habitStatus.completed} / {habitStatus.total} habits
+                                {habitStatus.isPerfect ? ' ⭐ PERFECT' : ''}
+                            </Text>
                         </View>
                         <Ionicons name="chevron-forward" size={20} color={colors.textDim} />
                     </View>
                     <View style={styles.missionProgress}>
                         <View style={styles.progressBar}>
-                            <View style={[styles.progressFill, { width: '0%', backgroundColor: colors.warning }]} />
+                            <View style={[styles.progressFill, {
+                                width: `${habitProgress * 100}%`,
+                                backgroundColor: habitStatus.isPerfect ? colors.success : colors.warning,
+                            }]} />
                         </View>
-                        <Text style={styles.progressText}>0 habits tracked</Text>
+                        <Text style={styles.progressText}>
+                            {Math.round(habitProgress * 100)}%
+                        </Text>
                     </View>
-                </TouchableOpacity>
+                </View>
+
+                {/* Lookmaxx Mini Card */}
+                <View style={styles.lookmaxxMini}>
+                    <View style={styles.lookmaxxLeft}>
+                        <Text style={styles.lookmaxxIcon}>✨</Text>
+                        <Text style={styles.lookmaxxLabel}>LOOKMAXX</Text>
+                    </View>
+                    <View style={styles.lookmaxxRight}>
+                        <Text style={styles.lookmaxxStat}>
+                            AM: {routineStatus.amCompleted}/{routineStatus.amTotal}
+                        </Text>
+                        <Text style={styles.lookmaxxStat}>
+                            PM: {routineStatus.pmCompleted}/{routineStatus.pmTotal}
+                        </Text>
+                    </View>
+                </View>
 
                 {/* Next Obligation */}
                 {nextObligation && (
@@ -256,13 +328,8 @@ const DashboardScreen = () => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: colors.background,
-    },
-    scrollView: {
-        flex: 1,
-    },
+    container: { flex: 1, backgroundColor: colors.background },
+    scrollView: { flex: 1 },
     scrollContent: {
         paddingHorizontal: screen.paddingHorizontal,
         paddingTop: spacing[12],
@@ -319,6 +386,15 @@ const styles = StyleSheet.create({
     statusText: {
         ...textStyles.h3,
     },
+    levelBadge: {
+        ...textStyles.label,
+        color: colors.primary,
+        fontSize: 11,
+        borderWidth: 1,
+        borderColor: colors.primary,
+        paddingVertical: 2,
+        paddingHorizontal: spacing[2],
+    },
     debtText: {
         ...textStyles.caption,
         color: colors.danger,
@@ -336,19 +412,19 @@ const styles = StyleSheet.create({
         backgroundColor: colors.surface,
         borderWidth: 1,
         borderColor: colors.border,
-        padding: spacing[3],
+        padding: spacing[2],
         alignItems: 'center',
-        gap: spacing[1],
+        gap: 2,
     },
     statNumber: {
-        fontSize: 24,
+        fontSize: 16,
         fontWeight: '900',
         color: colors.text,
     },
     statLabel: {
         ...textStyles.caption,
         color: colors.textDim,
-        fontSize: 9,
+        fontSize: 7,
     },
 
     // Section
@@ -380,9 +456,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginRight: spacing[3],
     },
-    missionInfo: {
-        flex: 1,
-    },
+    missionInfo: { flex: 1 },
     missionTitle: {
         ...textStyles.h3,
         color: colors.text,
@@ -415,7 +489,54 @@ const styles = StyleSheet.create({
         textAlign: 'right',
     },
 
-    // Obligation Card
+    // Macro mini row
+    macroMini: {
+        flexDirection: 'row',
+        gap: spacing[3],
+        marginTop: spacing[2],
+        paddingTop: spacing[2],
+        borderTopWidth: 1,
+        borderTopColor: colors.border,
+    },
+    macroMiniText: {
+        ...textStyles.caption,
+        fontSize: 10,
+        fontWeight: '700',
+    },
+
+    // Lookmaxx mini
+    lookmaxxMini: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        backgroundColor: colors.surface,
+        borderWidth: 1,
+        borderColor: colors.border,
+        padding: spacing[3],
+        marginBottom: spacing[5],
+    },
+    lookmaxxLeft: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: spacing[2],
+    },
+    lookmaxxIcon: { fontSize: 18 },
+    lookmaxxLabel: {
+        ...textStyles.label,
+        color: colors.text,
+        fontSize: 12,
+    },
+    lookmaxxRight: {
+        flexDirection: 'row',
+        gap: spacing[3],
+    },
+    lookmaxxStat: {
+        ...textStyles.caption,
+        color: colors.textDim,
+        fontSize: 10,
+    },
+
+    // Obligation
     obligationCard: {
         backgroundColor: colors.surface,
         borderWidth: 1,
@@ -423,9 +544,7 @@ const styles = StyleSheet.create({
         padding: spacing[4],
         marginBottom: spacing[4],
     },
-    obligationBinding: {
-        borderColor: colors.warning,
-    },
+    obligationBinding: { borderColor: colors.warning },
     obligationHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
