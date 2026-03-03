@@ -8,11 +8,16 @@
  * 4. If committed + onboarded → Tab Navigator (5 tabs)
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
+import { useFonts, Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold, Inter_900Black } from '@expo-google-fonts/inter';
+import * as SplashScreen from 'expo-splash-screen';
+
+// Keep splash screen visible while fonts load
+SplashScreen.preventAutoHideAsync();
 
 // Screens
 import CreedScreen from './src/ui/screens/CreedScreen';
@@ -104,7 +109,16 @@ function getTabColor(name) {
 
 // ─── App Root ─────────────────────────────────────────────────────────────────
 export default function App() {
-  const [isLoading, setIsLoading] = useState(true);
+  // Load fonts
+  const [fontsLoaded] = useFonts({
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_600SemiBold,
+    Inter_700Bold,
+    Inter_900Black,
+  });
+
+  const [isReady, setIsReady] = useState(false);
 
   // Commitment state
   const hasCommitted = useCommitmentStore((s) => s.hasCommitted);
@@ -119,11 +133,18 @@ export default function App() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setIsLoading(false);
+      setIsReady(true);
       tick();
-    }, 500);
+    }, 300);
     return () => clearTimeout(timer);
   }, []);
+
+  // Hide splash once fonts + app are ready
+  useEffect(() => {
+    if (fontsLoaded && isReady) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, isReady]);
 
   // Tick every second after onboarding
   useEffect(() => {
@@ -132,7 +153,7 @@ export default function App() {
     return () => clearInterval(interval);
   }, [hasCommitted, hasCompletedOnboarding]);
 
-  if (isLoading) {
+  if (!fontsLoaded || !isReady) {
     return (
       <View style={styles.loading}>
         <ActivityIndicator size="large" color={colors.primary} />
