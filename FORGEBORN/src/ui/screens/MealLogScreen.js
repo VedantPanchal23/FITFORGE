@@ -30,6 +30,29 @@ const MealLogScreen = ({ mealType = 'LUNCH', onClose }) => {
     const [selectedFood, setSelectedFood] = useState(null);
 
     const logFood = useNutritionStore((s) => s.logFood);
+    const dailyLogs = useNutritionStore((s) => s.dailyLogs);
+
+    // Get recent foods (last 5 unique foods from logs)
+    const recentFoods = useMemo(() => {
+        const seen = new Set();
+        const recents = [];
+        const dates = Object.keys(dailyLogs).sort().reverse();
+        for (const date of dates) {
+            const meals = dailyLogs[date]?.meals || {};
+            for (const mealEntries of Object.values(meals)) {
+                for (const entry of (mealEntries || [])) {
+                    if (!seen.has(entry.foodId) && entry.food) {
+                        seen.add(entry.foodId);
+                        recents.push(entry.food);
+                        if (recents.length >= 5) break;
+                    }
+                }
+                if (recents.length >= 5) break;
+            }
+            if (recents.length >= 5) break;
+        }
+        return recents;
+    }, [dailyLogs]);
 
     const categories = getAllCategories();
 
@@ -172,6 +195,30 @@ const MealLogScreen = ({ mealType = 'LUNCH', onClose }) => {
                 ))}
             </ScrollView>
 
+            {/* Recent foods quick-add */}
+            {recentFoods.length > 0 && search.length === 0 && !selectedCategory && (
+                <View style={styles.recentSection}>
+                    <Text style={styles.recentLabel}>⚡ QUICK ADD</Text>
+                    <ScrollView
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={styles.recentScroll}
+                    >
+                        {recentFoods.map((food, i) => (
+                            <TouchableOpacity
+                                key={`recent-${food.id}-${i}`}
+                                style={styles.recentChip}
+                                onPress={() => { logFood(food, mealType, 1); onClose && onClose(); }}
+                                activeOpacity={0.7}
+                            >
+                                <Text style={styles.recentName} numberOfLines={1}>{food.name}</Text>
+                                <Text style={styles.recentCal}>{food.calories} cal</Text>
+                            </TouchableOpacity>
+                        ))}
+                    </ScrollView>
+                </View>
+            )}
+
             {/* Results count */}
             <Text style={styles.resultCount}>{filteredFoods.length} items</Text>
 
@@ -255,6 +302,40 @@ const styles = StyleSheet.create({
         paddingHorizontal: screen.paddingHorizontal,
         marginTop: spacing[2],
         marginBottom: spacing[1],
+    },
+
+    // Recent foods
+    recentSection: {
+        paddingHorizontal: screen.paddingHorizontal,
+        marginTop: spacing[2],
+    },
+    recentLabel: {
+        ...textStyles.caption,
+        color: colors.textDim,
+        fontSize: 9,
+        marginBottom: spacing[1],
+    },
+    recentScroll: {
+        gap: spacing[1],
+    },
+    recentChip: {
+        backgroundColor: colors.primaryMuted,
+        borderWidth: 1,
+        borderColor: colors.primary,
+        paddingVertical: spacing[2],
+        paddingHorizontal: spacing[3],
+        alignItems: 'center',
+    },
+    recentName: {
+        ...textStyles.label,
+        color: colors.primary,
+        fontSize: 10,
+        maxWidth: 90,
+    },
+    recentCal: {
+        ...textStyles.caption,
+        color: colors.textDim,
+        fontSize: 8,
     },
 
     // Food list

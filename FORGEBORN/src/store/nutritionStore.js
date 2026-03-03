@@ -49,6 +49,7 @@ const useNutritionStore = create(
                 const entry = {
                     id: Date.now().toString(),
                     foodId: food.id,
+                    food: { id: food.id, name: food.name, calories: food.calories, protein: food.protein, carbs: food.carbs, fats: food.fats, servingSize: food.servingSize },
                     name: food.name,
                     mealType,
                     quantity,
