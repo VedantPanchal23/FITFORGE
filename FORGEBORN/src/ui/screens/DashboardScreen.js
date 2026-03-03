@@ -19,6 +19,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../theme/colors';
 import { textStyles } from '../theme/typography';
 import { spacing, screen } from '../theme/spacing';
+import { radius, shadows } from '../theme/colors';
 import useCommitmentStore from '../../store/commitmentStore';
 import useUserStore from '../../store/userStore';
 import useObligationStore, { ObligationStatus } from '../../store/obligationStore';
@@ -375,6 +376,7 @@ const styles = StyleSheet.create({
     statusCard: {
         backgroundColor: colors.surface,
         borderWidth: 1,
+        borderRadius: radius.md,
         padding: spacing[3],
         marginBottom: spacing[4],
     },
@@ -412,6 +414,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.surface,
         borderWidth: 1,
         borderColor: colors.border,
+        borderRadius: radius.sm,
         padding: spacing[2],
         alignItems: 'center',
         gap: 2,
@@ -439,6 +442,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.surface,
         borderWidth: 1,
         borderColor: colors.border,
+        borderRadius: radius.md,
         padding: spacing[4],
         marginBottom: spacing[3],
     },
@@ -452,6 +456,7 @@ const styles = StyleSheet.create({
         height: 44,
         borderWidth: 1,
         borderColor: colors.primary,
+        borderRadius: radius.sm,
         justifyContent: 'center',
         alignItems: 'center',
         marginRight: spacing[3],
@@ -476,10 +481,13 @@ const styles = StyleSheet.create({
         flex: 1,
         height: 4,
         backgroundColor: colors.surfaceLight,
+        borderRadius: 2,
+        overflow: 'hidden',
     },
     progressFill: {
         height: '100%',
         backgroundColor: colors.primary,
+        borderRadius: 2,
     },
     progressText: {
         ...textStyles.caption,
@@ -541,6 +549,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.surface,
         borderWidth: 1,
         borderColor: colors.border,
+        borderRadius: radius.md,
         padding: spacing[4],
         marginBottom: spacing[4],
     },

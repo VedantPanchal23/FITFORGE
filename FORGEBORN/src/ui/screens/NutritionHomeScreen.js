@@ -28,6 +28,9 @@ import { spacing, screen } from '../theme/spacing';
 import useUserStore from '../../store/userStore';
 import useNutritionStore from '../../store/nutritionStore';
 import MealLogScreen from './MealLogScreen';
+import CalorieRing from '../components/CalorieRing';
+import MacroBar from '../components/MacroBar';
+import { radius, shadows } from '../theme/colors';
 
 const MEAL_SLOTS = [
     { type: 'BREAKFAST', label: 'BREAKFAST', icon: '🌅', time: '8:00 AM' },
@@ -111,17 +114,13 @@ const NutritionHomeScreen = () => {
 
                 {/* Calorie Ring Card */}
                 <View style={styles.calorieCard}>
-                    <View style={styles.calorieRing}>
-                        {/* Pseudo ring using border */}
-                        <View style={[styles.ringOuter, {
-                            borderColor: calProgress >= 1 ? colors.success : colors.primary,
-                        }]}>
-                            <View style={styles.ringInner}>
-                                <Text style={styles.calorieNum}>{totals.calories}</Text>
-                                <Text style={styles.calorieLabel}>CONSUMED</Text>
-                            </View>
-                        </View>
-                    </View>
+                    <CalorieRing
+                        consumed={totals.calories}
+                        target={plan.targetCalories}
+                        size={130}
+                        strokeWidth={8}
+                        color={colors.primary}
+                    />
                     <View style={styles.calorieStats}>
                         <View style={styles.calStatRow}>
                             <Text style={styles.calStatLabel}>TARGET</Text>
@@ -151,53 +150,9 @@ const NutritionHomeScreen = () => {
                 {/* Macro Bars */}
                 <Text style={styles.sectionLabel}>MACROS</Text>
                 <View style={styles.macroCard}>
-                    {/* Protein */}
-                    <View style={styles.macroRow}>
-                        <View style={styles.macroInfo}>
-                            <Text style={[styles.macroName, { color: '#FF6B6B' }]}>PROTEIN</Text>
-                            <Text style={styles.macroGrams}>
-                                {totals.protein}g / {plan.macros.protein}g
-                            </Text>
-                        </View>
-                        <View style={styles.macroBarBg}>
-                            <View style={[styles.macroBarFill, {
-                                width: `${proteinProgress * 100}%`,
-                                backgroundColor: '#FF6B6B',
-                            }]} />
-                        </View>
-                    </View>
-
-                    {/* Carbs */}
-                    <View style={styles.macroRow}>
-                        <View style={styles.macroInfo}>
-                            <Text style={[styles.macroName, { color: '#FFAA33' }]}>CARBS</Text>
-                            <Text style={styles.macroGrams}>
-                                {totals.carbs}g / {plan.macros.carbs}g
-                            </Text>
-                        </View>
-                        <View style={styles.macroBarBg}>
-                            <View style={[styles.macroBarFill, {
-                                width: `${carbsProgress * 100}%`,
-                                backgroundColor: '#FFAA33',
-                            }]} />
-                        </View>
-                    </View>
-
-                    {/* Fats */}
-                    <View style={styles.macroRow}>
-                        <View style={styles.macroInfo}>
-                            <Text style={[styles.macroName, { color: '#4ECDC4' }]}>FATS</Text>
-                            <Text style={styles.macroGrams}>
-                                {totals.fats}g / {plan.macros.fats}g
-                            </Text>
-                        </View>
-                        <View style={styles.macroBarBg}>
-                            <View style={[styles.macroBarFill, {
-                                width: `${fatsProgress * 100}%`,
-                                backgroundColor: '#4ECDC4',
-                            }]} />
-                        </View>
-                    </View>
+                    <MacroBar label="PROTEIN" current={totals.protein} target={plan.macros.protein} color={colors.protein} />
+                    <MacroBar label="CARBS" current={totals.carbs} target={plan.macros.carbs} color={colors.carbs} />
+                    <MacroBar label="FATS" current={totals.fats} target={plan.macros.fats} color={colors.fats} />
                 </View>
 
                 {/* Meal Slots */}
@@ -379,10 +334,12 @@ const styles = StyleSheet.create({
     calorieCard: {
         flexDirection: 'row',
         backgroundColor: colors.surface,
-        borderWidth: 2,
+        borderWidth: 1,
         borderColor: colors.primary,
+        borderRadius: radius.lg,
         padding: spacing[4],
         gap: spacing[4],
+        ...shadows.md,
     },
     calorieRing: {
         alignItems: 'center',
@@ -435,8 +392,8 @@ const styles = StyleSheet.create({
         backgroundColor: colors.surface,
         borderWidth: 1,
         borderColor: colors.border,
-        padding: spacing[3],
-        gap: spacing[3],
+        borderRadius: radius.md,
+        padding: spacing[4],
     },
     macroRow: {},
     macroInfo: {
@@ -467,6 +424,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.surface,
         borderWidth: 1,
         borderColor: colors.border,
+        borderRadius: radius.md,
         marginBottom: spacing[2],
         overflow: 'hidden',
     },
@@ -559,6 +517,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.surface,
         borderWidth: 1,
         borderColor: colors.border,
+        borderRadius: radius.md,
         padding: spacing[3],
     },
     waterHeader: {
@@ -631,6 +590,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.surface,
         borderWidth: 1,
         borderColor: colors.border,
+        borderRadius: radius.md,
         padding: spacing[3],
         justifyContent: 'space-between',
     },

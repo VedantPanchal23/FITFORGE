@@ -22,6 +22,8 @@ import { colors } from '../theme/colors';
 import { textStyles } from '../theme/typography';
 import { spacing, screen } from '../theme/spacing';
 import useProgressStore from '../../store/progressStore';
+import WeightChart from '../components/WeightChart';
+import { radius, shadows } from '../theme/colors';
 
 const MEASUREMENT_FIELDS = [
     { key: 'chest', label: 'CHEST', icon: '📏' },
@@ -157,38 +159,11 @@ const ProgressScreen = ({ onBack }) => {
                         <Text style={styles.emptySubtext}>Log your weight to see the graph.</Text>
                     </View>
                 ) : (
-                    <View style={styles.graphCard}>
-                        {/* Y-axis labels */}
-                        <View style={styles.graphYAxis}>
-                            <Text style={styles.graphYLabel}>{maxWeight}</Text>
-                            <Text style={styles.graphYLabel}>{((maxWeight + minWeight) / 2).toFixed(1)}</Text>
-                            <Text style={styles.graphYLabel}>{minWeight}</Text>
-                        </View>
-
-                        {/* Bars */}
-                        <ScrollView
-                            horizontal
-                            style={styles.graphScroll}
-                            contentContainerStyle={styles.graphBars}
-                            showsHorizontalScrollIndicator={false}
-                        >
-                            {last30.map((entry, i) => {
-                                const height = ((entry.weight - minWeight) / range) * 80 + 10;
-                                const isLast = i === last30.length - 1;
-                                return (
-                                    <View key={entry.date} style={styles.graphBarWrapper}>
-                                        <View style={[styles.graphBar, {
-                                            height: `${height}%`,
-                                            backgroundColor: isLast ? colors.primary : 'rgba(230, 169, 38, 0.4)',
-                                        }]} />
-                                        <Text style={styles.graphBarLabel}>
-                                            {entry.date.slice(8)}
-                                        </Text>
-                                    </View>
-                                );
-                            })}
-                        </ScrollView>
-                    </View>
+                    <WeightChart
+                        data={last30}
+                        height={160}
+                        color={colors.primary}
+                    />
                 )}
 
                 {/* Weight History */}
@@ -316,9 +291,11 @@ const styles = StyleSheet.create({
     // Trend
     trendCard: {
         backgroundColor: colors.surface,
-        borderWidth: 2,
+        borderWidth: 1,
         borderColor: colors.primary,
+        borderRadius: radius.lg,
         padding: spacing[4],
+        ...shadows.md,
     },
     trendHeader: {
         flexDirection: 'row',
@@ -353,6 +330,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.surface,
         borderWidth: 1,
         borderColor: colors.border,
+        borderRadius: radius.md,
         padding: spacing[3],
         marginTop: spacing[3],
     },
@@ -443,9 +421,10 @@ const styles = StyleSheet.create({
         backgroundColor: colors.surface,
         borderWidth: 1,
         borderColor: colors.border,
+        borderRadius: radius.sm,
         padding: spacing[2],
         paddingHorizontal: spacing[3],
-        marginBottom: 1,
+        marginBottom: 2,
     },
     historyDate: {
         ...textStyles.caption,
@@ -463,6 +442,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.surface,
         borderWidth: 1,
         borderColor: colors.border,
+        borderRadius: radius.md,
         padding: spacing[3],
     },
     measurementDate: {
