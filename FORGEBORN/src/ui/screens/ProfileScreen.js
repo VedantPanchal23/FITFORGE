@@ -31,7 +31,9 @@ import useWorkoutStore from '../../store/workoutStore';
 import useNutritionStore from '../../store/nutritionStore';
 import useHabitStore from '../../store/habitStore';
 import useLookmaxxStore from '../../store/lookmaxxStore';
+import useProgressStore from '../../store/progressStore';
 import LookmaxxingScreen from './LookmaxxingScreen';
+import ProgressScreen from './ProgressScreen';
 
 const ProfileScreen = () => {
     const profile = useUserStore((s) => s.profile);
@@ -56,10 +58,18 @@ const ProfileScreen = () => {
     const getTodaysRoutineStatus = useLookmaxxStore((s) => s.getTodaysRoutineStatus);
     const routineStatus = getTodaysRoutineStatus();
 
+    const progressReset = useProgressStore((s) => s.__devReset);
+    const weightLog = useProgressStore((s) => s.weightLog);
+
     const [showLookmaxx, setShowLookmaxx] = useState(false);
+    const [showProgress, setShowProgress] = useState(false);
 
     if (showLookmaxx) {
         return <LookmaxxingScreen onBack={() => setShowLookmaxx(false)} />;
+    }
+
+    if (showProgress) {
+        return <ProgressScreen onBack={() => setShowProgress(false)} />;
     }
 
     const days = getDaysSinceCommitment();
@@ -86,6 +96,7 @@ const ProfileScreen = () => {
                         nutritionReset();
                         habitReset();
                         lookmaxxReset();
+                        progressReset();
                         resetCommitment();
                         resetUser();
                     },
@@ -206,6 +217,26 @@ const ProfileScreen = () => {
                             <Text style={styles.lookmaxxTitle}>LOOKMAXXING</Text>
                             <Text style={styles.lookmaxxSub}>
                                 AM: {routineStatus.amCompleted}/{routineStatus.amTotal} • PM: {routineStatus.pmCompleted}/{routineStatus.pmTotal}
+                            </Text>
+                        </View>
+                    </View>
+                    <Ionicons name="chevron-forward" size={20} color={colors.textDim} />
+                </TouchableOpacity>
+
+                {/* Progress Card */}
+                <TouchableOpacity
+                    style={styles.lookmaxxCard}
+                    onPress={() => setShowProgress(true)}
+                    activeOpacity={0.7}
+                >
+                    <View style={styles.lookmaxxLeft}>
+                        <Text style={styles.lookmaxxIcon}>📊</Text>
+                        <View>
+                            <Text style={styles.lookmaxxTitle}>PROGRESS</Text>
+                            <Text style={styles.lookmaxxSub}>
+                                {weightLog.length > 0
+                                    ? `${weightLog[weightLog.length - 1].weight} kg • ${weightLog.length} entries`
+                                    : 'Weight, measurements, photos'}
                             </Text>
                         </View>
                     </View>

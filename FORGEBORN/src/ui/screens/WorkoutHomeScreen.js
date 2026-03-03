@@ -23,6 +23,7 @@ import useUserStore from '../../store/userStore';
 import useCommitmentStore from '../../store/commitmentStore';
 import useWorkoutStore from '../../store/workoutStore';
 import ActiveWorkoutScreen from './ActiveWorkoutScreen';
+import WorkoutLogScreen from './WorkoutLogScreen';
 
 // Muscle group icons
 const MUSCLE_ICONS = {
@@ -48,6 +49,7 @@ const WorkoutHomeScreen = () => {
     const getThisWeekWorkouts = useWorkoutStore((s) => s.getThisWeekWorkouts);
 
     const [showActive, setShowActive] = useState(false);
+    const [showLog, setShowLog] = useState(false);
 
     // Generate plan if not exists
     useEffect(() => {
@@ -60,6 +62,10 @@ const WorkoutHomeScreen = () => {
     useEffect(() => {
         if (activeWorkout) setShowActive(true);
     }, [activeWorkout]);
+
+    if (showLog) {
+        return <WorkoutLogScreen onBack={() => setShowLog(false)} />;
+    }
 
     if (showActive && activeWorkout) {
         return (
@@ -196,6 +202,16 @@ const WorkoutHomeScreen = () => {
                 <TouchableOpacity style={styles.startButton} onPress={handleStart} activeOpacity={0.8}>
                     <Ionicons name="play" size={22} color="#000" />
                     <Text style={styles.startText}>START WORKOUT</Text>
+                </TouchableOpacity>
+
+                {/* View Log */}
+                <TouchableOpacity
+                    style={styles.logButton}
+                    onPress={() => setShowLog(true)}
+                    activeOpacity={0.7}
+                >
+                    <Ionicons name="calendar-outline" size={18} color={colors.primary} />
+                    <Text style={styles.logButtonText}>VIEW WORKOUT LOG</Text>
                 </TouchableOpacity>
 
                 {/* Week overview */}
@@ -425,6 +441,21 @@ const styles = StyleSheet.create({
         ...textStyles.button,
         color: '#000',
         fontSize: 16,
+    },
+    logButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 1,
+        borderColor: colors.primary,
+        padding: spacing[3],
+        marginTop: spacing[2],
+        gap: spacing[2],
+    },
+    logButtonText: {
+        ...textStyles.label,
+        color: colors.primary,
+        fontSize: 12,
     },
 
     // Week overview
