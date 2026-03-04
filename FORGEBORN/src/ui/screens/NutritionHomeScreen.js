@@ -32,10 +32,10 @@ import MacroBar from '../components/MacroBar';
 import { radius, shadows } from '../theme/colors';
 
 const MEAL_SLOTS = [
-    { type: 'BREAKFAST', label: 'BREAKFAST', icon: '🌅', time: '8:00 AM' },
-    { type: 'LUNCH', label: 'LUNCH', icon: '☀️', time: '1:00 PM' },
-    { type: 'SNACK', label: 'SNACK', icon: '🍎', time: '4:00 PM' },
-    { type: 'DINNER', label: 'DINNER', icon: '🌙', time: '8:00 PM' },
+    { type: 'BREAKFAST', label: 'BREAKFAST', icon: 'sunny-outline', time: '8:00 AM' },
+    { type: 'LUNCH', label: 'LUNCH', icon: 'partly-sunny-outline', time: '1:00 PM' },
+    { type: 'SNACKS', label: 'SNACKS', icon: 'cafe-outline', time: '4:00 PM' },
+    { type: 'DINNER', label: 'DINNER', icon: 'moon-outline', time: '8:00 PM' },
 ];
 
 const NutritionHomeScreen = ({ navigation }) => {
@@ -160,7 +160,7 @@ const NutritionHomeScreen = ({ navigation }) => {
                         <View key={slot.type} style={styles.mealSlot}>
                             <View style={styles.mealSlotHeader}>
                                 <View style={styles.mealSlotLeft}>
-                                    <Text style={styles.mealSlotIcon}>{slot.icon}</Text>
+                                    <Ionicons name={slot.icon} size={18} color={colors.textSecondary} />
                                     <View>
                                         <Text style={styles.mealSlotName}>{slot.label}</Text>
                                         <Text style={styles.mealSlotTime}>{slot.time}</Text>
@@ -218,7 +218,10 @@ const NutritionHomeScreen = ({ navigation }) => {
                 <View style={styles.waterCard}>
                     <View style={styles.waterHeader}>
                         <View>
-                            <Text style={styles.waterTitle}>💧 WATER</Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                                <Ionicons name="water-outline" size={14} color={colors.info} />
+                                <Text style={styles.waterTitle}>WATER</Text>
+                            </View>
                             <Text style={styles.waterCount}>
                                 {totals.water} / {plan.waterGlasses} glasses
                             </Text>
@@ -245,7 +248,11 @@ const NutritionHomeScreen = ({ navigation }) => {
                                 ]}
                             >
                                 <Text style={styles.glassIcon}>
-                                    {i < totals.water ? '💧' : '○'}
+                                    <Ionicons
+                                        name={i < totals.water ? 'water' : 'water-outline'}
+                                        size={16}
+                                        color={i < totals.water ? colors.info : colors.textDim}
+                                    />
                                 </Text>
                             </View>
                         ))}

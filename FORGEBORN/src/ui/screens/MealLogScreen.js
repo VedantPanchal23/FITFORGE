@@ -199,7 +199,10 @@ const MealLogScreen = ({ navigation, route }) => {
             {/* Recent foods quick-add */}
             {recentFoods.length > 0 && search.length === 0 && !selectedCategory && (
                 <View style={styles.recentSection}>
-                    <Text style={styles.recentLabel}>⚡ QUICK ADD</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                        <Ionicons name="flash" size={14} color={colors.primary} />
+                        <Text style={styles.recentLabel}>QUICK ADD</Text>
+                    </View>
                     <ScrollView
                         horizontal
                         showsHorizontalScrollIndicator={false}
