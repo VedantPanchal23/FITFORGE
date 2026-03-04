@@ -23,7 +23,8 @@ import { spacing, screen } from '../theme/spacing';
 import { foodDatabase, getAllCategories, searchFoods, getFoodsByCategory, FoodCategory } from '../../data/foodDB';
 import useNutritionStore from '../../store/nutritionStore';
 
-const MealLogScreen = ({ mealType = 'LUNCH', onClose }) => {
+const MealLogScreen = ({ navigation, route }) => {
+    const mealType = route?.params?.mealType || 'LUNCH';
     const [search, setSearch] = useState('');
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [quantity, setQuantity] = useState('1');
@@ -67,7 +68,7 @@ const MealLogScreen = ({ mealType = 'LUNCH', onClose }) => {
         logFood(food, mealType, qty);
         setSelectedFood(null);
         setQuantity('1');
-        onClose && onClose();
+        navigation.goBack();
     };
 
     const renderFoodItem = ({ item: food }) => {
@@ -144,7 +145,7 @@ const MealLogScreen = ({ mealType = 'LUNCH', onClose }) => {
 
             {/* Header */}
             <View style={styles.header}>
-                <TouchableOpacity onPress={onClose}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Ionicons name="arrow-back" size={24} color={colors.text} />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>ADD {mealType}</Text>
@@ -208,7 +209,7 @@ const MealLogScreen = ({ mealType = 'LUNCH', onClose }) => {
                             <TouchableOpacity
                                 key={`recent-${food.id}-${i}`}
                                 style={styles.recentChip}
-                                onPress={() => { logFood(food, mealType, 1); onClose && onClose(); }}
+                                onPress={() => { logFood(food, mealType, 1); navigation.goBack(); }}
                                 activeOpacity={0.7}
                             >
                                 <Text style={styles.recentName} numberOfLines={1}>{food.name}</Text>

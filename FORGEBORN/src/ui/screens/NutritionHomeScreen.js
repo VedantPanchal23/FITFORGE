@@ -11,7 +11,7 @@
  * Inspired by: MacroFactor (clean UI), HealthifyMe (Indian meals), MFP (macro pie)
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
     View,
     Text,
@@ -27,7 +27,6 @@ import { textStyles } from '../theme/typography';
 import { spacing, screen } from '../theme/spacing';
 import useUserStore from '../../store/userStore';
 import useNutritionStore from '../../store/nutritionStore';
-import MealLogScreen from './MealLogScreen';
 import CalorieRing from '../components/CalorieRing';
 import MacroBar from '../components/MacroBar';
 import { radius, shadows } from '../theme/colors';
@@ -39,7 +38,7 @@ const MEAL_SLOTS = [
     { type: 'DINNER', label: 'DINNER', icon: '🌙', time: '8:00 PM' },
 ];
 
-const NutritionHomeScreen = () => {
+const NutritionHomeScreen = ({ navigation }) => {
     const profile = useUserStore((s) => s.profile);
     const nutritionPlan = useNutritionStore((s) => s.nutritionPlan);
     const generatePlan = useNutritionStore((s) => s.generatePlan);
@@ -49,7 +48,6 @@ const NutritionHomeScreen = () => {
     const removeFood = useNutritionStore((s) => s.removeFood);
     const getWeekSummary = useNutritionStore((s) => s.getWeekSummary);
 
-    const [showMealLog, setShowMealLog] = useState(null); // meal type or null
     const [refreshKey, setRefreshKey] = useState(0);
 
     // Generate plan if not exists
@@ -59,17 +57,13 @@ const NutritionHomeScreen = () => {
         }
     }, [profile, nutritionPlan]);
 
-    if (showMealLog) {
-        return (
-            <MealLogScreen
-                mealType={showMealLog}
-                onClose={() => {
-                    setShowMealLog(null);
-                    setRefreshKey(k => k + 1);
-                }}
-            />
-        );
-    }
+    // Refresh when coming back from MealLog
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            setRefreshKey(k => k + 1);
+        });
+        return unsubscribe;
+    }, [navigation]);
 
     const plan = nutritionPlan || {
         targetCalories: 2200,
@@ -178,7 +172,7 @@ const NutritionHomeScreen = () => {
                                     )}
                                     <TouchableOpacity
                                         style={styles.addMealBtn}
-                                        onPress={() => setShowMealLog(slot.type)}
+                                        onPress={() => navigation.navigate('MealLog', { mealType: slot.type })}
                                     >
                                         <Ionicons name="add" size={18} color={colors.primary} />
                                     </TouchableOpacity>
@@ -209,7 +203,7 @@ const NutritionHomeScreen = () => {
                             {meals.length === 0 && (
                                 <TouchableOpacity
                                     style={styles.emptySlot}
-                                    onPress={() => setShowMealLog(slot.type)}
+                                    onPress={() => navigation.navigate('MealLog', { mealType: slot.type })}
                                 >
                                     <Ionicons name="add-circle-outline" size={16} color={colors.textDim} />
                                     <Text style={styles.emptySlotText}>Tap to log {slot.label.toLowerCase()}</Text>

@@ -35,7 +35,7 @@ const MEASUREMENT_FIELDS = [
     { key: 'neck', label: 'NECK', icon: '📏' },
 ];
 
-const ProgressScreen = ({ onBack }) => {
+const ProgressScreen = ({ navigation }) => {
     const weightLog = useProgressStore((s) => s.weightLog);
     const logWeight = useProgressStore((s) => s.logWeight);
     const getWeightTrend = useProgressStore((s) => s.getWeightTrend);
@@ -95,11 +95,9 @@ const ProgressScreen = ({ onBack }) => {
             >
                 {/* Header */}
                 <View style={styles.header}>
-                    {onBack && (
-                        <TouchableOpacity onPress={onBack}>
-                            <Ionicons name="arrow-back" size={24} color={colors.text} />
-                        </TouchableOpacity>
-                    )}
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                        <Ionicons name="arrow-back" size={24} color={colors.text} />
+                    </TouchableOpacity>
                     <Text style={styles.title}>PROGRESS</Text>
                 </View>
                 <Text style={styles.subtitle}>TRACK. MEASURE. EVOLVE.</Text>

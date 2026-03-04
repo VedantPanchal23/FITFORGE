@@ -20,7 +20,7 @@ import { textStyles } from '../theme/typography';
 import { spacing, screen } from '../theme/spacing';
 import useWorkoutStore from '../../store/workoutStore';
 
-const WorkoutLogScreen = ({ onBack }) => {
+const WorkoutLogScreen = ({ navigation }) => {
     const workoutHistory = useWorkoutStore((s) => s.workoutHistory);
     const personalRecords = useWorkoutStore((s) => s.personalRecords);
     const totalWorkoutsCompleted = useWorkoutStore((s) => s.totalWorkoutsCompleted);
@@ -108,11 +108,9 @@ const WorkoutLogScreen = ({ onBack }) => {
             >
                 {/* Header */}
                 <View style={styles.header}>
-                    {onBack && (
-                        <TouchableOpacity onPress={onBack}>
-                            <Ionicons name="arrow-back" size={24} color={colors.text} />
-                        </TouchableOpacity>
-                    )}
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                        <Ionicons name="arrow-back" size={24} color={colors.text} />
+                    </TouchableOpacity>
                     <Text style={styles.title}>WORKOUT LOG</Text>
                 </View>
 

@@ -11,7 +11,7 @@
  * - DEV reset
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import {
     View,
     Text,
@@ -32,10 +32,8 @@ import useNutritionStore from '../../store/nutritionStore';
 import useHabitStore from '../../store/habitStore';
 import useLookmaxxStore from '../../store/lookmaxxStore';
 import useProgressStore from '../../store/progressStore';
-import LookmaxxingScreen from './LookmaxxingScreen';
-import ProgressScreen from './ProgressScreen';
 
-const ProfileScreen = () => {
+const ProfileScreen = ({ navigation }) => {
     const profile = useUserStore((s) => s.profile);
     const resetUser = useUserStore((s) => s.resetUser);
     const getDaysSinceCommitment = useCommitmentStore((s) => s.getDaysSinceCommitment);
@@ -61,16 +59,6 @@ const ProfileScreen = () => {
     const progressReset = useProgressStore((s) => s.__devReset);
     const weightLog = useProgressStore((s) => s.weightLog);
 
-    const [showLookmaxx, setShowLookmaxx] = useState(false);
-    const [showProgress, setShowProgress] = useState(false);
-
-    if (showLookmaxx) {
-        return <LookmaxxingScreen onBack={() => setShowLookmaxx(false)} />;
-    }
-
-    if (showProgress) {
-        return <ProgressScreen onBack={() => setShowProgress(false)} />;
-    }
 
     const days = getDaysSinceCommitment();
     const name = profile?.name || 'OPERATOR';
@@ -208,7 +196,7 @@ const ProfileScreen = () => {
                 <Text style={styles.sectionLabel}>APPEARANCE</Text>
                 <TouchableOpacity
                     style={styles.lookmaxxCard}
-                    onPress={() => setShowLookmaxx(true)}
+                    onPress={() => navigation.navigate('Lookmaxxing')}
                     activeOpacity={0.7}
                 >
                     <View style={styles.lookmaxxLeft}>
@@ -226,7 +214,7 @@ const ProfileScreen = () => {
                 {/* Progress Card */}
                 <TouchableOpacity
                     style={styles.lookmaxxCard}
-                    onPress={() => setShowProgress(true)}
+                    onPress={() => navigation.navigate('Progress')}
                     activeOpacity={0.7}
                 >
                     <View style={styles.lookmaxxLeft}>

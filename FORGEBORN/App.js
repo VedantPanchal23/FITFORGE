@@ -1,17 +1,20 @@
 /**
- * FORGEBORN — APP ENTRY POINT
+ * FORGEBORN — APP ENTRY POINT (V2)
  * 
  * Flow:
  * 1. If not committed → Creed Screen
  * 2. If not onboarded → Onboarding Screen 
  * 3. If locked (obligation due) → Lock Screen (overlay)
- * 4. If committed + onboarded → Tab Navigator (5 tabs)
+ * 4. If committed + onboarded → Tab Navigator with nested stacks
+ * 
+ * V2: Proper React Navigation stacks for smooth transitions
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
 import { useFonts, Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold, Inter_900Black } from '@expo-google-fonts/inter';
 import * as SplashScreen from 'expo-splash-screen';
@@ -24,9 +27,14 @@ import CreedScreen from './src/ui/screens/CreedScreen';
 import OnboardingScreen from './src/ui/screens/OnboardingScreen';
 import DashboardScreen from './src/ui/screens/DashboardScreen';
 import WorkoutHomeScreen from './src/ui/screens/WorkoutHomeScreen';
+import ActiveWorkoutScreen from './src/ui/screens/ActiveWorkoutScreen';
+import WorkoutLogScreen from './src/ui/screens/WorkoutLogScreen';
 import NutritionHomeScreen from './src/ui/screens/NutritionHomeScreen';
+import MealLogScreen from './src/ui/screens/MealLogScreen';
 import DisciplineScreen from './src/ui/screens/DisciplineScreen';
 import ProfileScreen from './src/ui/screens/ProfileScreen';
+import LookmaxxingScreen from './src/ui/screens/LookmaxxingScreen';
+import ProgressScreen from './src/ui/screens/ProgressScreen';
 import LockScreen from './src/ui/screens/LockScreen';
 import CreateObligationScreen from './src/ui/screens/CreateObligationScreen';
 
@@ -37,21 +45,65 @@ import useObligationStore from './src/store/obligationStore';
 import { colors } from './src/ui/theme/colors';
 
 const Tab = createBottomTabNavigator();
+const WorkoutStack = createNativeStackNavigator();
+const NutritionStack = createNativeStackNavigator();
+const ProfileStack = createNativeStackNavigator();
+const DisciplineStack = createNativeStackNavigator();
+
+const screenOptions = { headerShown: false, animation: 'slide_from_right' };
+
+// ─── Workout Stack ────────────────────────────────────────────────────────────
+function WorkoutStackScreen() {
+  return (
+    <WorkoutStack.Navigator screenOptions={screenOptions}>
+      <WorkoutStack.Screen name="WorkoutHome" component={WorkoutHomeScreen} />
+      <WorkoutStack.Screen name="ActiveWorkout" component={ActiveWorkoutScreen} />
+      <WorkoutStack.Screen name="WorkoutLog" component={WorkoutLogScreen} />
+    </WorkoutStack.Navigator>
+  );
+}
+
+// ─── Nutrition Stack ──────────────────────────────────────────────────────────
+function NutritionStackScreen() {
+  return (
+    <NutritionStack.Navigator screenOptions={screenOptions}>
+      <NutritionStack.Screen name="NutritionHome" component={NutritionHomeScreen} />
+      <NutritionStack.Screen
+        name="MealLog"
+        component={MealLogScreen}
+        options={{ animation: 'slide_from_bottom' }}
+      />
+    </NutritionStack.Navigator>
+  );
+}
+
+// ─── Profile Stack ────────────────────────────────────────────────────────────
+function ProfileStackScreen() {
+  return (
+    <ProfileStack.Navigator screenOptions={screenOptions}>
+      <ProfileStack.Screen name="ProfileHome" component={ProfileScreen} />
+      <ProfileStack.Screen name="Lookmaxxing" component={LookmaxxingScreen} />
+      <ProfileStack.Screen name="Progress" component={ProgressScreen} />
+    </ProfileStack.Navigator>
+  );
+}
+
+// ─── Discipline Stack ─────────────────────────────────────────────────────────
+function DisciplineStackScreen() {
+  return (
+    <DisciplineStack.Navigator screenOptions={screenOptions}>
+      <DisciplineStack.Screen name="DisciplineHome" component={DisciplineScreen} />
+      <DisciplineStack.Screen
+        name="CreateObligation"
+        component={CreateObligationScreen}
+        options={{ animation: 'slide_from_bottom' }}
+      />
+    </DisciplineStack.Navigator>
+  );
+}
 
 // ─── Tab Navigator ────────────────────────────────────────────────────────────
 function MainTabs() {
-  const [showCreate, setShowCreate] = useState(false);
-  const tick = useObligationStore((s) => s.tick);
-
-  if (showCreate) {
-    return (
-      <CreateObligationScreen
-        onComplete={() => { setShowCreate(false); tick(); }}
-        onCancel={() => setShowCreate(false)}
-      />
-    );
-  }
-
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -85,13 +137,10 @@ function MainTabs() {
       })}
     >
       <Tab.Screen name="Dashboard" component={DashboardScreen} />
-      <Tab.Screen name="Workout" component={WorkoutHomeScreen} />
-      <Tab.Screen name="Nutrition" component={NutritionHomeScreen} />
-      <Tab.Screen
-        name="Discipline"
-        children={() => <DisciplineScreen onCreateObligation={() => setShowCreate(true)} />}
-      />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen name="Workout" component={WorkoutStackScreen} />
+      <Tab.Screen name="Nutrition" component={NutritionStackScreen} />
+      <Tab.Screen name="Discipline" component={DisciplineStackScreen} />
+      <Tab.Screen name="Profile" component={ProfileStackScreen} />
     </Tab.Navigator>
   );
 }
@@ -176,7 +225,7 @@ export default function App() {
     return <LockScreen />;
   }
 
-  // MAIN APP: Tab Navigator
+  // MAIN APP: Tab Navigator with nested stacks
   return (
     <NavigationContainer>
       <MainTabs />

@@ -6,7 +6,7 @@
  * Navigates to ActiveWorkoutScreen when started.
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
     View,
     Text,
@@ -22,8 +22,6 @@ import { spacing, screen } from '../theme/spacing';
 import useUserStore from '../../store/userStore';
 import useCommitmentStore from '../../store/commitmentStore';
 import useWorkoutStore from '../../store/workoutStore';
-import ActiveWorkoutScreen from './ActiveWorkoutScreen';
-import WorkoutLogScreen from './WorkoutLogScreen';
 
 // Muscle group icons
 const MUSCLE_ICONS = {
@@ -33,7 +31,7 @@ const MUSCLE_ICONS = {
     CARDIO: '❤️', FULL_BODY: '🔥',
 };
 
-const WorkoutHomeScreen = () => {
+const WorkoutHomeScreen = ({ navigation }) => {
     const profile = useUserStore((s) => s.profile);
     const getDaysSinceCommitment = useCommitmentStore((s) => s.getDaysSinceCommitment);
     const days = getDaysSinceCommitment();
@@ -48,9 +46,6 @@ const WorkoutHomeScreen = () => {
     const workoutHistory = useWorkoutStore((s) => s.workoutHistory);
     const getThisWeekWorkouts = useWorkoutStore((s) => s.getThisWeekWorkouts);
 
-    const [showActive, setShowActive] = useState(false);
-    const [showLog, setShowLog] = useState(false);
-
     // Generate plan if not exists
     useEffect(() => {
         if (!currentPlan && profile) {
@@ -58,23 +53,10 @@ const WorkoutHomeScreen = () => {
         }
     }, [profile, currentPlan]);
 
-    // Show active workout if one is in progress
+    // Navigate to active workout if one is in progress
     useEffect(() => {
-        if (activeWorkout) setShowActive(true);
+        if (activeWorkout) navigation.navigate('ActiveWorkout');
     }, [activeWorkout]);
-
-    if (showLog) {
-        return <WorkoutLogScreen onBack={() => setShowLog(false)} />;
-    }
-
-    if (showActive && activeWorkout) {
-        return (
-            <ActiveWorkoutScreen
-                onFinish={() => setShowActive(false)}
-                onCancel={() => setShowActive(false)}
-            />
-        );
-    }
 
     const todaysWorkout = getTodaysWorkout(days);
     const weekWorkouts = getThisWeekWorkouts();
@@ -99,7 +81,7 @@ const WorkoutHomeScreen = () => {
 
     const handleStart = () => {
         startWorkout(todaysWorkout);
-        setShowActive(true);
+        navigation.navigate('ActiveWorkout');
     };
 
     return (
@@ -207,7 +189,7 @@ const WorkoutHomeScreen = () => {
                 {/* View Log */}
                 <TouchableOpacity
                     style={styles.logButton}
-                    onPress={() => setShowLog(true)}
+                    onPress={() => navigation.navigate('WorkoutLog')}
                     activeOpacity={0.7}
                 >
                     <Ionicons name="calendar-outline" size={18} color={colors.primary} />

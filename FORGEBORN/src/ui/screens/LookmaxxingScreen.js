@@ -22,7 +22,7 @@ import { textStyles } from '../theme/typography';
 import { spacing, screen } from '../theme/spacing';
 import useLookmaxxStore from '../../store/lookmaxxStore';
 
-const LookmaxxingScreen = ({ onBack }) => {
+const LookmaxxingScreen = ({ navigation }) => {
     const amRoutine = useLookmaxxStore((s) => s.amRoutine);
     const pmRoutine = useLookmaxxStore((s) => s.pmRoutine);
     const grooming = useLookmaxxStore((s) => s.grooming);
@@ -72,11 +72,9 @@ const LookmaxxingScreen = ({ onBack }) => {
             >
                 {/* Header */}
                 <View style={styles.header}>
-                    {onBack && (
-                        <TouchableOpacity onPress={onBack}>
-                            <Ionicons name="arrow-back" size={24} color={colors.text} />
-                        </TouchableOpacity>
-                    )}
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                        <Ionicons name="arrow-back" size={24} color={colors.text} />
+                    </TouchableOpacity>
                     <Text style={styles.title}>LOOKMAXXING</Text>
                 </View>
                 <Text style={styles.subtitle}>SHARPEN THE BLADE. REFINE THE WEAPON.</Text>

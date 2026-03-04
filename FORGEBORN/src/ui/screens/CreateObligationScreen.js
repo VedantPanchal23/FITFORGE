@@ -39,7 +39,7 @@ const TIME_PRESETS = [
     { label: 'TOMORROW', minutes: 24 * 60 },
 ];
 
-const CreateObligationScreen = ({ onComplete, onCancel }) => {
+const CreateObligationScreen = ({ navigation }) => {
     const [selectedPreset, setSelectedPreset] = useState(null);
     const [customName, setCustomName] = useState('');
     const [customUnits, setCustomUnits] = useState('1');
@@ -76,7 +76,7 @@ const CreateObligationScreen = ({ onComplete, onCancel }) => {
             tick();
         }, 100);
 
-        onComplete && onComplete();
+        navigation.goBack();
     };
 
     const canCreate = customName && customUnits && selectedTime;
@@ -85,7 +85,7 @@ const CreateObligationScreen = ({ onComplete, onCancel }) => {
         <View style={styles.container}>
             {/* Header */}
             <View style={styles.header}>
-                <TouchableOpacity onPress={onCancel} style={styles.cancelButton}>
+                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.cancelButton}>
                     <Text style={styles.cancelText}>✕</Text>
                 </TouchableOpacity>
                 <Text style={styles.title}>NEW OBLIGATION</Text>

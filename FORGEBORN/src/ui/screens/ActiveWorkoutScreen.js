@@ -31,7 +31,7 @@ import { textStyles } from '../theme/typography';
 import { spacing, screen } from '../theme/spacing';
 import useWorkoutStore from '../../store/workoutStore';
 
-const ActiveWorkoutScreen = ({ onFinish, onCancel }) => {
+const ActiveWorkoutScreen = ({ navigation }) => {
     const activeWorkout = useWorkoutStore((s) => s.activeWorkout);
     const logSet = useWorkoutStore((s) => s.logSet);
     const startRest = useWorkoutStore((s) => s.startRest);
@@ -128,7 +128,7 @@ const ActiveWorkoutScreen = ({ onFinish, onCancel }) => {
                     onPress: () => {
                         const record = finishWorkout();
                         Vibration.vibrate([0, 50, 100, 50, 100, 50, 200]);
-                        onFinish && onFinish(record);
+                        navigation.goBack();
                     },
                 },
             ]
@@ -145,7 +145,7 @@ const ActiveWorkoutScreen = ({ onFinish, onCancel }) => {
                     text: 'QUIT', style: 'destructive',
                     onPress: () => {
                         cancelWorkout();
-                        onCancel && onCancel();
+                        navigation.goBack();
                     },
                 },
             ]
