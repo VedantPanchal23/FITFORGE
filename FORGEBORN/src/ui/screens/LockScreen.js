@@ -144,7 +144,10 @@ const LockScreen = () => {
 
             {/* Lock indicator */}
             <View style={styles.lockIndicator}>
-                <Text style={styles.lockText}>🔒 LOCKED</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                    <Ionicons name="lock-closed" size={16} color={colors.danger} />
+                    <Text style={styles.lockText}>LOCKED</Text>
+                </View>
             </View>
 
             {/* Obligation name */}

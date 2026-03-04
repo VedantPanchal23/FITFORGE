@@ -376,12 +376,12 @@ const OnboardingScreen = ({ onComplete }) => {
                     </Text>
                     <View style={styles.optionsGrid}>
                         {[
-                            { key: CardioType.RUNNING, label: 'RUNNING', sub: '🏃' },
-                            { key: CardioType.CYCLING, label: 'CYCLING', sub: '🚴' },
-                            { key: CardioType.SWIMMING, label: 'SWIMMING', sub: '🏊' },
-                            { key: CardioType.JUMP_ROPE, label: 'JUMP ROPE', sub: '⚡' },
-                            { key: CardioType.WALKING, label: 'WALKING', sub: '🚶' },
-                            { key: CardioType.HIIT, label: 'HIIT', sub: '🔥' },
+                            { key: CardioType.RUNNING, label: 'RUNNING', sub: 'ENDURANCE' },
+                            { key: CardioType.CYCLING, label: 'CYCLING', sub: 'LOW IMPACT' },
+                            { key: CardioType.SWIMMING, label: 'SWIMMING', sub: 'FULL BODY' },
+                            { key: CardioType.JUMP_ROPE, label: 'JUMP ROPE', sub: 'EXPLOSIVE' },
+                            { key: CardioType.WALKING, label: 'WALKING', sub: 'RECOVERY' },
+                            { key: CardioType.HIIT, label: 'HIIT', sub: 'INTENSE' },
                         ].map(item => (
                             <OptionButton
                                 key={item.key}
@@ -573,7 +573,7 @@ const OnboardingScreen = ({ onComplete }) => {
                         onPress={handleFinish}
                         disabled={!canProceed()}
                     >
-                        <Text style={styles.forgeText}>FORGE MY PLAN ⚔️</Text>
+                        <Text style={styles.forgeText}>FORGE MY PLAN</Text>
                     </TouchableOpacity>
                 ) : (
                     <TouchableOpacity

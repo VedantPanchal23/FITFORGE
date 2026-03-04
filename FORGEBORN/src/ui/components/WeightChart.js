@@ -18,7 +18,7 @@ const WeightChart = ({
     if (data.length < 2) {
         return (
             <View style={[styles.container, styles.empty, { height }]}>
-                <Text style={styles.emptyIcon}>📊</Text>
+                <Text style={styles.emptyIcon}>—</Text>
                 <Text style={styles.emptyText}>Need 2+ entries for chart</Text>
             </View>
         );

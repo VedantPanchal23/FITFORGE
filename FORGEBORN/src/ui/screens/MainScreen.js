@@ -152,7 +152,7 @@ const MainScreen = ({ onCreateObligation }) => {
 
                             {nextObligation.status === ObligationStatus.BINDING && (
                                 <Text style={styles.bindingWarning}>
-                                    ⚠️ CANNOT BE MODIFIED OR DELETED
+                                    CANNOT BE MODIFIED OR DELETED
                                 </Text>
                             )}
                         </View>

@@ -96,7 +96,10 @@ const CreateObligationScreen = ({ navigation }) => {
                 {/* Warning */}
                 <View style={styles.warningBox}>
                     <Text style={styles.warningText}>
-                        ⚠️ ONCE SCHEDULED, YOU WILL BE HELD ACCOUNTABLE
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                            <Ionicons name="alert-circle-outline" size={14} color={colors.warning} />
+                            <Text style={styles.warningText}>ONCE SCHEDULED, YOU WILL BE HELD ACCOUNTABLE</Text>
+                        </View>
                     </Text>
                 </View>
 
@@ -186,7 +189,10 @@ const CreateObligationScreen = ({ navigation }) => {
 
                 {selectedTime?.label === 'NOW' && (
                     <Text style={styles.nowWarning}>
-                        ⚡ SYSTEM WILL LOCK IMMEDIATELY
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                            <Ionicons name="flash" size={14} color={colors.primary} />
+                            <Text style={styles.warningText}>SYSTEM WILL LOCK IMMEDIATELY</Text>
+                        </View>
                     </Text>
                 )}
 
