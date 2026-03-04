@@ -144,7 +144,10 @@ const DisciplineScreen = () => {
                         }]} />
                     </View>
                     {todayStatus.isPerfect && (
-                        <Text style={styles.perfectBadge}>⭐ PERFECT DAY</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                            <Ionicons name="star" size={14} color={colors.success} />
+                            <Text style={styles.perfectBadge}>PERFECT DAY</Text>
+                        </View>
                     )}
                 </View>
 
@@ -204,7 +207,7 @@ const DisciplineScreen = () => {
                                         <View style={[styles.checkbox, done && styles.checkboxDone]}>
                                             {done && <Ionicons name="checkmark" size={14} color="#000" />}
                                         </View>
-                                        <Text style={styles.habitIcon}>{habit.icon}</Text>
+                                        <Ionicons name={habit.icon} size={16} color={colors.textSecondary} />
                                         <View style={styles.habitInfo}>
                                             <Text style={[styles.habitName, done && styles.habitNameDone]}>
                                                 {habit.name}
@@ -215,8 +218,9 @@ const DisciplineScreen = () => {
                                     <View style={styles.habitRight}>
                                         {streak.current > 0 && (
                                             <View style={styles.streakBadge}>
+                                                <Ionicons name="flame" size={12} color="#FF6B6B" />
                                                 <Text style={styles.streakText}>
-                                                    🔥 {streak.current}
+                                                    {streak.current}
                                                 </Text>
                                             </View>
                                         )}
