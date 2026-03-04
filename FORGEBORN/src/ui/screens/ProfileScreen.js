@@ -72,7 +72,7 @@ const ProfileScreen = ({ navigation }) => {
 
     const handleDevReset = () => {
         Alert.alert(
-            '⚠️ DEV RESET',
+            'DEV RESET',
             'This will ERASE ALL DATA including profile, workout history, nutrition logs, habits, and lookmaxxing progress.\n\nYou will be sent back to onboarding.',
             [
                 { text: 'CANCEL', style: 'cancel' },
@@ -171,7 +171,10 @@ const ProfileScreen = ({ navigation }) => {
                         <Text style={styles.allTimeLabel}>WORKOUTS</Text>
                     </View>
                     <View style={styles.allTimeStat}>
-                        <Text style={styles.allTimeVal}>🔥 {workoutStreak}</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                            <Ionicons name="flame" size={14} color={colors.primary} />
+                            <Text style={styles.allTimeVal}>{workoutStreak}</Text>
+                        </View>
                         <Text style={styles.allTimeLabel}>STREAK</Text>
                     </View>
                     <View style={styles.allTimeStat}>
@@ -183,7 +186,10 @@ const ProfileScreen = ({ navigation }) => {
                         <Text style={styles.allTimeLabel}>HABITS DONE</Text>
                     </View>
                     <View style={styles.allTimeStat}>
-                        <Text style={styles.allTimeVal}>⭐ {perfectDays}</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                            <Ionicons name="star" size={14} color={colors.primary} />
+                            <Text style={styles.allTimeVal}>{perfectDays}</Text>
+                        </View>
                         <Text style={styles.allTimeLabel}>PERFECT DAYS</Text>
                     </View>
                     <View style={styles.allTimeStat}>
@@ -218,7 +224,7 @@ const ProfileScreen = ({ navigation }) => {
                     activeOpacity={0.7}
                 >
                     <View style={styles.lookmaxxLeft}>
-                        <Text style={styles.lookmaxxIcon}>📊</Text>
+                        <Ionicons name="analytics-outline" size={22} color={colors.primary} />
                         <View>
                             <Text style={styles.lookmaxxTitle}>PROGRESS</Text>
                             <Text style={styles.lookmaxxSub}>

@@ -166,7 +166,10 @@ const DashboardScreen = () => {
                     <View style={styles.statCard}>
                         <Ionicons name="water" size={20} color="#4FA4FF" />
                         <Text style={styles.statNumber}>{nutritionTotals.water}</Text>
-                        <Text style={styles.statLabel}>WATER 💧</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                            <Ionicons name="water-outline" size={12} color={colors.info} />
+                            <Text style={styles.statLabel}>WATER</Text>
+                        </View>
                     </View>
                 </View>
 
@@ -195,7 +198,7 @@ const DashboardScreen = () => {
                             }]} />
                         </View>
                         <Text style={styles.progressText}>
-                            {activeWorkout ? 'IN PROGRESS' : workoutDone ? 'COMPLETE ✅' : 'Not started'}
+                            {activeWorkout ? 'IN PROGRESS' : workoutDone ? 'COMPLETE' : 'Not started'}
                         </Text>
                     </View>
                 </View>
@@ -249,7 +252,7 @@ const DashboardScreen = () => {
                             <Text style={styles.missionTitle}>DISCIPLINE</Text>
                             <Text style={styles.missionSub}>
                                 {habitStatus.completed} / {habitStatus.total} habits
-                                {habitStatus.isPerfect ? ' ⭐ PERFECT' : ''}
+                                {habitStatus.isPerfect ? ' PERFECT' : ''}
                             </Text>
                         </View>
                         <Ionicons name="chevron-forward" size={20} color={colors.textDim} />
