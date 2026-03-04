@@ -82,7 +82,7 @@ const LookmaxxingScreen = ({ navigation }) => {
                 {/* Progress cards */}
                 <View style={styles.progressRow}>
                     <View style={[styles.progressCard, status.isAMDone && styles.progressCardDone]}>
-                        <Text style={styles.progressIcon}>🌅</Text>
+                        <Ionicons name="sunny-outline" size={22} color={colors.primary} />
                         <Text style={styles.progressNum}>{status.amCompleted}/{status.amTotal}</Text>
                         <Text style={styles.progressLabel}>AM ROUTINE</Text>
                         <View style={styles.miniBarBg}>
@@ -90,7 +90,7 @@ const LookmaxxingScreen = ({ navigation }) => {
                         </View>
                     </View>
                     <View style={[styles.progressCard, status.isPMDone && styles.progressCardDone]}>
-                        <Text style={styles.progressIcon}>🌙</Text>
+                        <Ionicons name="moon-outline" size={22} color={colors.primary} />
                         <Text style={styles.progressNum}>{status.pmCompleted}/{status.pmTotal}</Text>
                         <Text style={styles.progressLabel}>PM ROUTINE</Text>
                         <View style={styles.miniBarBg}>
@@ -100,7 +100,10 @@ const LookmaxxingScreen = ({ navigation }) => {
                 </View>
 
                 {/* AM Routine */}
-                <Text style={styles.sectionLabel}>🌅 MORNING PROTOCOL</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                    <Ionicons name="sunny-outline" size={14} color={colors.textDim} />
+                    <Text style={styles.sectionLabel}>MORNING PROTOCOL</Text>
+                </View>
                 {amRoutine.map((item) => {
                     const done = isAMDone(item.id);
                     return (
@@ -113,7 +116,7 @@ const LookmaxxingScreen = ({ navigation }) => {
                             <View style={[styles.checkbox, done && styles.checkboxDone]}>
                                 {done && <Ionicons name="checkmark" size={14} color="#000" />}
                             </View>
-                            <Text style={styles.routineIcon}>{item.icon}</Text>
+                            <Ionicons name={item.icon} size={16} color={colors.textSecondary} />
                             <Text style={[styles.routineName, done && styles.routineNameDone]}>
                                 {item.name}
                             </Text>
@@ -122,7 +125,10 @@ const LookmaxxingScreen = ({ navigation }) => {
                 })}
 
                 {/* PM Routine */}
-                <Text style={[styles.sectionLabel, { marginTop: spacing[5] }]}>🌙 EVENING PROTOCOL</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: spacing[5] }}>
+                    <Ionicons name="moon-outline" size={14} color={colors.textDim} />
+                    <Text style={styles.sectionLabel}>EVENING PROTOCOL</Text>
+                </View>
                 {pmRoutine.map((item) => {
                     const done = isPMDone(item.id);
                     return (
@@ -135,7 +141,7 @@ const LookmaxxingScreen = ({ navigation }) => {
                             <View style={[styles.checkbox, done && styles.checkboxDone]}>
                                 {done && <Ionicons name="checkmark" size={14} color="#000" />}
                             </View>
-                            <Text style={styles.routineIcon}>{item.icon}</Text>
+                            <Ionicons name={item.icon} size={16} color={colors.textSecondary} />
                             <Text style={[styles.routineName, done && styles.routineNameDone]}>
                                 {item.name}
                             </Text>
@@ -144,7 +150,10 @@ const LookmaxxingScreen = ({ navigation }) => {
                 })}
 
                 {/* Grooming Schedule */}
-                <Text style={[styles.sectionLabel, { marginTop: spacing[5] }]}>✂️ GROOMING SCHEDULE</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: spacing[5] }}>
+                    <Ionicons name="cut-outline" size={14} color={colors.textDim} />
+                    <Text style={styles.sectionLabel}>GROOMING SCHEDULE</Text>
+                </View>
                 {grooming.map((item) => {
                     const isDue = isGroomingDue(item);
                     const daysSince = item.lastDone
@@ -154,7 +163,7 @@ const LookmaxxingScreen = ({ navigation }) => {
                     return (
                         <View key={item.id} style={[styles.groomingItem, isDue && styles.groomingDue]}>
                             <View style={styles.groomingLeft}>
-                                <Text style={styles.groomingIcon}>{item.icon}</Text>
+                                <Ionicons name={item.icon} size={16} color={colors.textSecondary} />
                                 <View>
                                     <Text style={styles.groomingName}>{item.name}</Text>
                                     <Text style={styles.groomingFreq}>{item.frequency}</Text>
@@ -182,7 +191,10 @@ const LookmaxxingScreen = ({ navigation }) => {
                 })}
 
                 {/* Sleep Tracker */}
-                <Text style={[styles.sectionLabel, { marginTop: spacing[5] }]}>😴 SLEEP</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: spacing[5] }}>
+                    <Ionicons name="moon-outline" size={14} color={colors.textDim} />
+                    <Text style={styles.sectionLabel}>SLEEP</Text>
+                </View>
                 <View style={styles.sleepCard}>
                     {todaysSleep ? (
                         <View style={styles.sleepLogged}>
@@ -202,7 +214,11 @@ const LookmaxxingScreen = ({ navigation }) => {
                                 backgroundColor: todaysSleep.hours >= 7 ? colors.success : colors.danger,
                             }]}>
                                 <Text style={styles.sleepBadgeText}>
-                                    {todaysSleep.hours >= 7 ? '✅' : '⚠️'}
+                                    <Ionicons
+                                        name={todaysSleep.hours >= 7 ? 'checkmark-circle' : 'alert-circle'}
+                                        size={18}
+                                        color={todaysSleep.hours >= 7 ? colors.success : colors.danger}
+                                    />
                                 </Text>
                             </View>
                         </View>
@@ -238,7 +254,10 @@ const LookmaxxingScreen = ({ navigation }) => {
                 </View>
 
                 {/* Mewing Tracker */}
-                <Text style={[styles.sectionLabel, { marginTop: spacing[5] }]}>👅 MEWING</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: spacing[5] }}>
+                    <Ionicons name="fitness-outline" size={14} color={colors.textDim} />
+                    <Text style={styles.sectionLabel}>MEWING</Text>
+                </View>
                 <View style={styles.mewingCard}>
                     <Text style={styles.mewingDesc}>
                         Keep tongue on roof of mouth. Proper tongue posture builds jawline.
