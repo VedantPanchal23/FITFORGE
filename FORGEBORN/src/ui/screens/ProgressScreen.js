@@ -26,13 +26,13 @@ import WeightChart from '../components/WeightChart';
 import { radius, shadows } from '../theme/colors';
 
 const MEASUREMENT_FIELDS = [
-    { key: 'chest', label: 'CHEST', icon: '📏' },
-    { key: 'waist', label: 'WAIST', icon: '📐' },
-    { key: 'hips', label: 'HIPS', icon: '📏' },
-    { key: 'arms', label: 'ARMS', icon: '💪' },
-    { key: 'thighs', label: 'THIGHS', icon: '🦵' },
-    { key: 'shoulders', label: 'SHOULDERS', icon: '🔱' },
-    { key: 'neck', label: 'NECK', icon: '📏' },
+    { key: 'chest', label: 'CHEST', icon: 'resize-outline' },
+    { key: 'waist', label: 'WAIST', icon: 'analytics-outline' },
+    { key: 'hips', label: 'HIPS', icon: 'resize-outline' },
+    { key: 'arms', label: 'ARMS', icon: 'fitness-outline' },
+    { key: 'thighs', label: 'THIGHS', icon: 'footsteps-outline' },
+    { key: 'shoulders', label: 'SHOULDERS', icon: 'barbell-outline' },
+    { key: 'neck', label: 'NECK', icon: 'resize-outline' },
 ];
 
 const ProgressScreen = ({ navigation }) => {
@@ -152,7 +152,7 @@ const ProgressScreen = ({ navigation }) => {
                 <Text style={styles.sectionLabel}>WEIGHT TREND (30 DAYS)</Text>
                 {last30.length === 0 ? (
                     <View style={styles.emptyCard}>
-                        <Text style={styles.emptyIcon}>📊</Text>
+                        <Ionicons name="bar-chart-outline" size={24} color={colors.textDim} />
                         <Text style={styles.emptyText}>No weight data yet.</Text>
                         <Text style={styles.emptySubtext}>Log your weight to see the graph.</Text>
                     </View>
@@ -190,7 +190,7 @@ const ProgressScreen = ({ navigation }) => {
                                 if (!val) return null;
                                 return (
                                     <View key={field.key} style={styles.measurementItem}>
-                                        <Text style={styles.measurementIcon}>{field.icon}</Text>
+                                        <Ionicons name={field.icon} size={14} color={colors.textSecondary} />
                                         <Text style={styles.measurementVal}>{val}</Text>
                                         <Text style={styles.measurementLabel}>{field.label}</Text>
                                     </View>
