@@ -25,10 +25,10 @@ import useWorkoutStore from '../../store/workoutStore';
 
 // Muscle group icons
 const MUSCLE_ICONS = {
-    CHEST: '🫁', BACK: '🔙', SHOULDERS: '💪',
-    BICEPS: '💪', TRICEPS: '💪', LEGS: '🦵',
-    GLUTES: '🍑', CORE: '🎯', FOREARMS: '✊',
-    CARDIO: '❤️', FULL_BODY: '🔥',
+    CHEST: 'body-outline', BACK: 'arrow-undo-outline', SHOULDERS: 'barbell-outline',
+    BICEPS: 'fitness-outline', TRICEPS: 'fitness-outline', LEGS: 'footsteps-outline',
+    GLUTES: 'trending-up-outline', CORE: 'disc-outline', FOREARMS: 'hand-left-outline',
+    CARDIO: 'heart-outline', FULL_BODY: 'flame-outline',
 };
 
 const WorkoutHomeScreen = ({ navigation }) => {
@@ -103,7 +103,10 @@ const WorkoutHomeScreen = ({ navigation }) => {
                         <Text style={styles.statLabel}>TOTAL</Text>
                     </View>
                     <View style={styles.statItem}>
-                        <Text style={styles.statNum}>🔥 {currentStreak}</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                            <Ionicons name="flame" size={14} color={colors.primary} />
+                            <Text style={styles.statNum}>{currentStreak}</Text>
+                        </View>
                         <Text style={styles.statLabel}>STREAK</Text>
                     </View>
                     <View style={styles.statItem}>
@@ -129,9 +132,8 @@ const WorkoutHomeScreen = ({ navigation }) => {
                     <View style={styles.muscleTags}>
                         {todaysWorkout.muscles.map((m, i) => (
                             <View key={i} style={styles.muscleTag}>
-                                <Text style={styles.muscleTagText}>
-                                    {MUSCLE_ICONS[m] || '💪'} {m}
-                                </Text>
+                                <Ionicons name={MUSCLE_ICONS[m] || 'fitness-outline'} size={10} color={colors.textSecondary} />
+                                <Text style={styles.muscleTagText}>{m}</Text>
                             </View>
                         ))}
                     </View>

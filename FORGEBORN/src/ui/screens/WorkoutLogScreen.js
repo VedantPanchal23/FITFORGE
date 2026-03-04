@@ -121,7 +121,10 @@ const WorkoutLogScreen = ({ navigation }) => {
                         <Text style={styles.statLabel}>TOTAL</Text>
                     </View>
                     <View style={styles.statBox}>
-                        <Text style={styles.statVal}>🔥 {currentStreak}</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                            <Ionicons name="flame" size={16} color={colors.primary} />
+                            <Text style={styles.statVal}>{currentStreak}</Text>
+                        </View>
                         <Text style={styles.statLabel}>STREAK</Text>
                     </View>
                     <View style={styles.statBox}>
@@ -209,7 +212,7 @@ const WorkoutLogScreen = ({ navigation }) => {
                 <Text style={styles.sectionLabel}>RECENT WORKOUTS</Text>
                 {workoutHistory.length === 0 ? (
                     <View style={styles.emptyCard}>
-                        <Text style={styles.emptyIcon}>🏋️</Text>
+                        <Ionicons name="barbell-outline" size={28} color={colors.textDim} />
                         <Text style={styles.emptyText}>No workouts logged yet.</Text>
                         <Text style={styles.emptySubtext}>Complete your first workout to see history.</Text>
                     </View>
@@ -246,10 +249,13 @@ const WorkoutLogScreen = ({ navigation }) => {
                 )}
 
                 {/* Personal Records */}
-                <Text style={styles.sectionLabel}>🏆 PERSONAL RECORDS</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                    <Ionicons name="trophy-outline" size={14} color={colors.textDim} />
+                    <Text style={styles.sectionLabel}>PERSONAL RECORDS</Text>
+                </View>
                 {prList.length === 0 ? (
                     <View style={styles.emptyCard}>
-                        <Text style={styles.emptyIcon}>🏆</Text>
+                        <Ionicons name="trophy-outline" size={28} color={colors.textDim} />
                         <Text style={styles.emptyText}>No PRs yet.</Text>
                         <Text style={styles.emptySubtext}>Hit new maxes to see them here.</Text>
                     </View>
