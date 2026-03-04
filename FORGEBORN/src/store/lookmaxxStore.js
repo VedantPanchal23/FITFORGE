@@ -13,31 +13,31 @@ const storage = createJSONStorage(() => AsyncStorage);
 const getToday = () => new Date().toISOString().split('T')[0];
 
 const DEFAULT_AM_ROUTINE = [
-    { id: 'am01', name: 'Face Wash', icon: '🧼', done: false },
-    { id: 'am02', name: 'Moisturizer', icon: '💧', done: false },
-    { id: 'am03', name: 'Sunscreen SPF 50', icon: '☀️', done: false },
-    { id: 'am04', name: 'Lip Balm', icon: '💋', done: false },
-    { id: 'am05', name: 'Mewing (5 min)', icon: '👅', done: false },
-    { id: 'am06', name: 'Posture Check', icon: '🧍', done: false },
-    { id: 'am07', name: 'Hair Style', icon: '💇', done: false },
+    { id: 'am01', name: 'Face Wash', icon: 'water-outline', done: false },
+    { id: 'am02', name: 'Moisturizer', icon: 'rainy-outline', done: false },
+    { id: 'am03', name: 'Sunscreen SPF 50', icon: 'sunny-outline', done: false },
+    { id: 'am04', name: 'Lip Balm', icon: 'ellipse-outline', done: false },
+    { id: 'am05', name: 'Mewing (5 min)', icon: 'fitness-outline', done: false },
+    { id: 'am06', name: 'Posture Check', icon: 'body-outline', done: false },
+    { id: 'am07', name: 'Hair Style', icon: 'cut-outline', done: false },
 ];
 
 const DEFAULT_PM_ROUTINE = [
-    { id: 'pm01', name: 'Cleanser', icon: '🧴', done: false },
-    { id: 'pm02', name: 'Exfoliate (2x/week)', icon: '✨', done: false },
-    { id: 'pm03', name: 'Serum / Retinol', icon: '💜', done: false },
-    { id: 'pm04', name: 'Moisturizer', icon: '💧', done: false },
-    { id: 'pm05', name: 'Ice Face (2 min)', icon: '🧊', done: false },
-    { id: 'pm06', name: 'Tongue Posture', icon: '👅', done: false },
+    { id: 'pm01', name: 'Cleanser', icon: 'water-outline', done: false },
+    { id: 'pm02', name: 'Exfoliate (2x/week)', icon: 'sparkles-outline', done: false },
+    { id: 'pm03', name: 'Serum / Retinol', icon: 'flask-outline', done: false },
+    { id: 'pm04', name: 'Moisturizer', icon: 'rainy-outline', done: false },
+    { id: 'pm05', name: 'Ice Face (2 min)', icon: 'snow-outline', done: false },
+    { id: 'pm06', name: 'Tongue Posture', icon: 'fitness-outline', done: false },
 ];
 
 const DEFAULT_GROOMING = [
-    { id: 'gr01', name: 'Haircut', icon: '✂️', frequency: 'MONTHLY', lastDone: null },
-    { id: 'gr02', name: 'Nails Trimmed', icon: '💅', frequency: 'WEEKLY', lastDone: null },
-    { id: 'gr03', name: 'Eyebrows', icon: '👁️', frequency: 'BIWEEKLY', lastDone: null },
-    { id: 'gr04', name: 'Shave / Trim Beard', icon: '🪒', frequency: 'WEEKLY', lastDone: null },
-    { id: 'gr05', name: 'Nose Hair', icon: '👃', frequency: 'BIWEEKLY', lastDone: null },
-    { id: 'gr06', name: 'Ear Clean', icon: '👂', frequency: 'WEEKLY', lastDone: null },
+    { id: 'gr01', name: 'Haircut', icon: 'cut-outline', frequency: 'MONTHLY', lastDone: null },
+    { id: 'gr02', name: 'Nails Trimmed', icon: 'hand-left-outline', frequency: 'WEEKLY', lastDone: null },
+    { id: 'gr03', name: 'Eyebrows', icon: 'eye-outline', frequency: 'BIWEEKLY', lastDone: null },
+    { id: 'gr04', name: 'Shave / Trim Beard', icon: 'construct-outline', frequency: 'WEEKLY', lastDone: null },
+    { id: 'gr05', name: 'Nose Hair', icon: 'remove-circle-outline', frequency: 'BIWEEKLY', lastDone: null },
+    { id: 'gr06', name: 'Ear Clean', icon: 'ear-outline', frequency: 'WEEKLY', lastDone: null },
 ];
 
 const useLookmaxxStore = create(
