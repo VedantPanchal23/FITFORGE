@@ -15,18 +15,18 @@ const getToday = () => new Date().toISOString().split('T')[0];
 
 // Default habits every operator should have
 const DEFAULT_HABITS = [
-    { id: 'h01', name: 'Cold Shower', icon: '🥶', category: 'DISCIPLINE', xpReward: 15 },
-    { id: 'h02', name: 'Meditate 10 min', icon: '🧘', category: 'MIND', xpReward: 10 },
-    { id: 'h03', name: 'No Social Media', icon: '📵', category: 'DISCIPLINE', xpReward: 20 },
-    { id: 'h04', name: 'Read 20 Pages', icon: '📖', category: 'MIND', xpReward: 15 },
-    { id: 'h05', name: 'Journal', icon: '✍️', category: 'MIND', xpReward: 10 },
-    { id: 'h06', name: 'Sleep by 10 PM', icon: '🌙', category: 'HEALTH', xpReward: 15 },
-    { id: 'h07', name: 'No Junk Food', icon: '🚫', category: 'HEALTH', xpReward: 15 },
-    { id: 'h08', name: 'Sunlight 15 min', icon: '☀️', category: 'HEALTH', xpReward: 10 },
-    { id: 'h09', name: 'Walk 10,000 Steps', icon: '🚶', category: 'FITNESS', xpReward: 15 },
-    { id: 'h10', name: 'No Fap', icon: '🔒', category: 'DISCIPLINE', xpReward: 25 },
-    { id: 'h11', name: 'Gratitude (3 Things)', icon: '🙏', category: 'MIND', xpReward: 5 },
-    { id: 'h12', name: 'Skin Care Routine', icon: '🧴', category: 'LOOKMAXX', xpReward: 10 },
+    { id: 'h01', name: 'Cold Shower', icon: 'snow-outline', category: 'DISCIPLINE', xpReward: 15 },
+    { id: 'h02', name: 'Meditate 10 min', icon: 'leaf-outline', category: 'MIND', xpReward: 10 },
+    { id: 'h03', name: 'No Social Media', icon: 'phone-portrait-outline', category: 'DISCIPLINE', xpReward: 20 },
+    { id: 'h04', name: 'Read 20 Pages', icon: 'book-outline', category: 'MIND', xpReward: 15 },
+    { id: 'h05', name: 'Journal', icon: 'create-outline', category: 'MIND', xpReward: 10 },
+    { id: 'h06', name: 'Sleep by 10 PM', icon: 'moon-outline', category: 'HEALTH', xpReward: 15 },
+    { id: 'h07', name: 'No Junk Food', icon: 'close-circle-outline', category: 'HEALTH', xpReward: 15 },
+    { id: 'h08', name: 'Sunlight 15 min', icon: 'sunny-outline', category: 'HEALTH', xpReward: 10 },
+    { id: 'h09', name: 'Walk 10,000 Steps', icon: 'footsteps-outline', category: 'FITNESS', xpReward: 15 },
+    { id: 'h10', name: 'No Fap', icon: 'lock-closed-outline', category: 'DISCIPLINE', xpReward: 25 },
+    { id: 'h11', name: 'Gratitude (3 Things)', icon: 'heart-outline', category: 'MIND', xpReward: 5 },
+    { id: 'h12', name: 'Skin Care Routine', icon: 'water-outline', category: 'LOOKMAXX', xpReward: 10 },
 ];
 
 const XP_PER_LEVEL = 100; // XP needed per level up
