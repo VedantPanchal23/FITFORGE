@@ -247,13 +247,11 @@ const NutritionHomeScreen = ({ navigation }) => {
                                 i < totals.water && styles.glassFilled
                                 ]}
                             >
-                                <Text style={styles.glassIcon}>
-                                    <Ionicons
-                                        name={i < totals.water ? 'water' : 'water-outline'}
-                                        size={16}
-                                        color={i < totals.water ? colors.info : colors.textDim}
-                                    />
-                                </Text>
+                                <Ionicons
+                                    name={i < totals.water ? 'water' : 'water-outline'}
+                                    size={16}
+                                    color={i < totals.water ? colors.info : colors.textDim}
+                                />
                             </View>
                         ))}
                     </View>
