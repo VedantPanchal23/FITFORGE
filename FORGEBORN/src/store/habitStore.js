@@ -115,7 +115,7 @@ const useHabitStore = create(
             },
 
             // ─── Add Custom Habit ─────────────────────────────────────
-            addCustomHabit: (name, icon = '⭐', category = 'CUSTOM') => {
+            addCustomHabit: (name, icon = 'star-outline', category = 'CUSTOM') => {
                 const { habits } = get();
                 const newHabit = {
                     id: `custom_${Date.now()}`,
@@ -212,6 +212,14 @@ const useHabitStore = create(
         {
             name: 'forgeborn-habits',
             storage,
+            version: 2,
+            migrate: (persistedState, version) => {
+                if (version < 2) {
+                    // Old store had emoji icons — reset habits to new Ionicons names
+                    return { ...persistedState, habits: DEFAULT_HABITS };
+                }
+                return persistedState;
+            },
         }
     )
 );

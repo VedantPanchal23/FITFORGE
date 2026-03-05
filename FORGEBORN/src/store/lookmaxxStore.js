@@ -210,6 +210,19 @@ const useLookmaxxStore = create(
         {
             name: 'forgeborn-lookmaxx',
             storage,
+            version: 2,
+            migrate: (persistedState, version) => {
+                if (version < 2) {
+                    // Old store had emoji icons — reset routines to new Ionicons names
+                    return {
+                        ...persistedState,
+                        amRoutine: DEFAULT_AM_ROUTINE,
+                        pmRoutine: DEFAULT_PM_ROUTINE,
+                        grooming: DEFAULT_GROOMING,
+                    };
+                }
+                return persistedState;
+            },
         }
     )
 );
