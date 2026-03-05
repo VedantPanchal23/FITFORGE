@@ -200,7 +200,7 @@ const ActiveWorkoutScreen = ({ navigation }) => {
                         </View>
                     </View>
                     <Text style={styles.instructions}>{currentExercise.instructions}</Text>
-                    <Text style={styles.tips}>💡 {currentExercise.tips}</Text>
+                    <Text style={styles.tips}>TIP: {currentExercise.tips}</Text>
                 </View>
 
                 {/* Rest Timer */}
