@@ -43,7 +43,7 @@ const WorkoutLogScreen = ({ navigation }) => {
 
         for (let d = 1; d <= daysInMonth; d++) {
             const dateStr = `${selectedYear}-${String(selectedMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-            const workout = workoutHistory.find(w => w.date === dateStr);
+            const workout = workoutHistory.find(w => w.date?.startsWith(dateStr));
             days.push({
                 day: d,
                 date: dateStr,
@@ -67,14 +67,8 @@ const WorkoutLogScreen = ({ navigation }) => {
 
         monthWorkouts.forEach(w => {
             totalDuration += w.duration || 0;
-            (w.exercises || []).forEach(ex => {
-                (ex.sets || []).forEach(set => {
-                    if (set.completed) {
-                        totalSets++;
-                        totalVolume += (set.weight || 0) * (set.reps || 0);
-                    }
-                });
-            });
+            totalVolume += w.totalVolume || 0;
+            totalSets += w.setsCompleted || 0;
         });
 
         return {
