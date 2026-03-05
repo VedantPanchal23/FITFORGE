@@ -15,6 +15,7 @@ import {
     ScrollView,
     Vibration,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../theme/colors';
 import { textStyles } from '../theme/typography';
 import { spacing, screen } from '../theme/spacing';
@@ -95,12 +96,10 @@ const CreateObligationScreen = ({ navigation }) => {
             <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
                 {/* Warning */}
                 <View style={styles.warningBox}>
-                    <Text style={styles.warningText}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                            <Ionicons name="alert-circle-outline" size={14} color={colors.warning} />
-                            <Text style={styles.warningText}>ONCE SCHEDULED, YOU WILL BE HELD ACCOUNTABLE</Text>
-                        </View>
-                    </Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                        <Ionicons name="alert-circle-outline" size={14} color={colors.warning} />
+                        <Text style={styles.warningText}>ONCE SCHEDULED, YOU WILL BE HELD ACCOUNTABLE</Text>
+                    </View>
                 </View>
 
                 {/* Presets */}
@@ -188,12 +187,10 @@ const CreateObligationScreen = ({ navigation }) => {
                 </TouchableOpacity>
 
                 {selectedTime?.label === 'NOW' && (
-                    <Text style={styles.nowWarning}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                            <Ionicons name="flash" size={14} color={colors.primary} />
-                            <Text style={styles.warningText}>SYSTEM WILL LOCK IMMEDIATELY</Text>
-                        </View>
-                    </Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, marginTop: spacing[2] }}>
+                        <Ionicons name="flash" size={14} color={colors.primary} />
+                        <Text style={styles.nowWarning}>SYSTEM WILL LOCK IMMEDIATELY</Text>
+                    </View>
                 )}
 
             </ScrollView>
