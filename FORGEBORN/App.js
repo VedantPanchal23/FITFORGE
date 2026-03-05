@@ -28,6 +28,7 @@ import OnboardingScreen from './src/ui/screens/OnboardingScreen';
 import DashboardScreen from './src/ui/screens/DashboardScreen';
 import WorkoutHomeScreen from './src/ui/screens/WorkoutHomeScreen';
 import ActiveWorkoutScreen from './src/ui/screens/ActiveWorkoutScreen';
+import WorkoutCompleteScreen from './src/ui/screens/WorkoutCompleteScreen';
 import WorkoutLogScreen from './src/ui/screens/WorkoutLogScreen';
 import NutritionHomeScreen from './src/ui/screens/NutritionHomeScreen';
 import MealLogScreen from './src/ui/screens/MealLogScreen';
@@ -58,6 +59,7 @@ function WorkoutStackScreen() {
     <WorkoutStack.Navigator screenOptions={screenOptions}>
       <WorkoutStack.Screen name="WorkoutHome" component={WorkoutHomeScreen} />
       <WorkoutStack.Screen name="ActiveWorkout" component={ActiveWorkoutScreen} />
+      <WorkoutStack.Screen name="WorkoutComplete" component={WorkoutCompleteScreen} />
       <WorkoutStack.Screen name="WorkoutLog" component={WorkoutLogScreen} />
     </WorkoutStack.Navigator>
   );

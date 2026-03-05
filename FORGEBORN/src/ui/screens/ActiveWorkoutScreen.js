@@ -153,6 +153,11 @@ const ActiveWorkoutScreen = ({ navigation }) => {
         }
     };
 
+    // Get next exercise for preview
+    const nextExerciseData = activeWorkout.currentExerciseIndex < totalExercises - 1
+        ? activeWorkout.exercises[activeWorkout.currentExerciseIndex + 1]
+        : null;
+
     const handleFinish = () => {
         Alert.alert(
             'FINISH WORKOUT',
@@ -164,7 +169,14 @@ const ActiveWorkoutScreen = ({ navigation }) => {
                     onPress: () => {
                         const record = finishWorkout();
                         Vibration.vibrate([0, 50, 100, 50, 100, 50, 200]);
-                        navigation.goBack();
+                        navigation.replace('WorkoutComplete', {
+                            duration: elapsedTime,
+                            setsCompleted: totalCompletedSets,
+                            totalSets: totalAllSets,
+                            totalVolume: record?.totalVolume || 0,
+                            exercisesDone: record?.exercises?.length || 0,
+                            dayName: record?.dayName || activeWorkout.dayName,
+                        });
                     },
                 },
             ]
@@ -245,18 +257,29 @@ const ActiveWorkoutScreen = ({ navigation }) => {
                 {/* Rest Timer */}
                 {activeWorkout.isResting && restTimeLeft > 0 && (
                     <View style={styles.restCard}>
-                        <View style={styles.restHeader}>
-                            <Ionicons name="timer-outline" size={18} color={colors.primary} />
-                            <Text style={styles.restLabel}>REST</Text>
+                        <View style={styles.restTop}>
+                            <View style={styles.restHeader}>
+                                <Ionicons name="timer-outline" size={18} color={colors.primary} />
+                                <Text style={styles.restLabel}>REST</Text>
+                            </View>
+                            <Text style={styles.restTimer}>{restTimeLeft}s</Text>
+                            <TouchableOpacity
+                                style={styles.skipRestBtn}
+                                onPress={() => endRest()}
+                            >
+                                <Text style={styles.skipRestText}>SKIP</Text>
+                                <Ionicons name="play-forward" size={14} color={colors.textSecondary} />
+                            </TouchableOpacity>
                         </View>
-                        <Text style={styles.restTimer}>{restTimeLeft}s</Text>
-                        <TouchableOpacity
-                            style={styles.skipRestBtn}
-                            onPress={() => endRest()}
-                        >
-                            <Text style={styles.skipRestText}>SKIP</Text>
-                            <Ionicons name="play-forward" size={14} color={colors.textSecondary} />
-                        </TouchableOpacity>
+                        {nextExerciseData && (
+                            <View style={styles.nextPreview}>
+                                <Text style={styles.nextLabel}>UP NEXT</Text>
+                                <Text style={styles.nextName}>{nextExerciseData.name}</Text>
+                                <Text style={styles.nextMuscle}>
+                                    {nextExerciseData.muscle} • {nextExerciseData.sets || nextExerciseData.defaultSets} sets × {nextExerciseData.reps || nextExerciseData.defaultReps}
+                                </Text>
+                            </View>
+                        )}
                     </View>
                 )}
 
@@ -541,6 +564,8 @@ const styles = StyleSheet.create({
         borderColor: colors.primary,
         padding: spacing[3],
         marginBottom: spacing[4],
+    },
+    restTop: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -570,6 +595,29 @@ const styles = StyleSheet.create({
         borderColor: colors.textDim,
     },
     skipRestText: {
+        ...textStyles.caption,
+        color: colors.textSecondary,
+        fontSize: 10,
+    },
+    nextPreview: {
+        borderTopWidth: 1,
+        borderTopColor: colors.primary,
+        paddingTop: spacing[2],
+        marginTop: spacing[2],
+    },
+    nextLabel: {
+        ...textStyles.caption,
+        color: colors.textDim,
+        fontSize: 9,
+        letterSpacing: 2,
+        marginBottom: 2,
+    },
+    nextName: {
+        ...textStyles.label,
+        color: colors.text,
+        fontSize: 13,
+    },
+    nextMuscle: {
         ...textStyles.caption,
         color: colors.textSecondary,
         fontSize: 10,
