@@ -23,6 +23,7 @@ import {
     Vibration,
     BackHandler,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../theme/colors';
 import { textStyles } from '../theme/typography';
 import { spacing, screen } from '../theme/spacing';
