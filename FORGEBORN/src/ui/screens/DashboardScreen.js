@@ -28,7 +28,7 @@ import useNutritionStore from '../../store/nutritionStore';
 import useHabitStore from '../../store/habitStore';
 import useLookmaxxStore from '../../store/lookmaxxStore';
 
-const DashboardScreen = () => {
+const DashboardScreen = ({ navigation }) => {
     const [greeting, setGreeting] = useState('');
 
     // User data
@@ -177,7 +177,7 @@ const DashboardScreen = () => {
                 <Text style={styles.sectionTitle}>TODAY'S MISSION</Text>
 
                 {/* Workout Card */}
-                <View style={styles.missionCard}>
+                <TouchableOpacity style={styles.missionCard} onPress={() => navigation.navigate('Workout')} activeOpacity={0.7}>
                     <View style={styles.missionHeader}>
                         <View style={styles.missionIconBox}>
                             <Ionicons name="barbell" size={24} color={colors.primary} />
@@ -201,10 +201,10 @@ const DashboardScreen = () => {
                             {activeWorkout ? 'IN PROGRESS' : workoutDone ? 'COMPLETE' : 'Not started'}
                         </Text>
                     </View>
-                </View>
+                </TouchableOpacity>
 
                 {/* Nutrition Card */}
-                <View style={styles.missionCard}>
+                <TouchableOpacity style={styles.missionCard} onPress={() => navigation.navigate('Nutrition')} activeOpacity={0.7}>
                     <View style={styles.missionHeader}>
                         <View style={[styles.missionIconBox, { borderColor: colors.success }]}>
                             <Ionicons name="nutrition" size={24} color={colors.success} />
@@ -240,10 +240,10 @@ const DashboardScreen = () => {
                             F: {nutritionTotals.fats}g
                         </Text>
                     </View>
-                </View>
+                </TouchableOpacity>
 
                 {/* Habits Card */}
-                <View style={styles.missionCard}>
+                <TouchableOpacity style={styles.missionCard} onPress={() => navigation.navigate('Discipline')} activeOpacity={0.7}>
                     <View style={styles.missionHeader}>
                         <View style={[styles.missionIconBox, { borderColor: colors.warning }]}>
                             <Ionicons name="flash" size={24} color={colors.warning} />
@@ -268,12 +268,12 @@ const DashboardScreen = () => {
                             {Math.round(habitProgress * 100)}%
                         </Text>
                     </View>
-                </View>
+                </TouchableOpacity>
 
                 {/* Lookmaxx Mini Card */}
-                <View style={styles.lookmaxxMini}>
+                <TouchableOpacity style={styles.lookmaxxMini} onPress={() => navigation.navigate('Profile')} activeOpacity={0.7}>
                     <View style={styles.lookmaxxLeft}>
-                        <Text style={styles.lookmaxxIcon}>✨</Text>
+                        <Ionicons name="sparkles-outline" size={18} color={colors.accent} />
                         <Text style={styles.lookmaxxLabel}>LOOKMAXX</Text>
                     </View>
                     <View style={styles.lookmaxxRight}>
@@ -284,7 +284,7 @@ const DashboardScreen = () => {
                             PM: {routineStatus.pmCompleted}/{routineStatus.pmTotal}
                         </Text>
                     </View>
-                </View>
+                </TouchableOpacity>
 
                 {/* Next Obligation */}
                 {nextObligation && (
