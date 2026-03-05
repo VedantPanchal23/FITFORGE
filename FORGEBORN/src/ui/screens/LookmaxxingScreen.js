@@ -213,13 +213,11 @@ const LookmaxxingScreen = ({ navigation }) => {
                             <View style={[styles.sleepBadge, {
                                 backgroundColor: todaysSleep.hours >= 7 ? colors.success : colors.danger,
                             }]}>
-                                <Text style={styles.sleepBadgeText}>
-                                    <Ionicons
-                                        name={todaysSleep.hours >= 7 ? 'checkmark-circle' : 'alert-circle'}
-                                        size={18}
-                                        color={todaysSleep.hours >= 7 ? colors.success : colors.danger}
-                                    />
-                                </Text>
+                                <Ionicons
+                                    name={todaysSleep.hours >= 7 ? 'checkmark-circle' : 'alert-circle'}
+                                    size={18}
+                                    color={todaysSleep.hours >= 7 ? '#fff' : '#fff'}
+                                />
                             </View>
                         </View>
                     ) : (
