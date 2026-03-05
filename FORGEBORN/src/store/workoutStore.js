@@ -240,6 +240,18 @@ const useWorkoutStore = create(
                 return workoutHistory.filter(w => new Date(w.date).getTime() > weekAgo);
             },
 
+            // ─── Get Last Workout Sets (for pre-fill) ───────────────
+            getLastWorkoutSets: (exerciseId) => {
+                const { workoutHistory } = get();
+                for (const workout of workoutHistory) {
+                    const sets = workout.sets?.[exerciseId];
+                    if (sets && sets.length > 0) {
+                        return sets.filter(s => s.completed);
+                    }
+                }
+                return null;
+            },
+
             // ─── DEV ONLY ────────────────────────────────────────────
             __devReset: () => {
                 set({

@@ -3,13 +3,12 @@
  * 
  * Live workout mode inspired by Hevy + Strong.
  * Features:
- * - Current exercise with instructions
- * - Set-by-set logging (weight × reps)
+ * - Table-style set logging (SET | PREVIOUS | KG | REPS | ✓)
+ * - Pre-filled values from target reps & previous workouts
+ * - All sets editable at once (not sequential)
  * - Auto rest timer between sets
- * - Progress bar at top
- * - Swipe to next/prev exercise
+ * - Progress bar + exercise navigation
  * - PR notification
- * - Distraction-free dark full-screen mode
  */
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -40,14 +39,12 @@ const ActiveWorkoutScreen = ({ navigation }) => {
     const prevExercise = useWorkoutStore((s) => s.prevExercise);
     const finishWorkout = useWorkoutStore((s) => s.finishWorkout);
     const cancelWorkout = useWorkoutStore((s) => s.cancelWorkout);
+    const getLastWorkoutSets = useWorkoutStore((s) => s.getLastWorkoutSets);
 
     const [elapsedTime, setElapsedTime] = useState(0);
     const [restTimeLeft, setRestTimeLeft] = useState(0);
-    const [weight, setWeight] = useState('');
-    const [reps, setReps] = useState('');
-    const [showPR, setShowPR] = useState(false);
-
-    const prAnim = useRef(new Animated.Value(0)).current;
+    // Per-set editable values: { [setIndex]: { weight, reps } }
+    const [setInputs, setSetInputs] = useState({});
 
     // Elapsed time counter
     useEffect(() => {
@@ -76,6 +73,35 @@ const ActiveWorkoutScreen = ({ navigation }) => {
         return () => clearInterval(interval);
     }, [activeWorkout?.isResting, activeWorkout?.restEndTime]);
 
+    // Initialize per-set inputs when exercise changes
+    useEffect(() => {
+        if (!activeWorkout) return;
+        const currentExercise = activeWorkout.exercises[activeWorkout.currentExerciseIndex];
+        const currentSets = activeWorkout.sets[currentExercise?.id] || [];
+        const previousSets = getLastWorkoutSets(currentExercise?.id);
+
+        // Parse target reps (e.g. "8-12" → 10, "10" → 10)
+        const targetReps = currentExercise?.reps || currentExercise?.defaultReps || '10';
+        const parsedReps = typeof targetReps === 'string' && targetReps.includes('-')
+            ? Math.round((parseInt(targetReps.split('-')[0]) + parseInt(targetReps.split('-')[1])) / 2)
+            : parseInt(targetReps) || 10;
+
+        const newInputs = {};
+        currentSets.forEach((s, i) => {
+            if (s.completed) {
+                newInputs[i] = { weight: String(s.weight), reps: String(s.reps) };
+            } else {
+                // Pre-fill from previous workout or target
+                const prev = previousSets?.[i];
+                newInputs[i] = {
+                    weight: prev ? String(prev.weight) : '',
+                    reps: prev ? String(prev.reps) : String(parsedReps),
+                };
+            }
+        });
+        setSetInputs(newInputs);
+    }, [activeWorkout?.currentExerciseIndex]);
+
     if (!activeWorkout) return null;
 
     const currentExercise = activeWorkout.exercises[activeWorkout.currentExerciseIndex];
@@ -92,29 +118,39 @@ const ActiveWorkoutScreen = ({ navigation }) => {
         totalCompletedSets += setArr.filter(s => s.completed).length;
     });
 
+    // Get previous workout data for this exercise
+    const previousSets = getLastWorkoutSets(currentExercise?.id);
+
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
-    const handleLogSet = () => {
-        if (!weight && !reps) return;
+    const updateSetInput = (setIndex, field, value) => {
+        setSetInputs(prev => ({
+            ...prev,
+            [setIndex]: { ...prev[setIndex], [field]: value },
+        }));
+    };
 
-        const setIndex = currentSets.findIndex(s => !s.completed);
-        if (setIndex === -1) return;
+    const handleLogSet = (setIndex) => {
+        const input = setInputs[setIndex];
+        if (!input) return;
+
+        const weight = input.weight || '0';
+        const reps = input.reps || '0';
+
+        if (parseInt(reps) <= 0) return;
 
         logSet(currentExercise.id, setIndex, weight, reps);
         Vibration.vibrate(50);
 
-        // Start rest timer
-        if (setIndex < currentSets.length - 1) {
+        // Start rest timer after completing a set (if more sets remain)
+        const nextUncompleted = currentSets.findIndex((s, i) => i > setIndex && !s.completed);
+        if (nextUncompleted !== -1) {
             startRest(currentExercise.rest || 60);
         }
-
-        // Clear inputs for next set
-        setWeight('');
-        setReps('');
     };
 
     const handleFinish = () => {
@@ -158,14 +194,15 @@ const ActiveWorkoutScreen = ({ navigation }) => {
 
             {/* Top Bar */}
             <View style={styles.topBar}>
-                <TouchableOpacity onPress={handleCancel}>
-                    <Ionicons name="close" size={24} color={colors.textDim} />
+                <TouchableOpacity onPress={handleCancel} style={styles.cancelBtn}>
+                    <Ionicons name="close" size={22} color={colors.textDim} />
                 </TouchableOpacity>
                 <View style={styles.timerBox}>
                     <Ionicons name="time-outline" size={16} color={colors.textSecondary} />
                     <Text style={styles.timerText}>{formatTime(elapsedTime)}</Text>
                 </View>
                 <TouchableOpacity onPress={handleFinish} style={styles.finishBtn}>
+                    <Ionicons name="checkmark-done" size={16} color="#000" />
                     <Text style={styles.finishBtnText}>FINISH</Text>
                 </TouchableOpacity>
             </View>
@@ -175,18 +212,19 @@ const ActiveWorkoutScreen = ({ navigation }) => {
                 <View style={[styles.progressFill, { width: `${progress}%` }]} />
             </View>
 
-            {/* Day Name */}
-            <Text style={styles.dayName}>{activeWorkout.dayName}</Text>
-            <Text style={styles.exerciseCounter}>
-                Exercise {activeWorkout.currentExerciseIndex + 1} of {totalExercises}
-            </Text>
+            {/* Exercise Counter */}
+            <View style={styles.exerciseHeader}>
+                <Text style={styles.exerciseCounter}>
+                    EXERCISE {activeWorkout.currentExerciseIndex + 1} OF {totalExercises}
+                </Text>
+            </View>
 
             <ScrollView
                 style={styles.scrollView}
                 contentContainerStyle={styles.scrollContent}
                 showsVerticalScrollIndicator={false}
             >
-                {/* Current Exercise */}
+                {/* Current Exercise Info */}
                 <View style={styles.exerciseCard}>
                     <Text style={styles.exerciseName}>{currentExercise.name}</Text>
                     <View style={styles.exerciseMeta}>
@@ -199,94 +237,150 @@ const ActiveWorkoutScreen = ({ navigation }) => {
                             </Text>
                         </View>
                     </View>
-                    <Text style={styles.instructions}>{currentExercise.instructions}</Text>
-                    <Text style={styles.tips}>TIP: {currentExercise.tips}</Text>
+                    {currentExercise.instructions && (
+                        <Text style={styles.instructions}>{currentExercise.instructions}</Text>
+                    )}
                 </View>
 
                 {/* Rest Timer */}
                 {activeWorkout.isResting && restTimeLeft > 0 && (
                     <View style={styles.restCard}>
-                        <Text style={styles.restLabel}>REST</Text>
-                        <Text style={styles.restTimer}>{restTimeLeft}</Text>
-                        <Text style={styles.restUnit}>SECONDS</Text>
+                        <View style={styles.restHeader}>
+                            <Ionicons name="timer-outline" size={18} color={colors.primary} />
+                            <Text style={styles.restLabel}>REST</Text>
+                        </View>
+                        <Text style={styles.restTimer}>{restTimeLeft}s</Text>
                         <TouchableOpacity
                             style={styles.skipRestBtn}
                             onPress={() => endRest()}
                         >
-                            <Text style={styles.skipRestText}>SKIP REST →</Text>
+                            <Text style={styles.skipRestText}>SKIP</Text>
+                            <Ionicons name="play-forward" size={14} color={colors.textSecondary} />
                         </TouchableOpacity>
                     </View>
                 )}
 
-                {/* Set Logging */}
-                <Text style={styles.setsLabel}>
-                    SETS ({completedSets}/{currentSets.length})
-                </Text>
+                {/* ─── SET TABLE (Hevy/Strong style) ─── */}
+                <View style={styles.setTable}>
+                    {/* Table Header */}
+                    <View style={styles.tableHeader}>
+                        <Text style={[styles.headerCell, styles.setCellSmall]}>SET</Text>
+                        <Text style={[styles.headerCell, styles.prevCell]}>PREVIOUS</Text>
+                        <Text style={[styles.headerCell, styles.inputCell]}>KG</Text>
+                        <Text style={[styles.headerCell, styles.inputCell]}>REPS</Text>
+                        <View style={styles.checkCell} />
+                    </View>
 
-                {currentSets.map((s, index) => (
-                    <View
-                        key={index}
-                        style={[
-                            styles.setRow,
-                            s.completed && styles.setRowDone,
-                        ]}
-                    >
-                        <View style={styles.setNumber}>
-                            <Text style={styles.setNumberText}>{index + 1}</Text>
-                        </View>
-                        {s.completed ? (
-                            <View style={styles.setCompleted}>
-                                <Text style={styles.setDoneText}>
-                                    {s.weight > 0 ? `${s.weight} kg` : 'BW'} × {s.reps} reps
-                                </Text>
-                                <Ionicons name="checkmark-circle" size={22} color={colors.success} />
-                            </View>
-                        ) : (
-                            index === completedSets ? (
-                                <View style={styles.setInput}>
-                                    <TextInput
-                                        style={styles.input}
-                                        placeholder="KG"
-                                        placeholderTextColor={colors.textDim}
-                                        value={weight}
-                                        onChangeText={setWeight}
-                                        keyboardType="numeric"
-                                    />
-                                    <Text style={styles.inputX}>×</Text>
-                                    <TextInput
-                                        style={styles.input}
-                                        placeholder="REPS"
-                                        placeholderTextColor={colors.textDim}
-                                        value={reps}
-                                        onChangeText={setReps}
-                                        keyboardType="numeric"
-                                    />
-                                    <TouchableOpacity
-                                        style={styles.logBtn}
-                                        onPress={handleLogSet}
-                                    >
-                                        <Ionicons name="checkmark" size={20} color={colors.text} />
-                                    </TouchableOpacity>
-                                </View>
-                            ) : (
-                                <View style={styles.setWaiting}>
-                                    <Text style={styles.setWaitText}>
-                                        {currentExercise.reps || currentExercise.defaultReps}
+                    {/* Set Rows */}
+                    {currentSets.map((s, index) => {
+                        const prev = previousSets?.[index];
+                        const input = setInputs[index] || { weight: '', reps: '' };
+
+                        return (
+                            <View
+                                key={index}
+                                style={[
+                                    styles.setRow,
+                                    s.completed && styles.setRowDone,
+                                ]}
+                            >
+                                {/* Set Number */}
+                                <View style={[styles.setCellSmall, styles.setNumBox]}>
+                                    <Text style={[
+                                        styles.setNumText,
+                                        s.completed && { color: colors.success }
+                                    ]}>
+                                        {index + 1}
                                     </Text>
                                 </View>
-                            )
-                        )}
-                    </View>
-                ))}
+
+                                {/* Previous */}
+                                <View style={styles.prevCell}>
+                                    <Text style={styles.prevText}>
+                                        {prev
+                                            ? `${prev.weight > 0 ? prev.weight + ' kg' : 'BW'} × ${prev.reps}`
+                                            : '—'
+                                        }
+                                    </Text>
+                                </View>
+
+                                {/* Weight Input */}
+                                <View style={styles.inputCell}>
+                                    {s.completed ? (
+                                        <Text style={styles.completedValue}>
+                                            {s.weight > 0 ? s.weight : 'BW'}
+                                        </Text>
+                                    ) : (
+                                        <TextInput
+                                            style={styles.input}
+                                            value={input.weight}
+                                            onChangeText={(v) => updateSetInput(index, 'weight', v)}
+                                            keyboardType="numeric"
+                                            placeholder="0"
+                                            placeholderTextColor={colors.textMuted}
+                                            selectTextOnFocus
+                                        />
+                                    )}
+                                </View>
+
+                                {/* Reps Input */}
+                                <View style={styles.inputCell}>
+                                    {s.completed ? (
+                                        <Text style={styles.completedValue}>{s.reps}</Text>
+                                    ) : (
+                                        <TextInput
+                                            style={styles.input}
+                                            value={input.reps}
+                                            onChangeText={(v) => updateSetInput(index, 'reps', v)}
+                                            keyboardType="numeric"
+                                            placeholder="0"
+                                            placeholderTextColor={colors.textMuted}
+                                            selectTextOnFocus
+                                        />
+                                    )}
+                                </View>
+
+                                {/* Check Button */}
+                                <View style={styles.checkCell}>
+                                    {s.completed ? (
+                                        <Ionicons name="checkmark-circle" size={28} color={colors.success} />
+                                    ) : (
+                                        <TouchableOpacity
+                                            onPress={() => handleLogSet(index)}
+                                            style={styles.checkBtn}
+                                            activeOpacity={0.6}
+                                        >
+                                            <Ionicons name="checkmark-circle-outline" size={28} color={colors.textDim} />
+                                        </TouchableOpacity>
+                                    )}
+                                </View>
+                            </View>
+                        );
+                    })}
+                </View>
 
                 {/* Target info */}
                 <View style={styles.targetInfo}>
-                    <Text style={styles.targetText}>
-                        TARGET: {currentExercise.sets || currentExercise.defaultSets} sets × {currentExercise.reps || currentExercise.defaultReps} reps
-                    </Text>
-                    <Text style={styles.targetText}>
-                        REST: {currentExercise.rest || 60}s between sets
-                    </Text>
+                    <View style={styles.targetRow}>
+                        <Ionicons name="information-circle-outline" size={14} color={colors.textDim} />
+                        <Text style={styles.targetText}>
+                            TARGET: {currentExercise.sets || currentExercise.defaultSets} sets × {currentExercise.reps || currentExercise.defaultReps} reps
+                        </Text>
+                    </View>
+                    <View style={styles.targetRow}>
+                        <Ionicons name="timer-outline" size={14} color={colors.textDim} />
+                        <Text style={styles.targetText}>
+                            REST: {currentExercise.rest || 60}s between sets
+                        </Text>
+                    </View>
+                    {currentExercise.tips && (
+                        <View style={styles.targetRow}>
+                            <Ionicons name="bulb-outline" size={14} color={colors.warning} />
+                            <Text style={[styles.targetText, { color: colors.warning }]}>
+                                {currentExercise.tips}
+                            </Text>
+                        </View>
+                    )}
                 </View>
 
                 <View style={{ height: 100 }} />
@@ -299,7 +393,7 @@ const ActiveWorkoutScreen = ({ navigation }) => {
                     onPress={prevExercise}
                     disabled={activeWorkout.currentExerciseIndex === 0}
                 >
-                    <Ionicons name="chevron-back" size={24} color={
+                    <Ionicons name="chevron-back" size={22} color={
                         activeWorkout.currentExerciseIndex === 0 ? colors.textMuted : colors.text
                     } />
                     <Text style={[styles.navBtnText, activeWorkout.currentExerciseIndex === 0 && { color: colors.textMuted }]}>
@@ -308,9 +402,8 @@ const ActiveWorkoutScreen = ({ navigation }) => {
                 </TouchableOpacity>
 
                 <View style={styles.setsProgress}>
-                    <Text style={styles.setsProgressText}>
-                        {totalCompletedSets}/{totalAllSets} SETS
-                    </Text>
+                    <Text style={styles.setsProgressNum}>{totalCompletedSets}</Text>
+                    <Text style={styles.setsProgressLabel}>/ {totalAllSets} SETS</Text>
                 </View>
 
                 <TouchableOpacity
@@ -325,7 +418,7 @@ const ActiveWorkoutScreen = ({ navigation }) => {
                     ]}>
                         NEXT
                     </Text>
-                    <Ionicons name="chevron-forward" size={24} color={
+                    <Ionicons name="chevron-forward" size={22} color={
                         activeWorkout.currentExerciseIndex === totalExercises - 1 ? colors.textMuted : colors.text
                     } />
                 </TouchableOpacity>
@@ -349,6 +442,9 @@ const styles = StyleSheet.create({
         paddingTop: spacing[10],
         paddingBottom: spacing[2],
     },
+    cancelBtn: {
+        padding: spacing[1],
+    },
     timerBox: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -362,6 +458,9 @@ const styles = StyleSheet.create({
         backgroundColor: colors.success,
         paddingVertical: spacing[1],
         paddingHorizontal: spacing[3],
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 4,
     },
     finishBtnText: {
         ...textStyles.button,
@@ -380,19 +479,16 @@ const styles = StyleSheet.create({
         backgroundColor: colors.primary,
     },
 
-    // Day
-    dayName: {
-        ...textStyles.h2,
-        color: colors.primary,
-        textAlign: 'center',
-        marginTop: spacing[3],
-        fontSize: 18,
+    // Exercise header
+    exerciseHeader: {
+        paddingHorizontal: screen.paddingHorizontal,
+        paddingVertical: spacing[2],
     },
     exerciseCounter: {
         ...textStyles.caption,
         color: colors.textDim,
         textAlign: 'center',
-        marginBottom: spacing[3],
+        letterSpacing: 2,
     },
 
     // Scroll
@@ -412,13 +508,13 @@ const styles = StyleSheet.create({
     exerciseName: {
         ...textStyles.h2,
         color: colors.text,
-        fontSize: 22,
+        fontSize: 20,
         marginBottom: spacing[2],
     },
     exerciseMeta: {
         flexDirection: 'row',
         gap: spacing[2],
-        marginBottom: spacing[3],
+        marginBottom: spacing[2],
     },
     metaBadge: {
         borderWidth: 1,
@@ -437,39 +533,39 @@ const styles = StyleSheet.create({
         fontSize: 12,
         lineHeight: 18,
     },
-    tips: {
-        ...textStyles.caption,
-        color: colors.warning,
-        marginTop: spacing[2],
-        fontSize: 10,
-    },
 
     // Rest timer
     restCard: {
         backgroundColor: colors.primaryMuted,
-        borderWidth: 2,
+        borderWidth: 1,
         borderColor: colors.primary,
-        padding: spacing[5],
-        alignItems: 'center',
+        padding: spacing[3],
         marginBottom: spacing[4],
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    restHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: spacing[1],
     },
     restLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
+        ...textStyles.label,
+        color: colors.primary,
+        fontSize: 12,
     },
     restTimer: {
-        fontSize: 72,
+        fontSize: 28,
         fontWeight: '900',
         color: colors.primary,
     },
-    restUnit: {
-        ...textStyles.caption,
-        color: colors.textDim,
-    },
     skipRestBtn: {
-        marginTop: spacing[3],
-        paddingVertical: spacing[2],
-        paddingHorizontal: spacing[4],
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 4,
+        paddingVertical: spacing[1],
+        paddingHorizontal: spacing[2],
         borderWidth: 1,
         borderColor: colors.textDim,
     },
@@ -479,97 +575,117 @@ const styles = StyleSheet.create({
         fontSize: 10,
     },
 
-    // Sets
-    setsLabel: {
-        ...textStyles.label,
-        color: colors.textDim,
-        marginBottom: spacing[2],
+    // ─── SET TABLE ────────────────────────────────────────────────
+    setTable: {
+        marginBottom: spacing[3],
     },
+    tableHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: spacing[1],
+        paddingHorizontal: spacing[1],
+        marginBottom: spacing[1],
+    },
+    headerCell: {
+        ...textStyles.caption,
+        color: colors.textDim,
+        fontSize: 10,
+        fontWeight: '700',
+        letterSpacing: 1,
+        textAlign: 'center',
+    },
+    setCellSmall: {
+        width: 36,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    prevCell: {
+        flex: 1,
+        paddingHorizontal: 4,
+    },
+    inputCell: {
+        width: 60,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    checkCell: {
+        width: 40,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    // Set rows
     setRow: {
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: colors.surface,
         borderWidth: 1,
         borderColor: colors.border,
-        padding: spacing[2],
+        paddingVertical: spacing[2],
+        paddingHorizontal: spacing[1],
         marginBottom: spacing[1],
         minHeight: 48,
     },
     setRowDone: {
         borderColor: colors.success,
-        opacity: 0.8,
+        backgroundColor: 'rgba(46, 204, 113, 0.05)',
     },
-    setNumber: {
-        width: 32,
-        height: 32,
+    setNumBox: {
+        width: 28,
+        height: 28,
         backgroundColor: colors.background,
         justifyContent: 'center',
         alignItems: 'center',
-        marginRight: spacing[3],
     },
-    setNumberText: {
-        ...textStyles.label,
-        color: colors.textDim,
-    },
-    setCompleted: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    setDoneText: {
-        ...textStyles.label,
-        color: colors.success,
+    setNumText: {
         fontSize: 13,
-    },
-    setInput: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: spacing[2],
-    },
-    input: {
-        flex: 1,
-        backgroundColor: colors.background,
-        borderWidth: 1,
-        borderColor: colors.primary,
-        color: colors.text,
-        fontSize: 16,
-        fontWeight: '700',
-        textAlign: 'center',
-        paddingVertical: spacing[1],
-    },
-    inputX: {
+        fontWeight: '900',
         color: colors.textDim,
-        fontSize: 16,
     },
-    logBtn: {
-        width: 40,
-        height: 40,
-        backgroundColor: colors.primary,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    setWaiting: {
-        flex: 1,
-    },
-    setWaitText: {
+    prevText: {
         ...textStyles.caption,
         color: colors.textMuted,
+        fontSize: 11,
+        textAlign: 'center',
+    },
+    input: {
+        backgroundColor: colors.background,
+        borderWidth: 1,
+        borderColor: colors.borderLight,
+        color: colors.text,
+        fontSize: 15,
+        fontWeight: '700',
+        textAlign: 'center',
+        paddingVertical: 4,
+        paddingHorizontal: 2,
+        width: 52,
+    },
+    completedValue: {
+        fontSize: 15,
+        fontWeight: '700',
+        color: colors.success,
+        textAlign: 'center',
+    },
+    checkBtn: {
+        padding: 2,
     },
 
     // Target
     targetInfo: {
-        marginTop: spacing[3],
         padding: spacing[2],
         borderTopWidth: 1,
         borderTopColor: colors.border,
+        gap: spacing[1],
+    },
+    targetRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: spacing[1],
     },
     targetText: {
         ...textStyles.caption,
         color: colors.textDim,
-        fontSize: 9,
-        marginBottom: 2,
+        fontSize: 10,
     },
 
     // Nav bar
@@ -602,8 +718,16 @@ const styles = StyleSheet.create({
         backgroundColor: colors.surface,
         paddingVertical: spacing[1],
         paddingHorizontal: spacing[3],
+        flexDirection: 'row',
+        alignItems: 'baseline',
+        gap: 4,
     },
-    setsProgressText: {
+    setsProgressNum: {
+        fontSize: 18,
+        fontWeight: '900',
+        color: colors.text,
+    },
+    setsProgressLabel: {
         ...textStyles.caption,
         color: colors.textSecondary,
         fontSize: 10,
