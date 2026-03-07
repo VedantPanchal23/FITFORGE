@@ -40,11 +40,13 @@ const ActiveWorkoutScreen = ({ navigation }) => {
     const finishWorkout = useWorkoutStore((s) => s.finishWorkout);
     const cancelWorkout = useWorkoutStore((s) => s.cancelWorkout);
     const getLastWorkoutSets = useWorkoutStore((s) => s.getLastWorkoutSets);
+    const personalRecords = useWorkoutStore((s) => s.personalRecords);
 
     const [elapsedTime, setElapsedTime] = useState(0);
     const [restTimeLeft, setRestTimeLeft] = useState(0);
-    // Per-set editable values: { [setIndex]: { weight, reps } }
     const [setInputs, setSetInputs] = useState({});
+    const [prNotification, setPrNotification] = useState(null);
+    const prFadeAnim = useRef(new Animated.Value(0)).current;
 
     // Elapsed time counter
     useEffect(() => {
@@ -143,8 +145,24 @@ const ActiveWorkoutScreen = ({ navigation }) => {
 
         if (parseInt(reps) <= 0) return;
 
+        // Check for PR before logging
+        const volume = (parseFloat(weight) || 0) * (parseInt(reps) || 0);
+        const prevPR = personalRecords?.[currentExercise.id];
+        const isPR = volume > 0 && (!prevPR || volume > (prevPR.maxVolume || 0));
+
         logSet(currentExercise.id, setIndex, weight, reps);
-        Vibration.vibrate(50);
+        Vibration.vibrate(isPR ? [0, 50, 50, 50, 50, 100, 50, 200] : 50);
+
+        // Show PR notification
+        if (isPR) {
+            setPrNotification(currentExercise.name);
+            prFadeAnim.setValue(0);
+            Animated.sequence([
+                Animated.timing(prFadeAnim, { toValue: 1, duration: 300, useNativeDriver: true }),
+                Animated.delay(2500),
+                Animated.timing(prFadeAnim, { toValue: 0, duration: 500, useNativeDriver: true }),
+            ]).start(() => setPrNotification(null));
+        }
 
         // Start rest timer after completing a set (if more sets remain)
         const nextUncompleted = currentSets.findIndex((s, i) => i > setIndex && !s.completed);
@@ -223,6 +241,15 @@ const ActiveWorkoutScreen = ({ navigation }) => {
             <View style={styles.progressBar}>
                 <View style={[styles.progressFill, { width: `${progress}%` }]} />
             </View>
+
+            {/* PR Notification Banner */}
+            {prNotification && (
+                <Animated.View style={[styles.prBanner, { opacity: prFadeAnim }]}>
+                    <Ionicons name="trophy" size={18} color="#FFD700" />
+                    <Text style={styles.prBannerText}>NEW PERSONAL RECORD!</Text>
+                    <Ionicons name="trophy" size={18} color="#FFD700" />
+                </Animated.View>
+            )}
 
             {/* Exercise Counter */}
             <View style={styles.exerciseHeader}>
@@ -500,6 +527,26 @@ const styles = StyleSheet.create({
     progressFill: {
         height: '100%',
         backgroundColor: colors.primary,
+    },
+
+    // PR Notification
+    prBanner: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: spacing[2],
+        backgroundColor: '#FFD70020',
+        borderWidth: 1,
+        borderColor: '#FFD700',
+        marginHorizontal: screen.paddingHorizontal,
+        marginTop: spacing[2],
+        paddingVertical: spacing[2],
+    },
+    prBannerText: {
+        ...textStyles.label,
+        color: '#FFD700',
+        fontSize: 13,
+        letterSpacing: 2,
     },
 
     // Exercise header

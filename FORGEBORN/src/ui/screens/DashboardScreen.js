@@ -27,6 +27,7 @@ import useWorkoutStore from '../../store/workoutStore';
 import useNutritionStore from '../../store/nutritionStore';
 import useHabitStore from '../../store/habitStore';
 import useLookmaxxStore from '../../store/lookmaxxStore';
+import useBadgeStore from '../../store/badgeStore';
 
 const DashboardScreen = ({ navigation }) => {
     const [greeting, setGreeting] = useState('');
@@ -76,7 +77,47 @@ const DashboardScreen = ({ navigation }) => {
         else setGreeting('NIGHT OPS');
 
         tick();
-        const interval = setInterval(tick, 60000); // Every minute
+        const interval = setInterval(tick, 60000);
+
+        // ── Badge checker ──
+        const checkBadges = useBadgeStore.getState().checkBadges;
+        const workoutState = useWorkoutStore.getState();
+        const habitState = useHabitStore.getState();
+        const nutritionState = useNutritionStore.getState();
+        const commitmentState = useCommitmentStore.getState();
+        const lookmaxxState = useLookmaxxStore.getState();
+
+        // Calculate total volume from history
+        let totalVol = 0;
+        (workoutState.workoutHistory || []).forEach(w => { totalVol += w.totalVolume || 0; });
+
+        // Count total meals logged
+        let totalMeals = 0;
+        let maxWater = 0;
+        const logs = nutritionState.dailyLogs || {};
+        Object.values(logs).forEach(day => {
+            const meals = day?.meals || {};
+            Object.values(meals).forEach(arr => { totalMeals += (arr || []).length; });
+            maxWater = Math.max(maxWater, day?.water || 0);
+        });
+
+        // Skincare completed count
+        const routineStatus = lookmaxxState.getTodaysRoutineStatus?.() || {};
+        const skincareCompleted = (routineStatus.amCompleted === routineStatus.amTotal && routineStatus.pmCompleted === routineStatus.pmTotal) ? 1 : 0;
+
+        checkBadges({
+            totalWorkouts: workoutState.totalWorkoutsCompleted || 0,
+            totalVolume: totalVol,
+            longestStreak: workoutState.longestStreak || 0,
+            totalHabitsCompleted: habitState.totalHabitsCompleted || 0,
+            perfectDays: habitState.perfectDays || 0,
+            habitLevel: habitState.level || 0,
+            totalMealsLogged: totalMeals,
+            maxWaterGlasses: maxWater,
+            daysSinceCommitment: commitmentState.getDaysSinceCommitment?.() || 0,
+            skincareCompleted,
+        });
+
         return () => clearInterval(interval);
     }, []);
 

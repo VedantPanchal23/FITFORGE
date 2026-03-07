@@ -32,6 +32,7 @@ import useNutritionStore from '../../store/nutritionStore';
 import useHabitStore from '../../store/habitStore';
 import useLookmaxxStore from '../../store/lookmaxxStore';
 import useProgressStore from '../../store/progressStore';
+import useBadgeStore, { BADGES } from '../../store/badgeStore';
 
 const ProfileScreen = ({ navigation }) => {
     const profile = useUserStore((s) => s.profile);
@@ -59,6 +60,11 @@ const ProfileScreen = ({ navigation }) => {
     const progressReset = useProgressStore((s) => s.__devReset);
     const weightLog = useProgressStore((s) => s.weightLog);
 
+    const getBadgesWithStatus = useBadgeStore((s) => s.getBadgesWithStatus);
+    const getUnlockedCount = useBadgeStore((s) => s.getUnlockedCount);
+    const badgeReset = useBadgeStore((s) => s.__devReset);
+    const allBadges = getBadgesWithStatus();
+    const unlockedCount = getUnlockedCount();
 
     const days = getDaysSinceCommitment();
     const name = profile?.name || 'OPERATOR';
@@ -85,6 +91,7 @@ const ProfileScreen = ({ navigation }) => {
                         habitReset();
                         lookmaxxReset();
                         progressReset();
+                        badgeReset();
                         resetCommitment();
                         resetUser();
                     },
@@ -198,6 +205,42 @@ const ProfileScreen = ({ navigation }) => {
                     </View>
                 </View>
 
+                {/* Achievement Badges */}
+                <Text style={styles.sectionLabel}>ACHIEVEMENTS ({unlockedCount}/{BADGES.length})</Text>
+                <View style={styles.badgeGrid}>
+                    {allBadges.map(badge => (
+                        <View
+                            key={badge.id}
+                            style={[
+                                styles.badgeItem,
+                                badge.unlocked && { borderColor: badge.color },
+                            ]}
+                        >
+                            <View style={[
+                                styles.badgeIcon,
+                                badge.unlocked
+                                    ? { backgroundColor: badge.color + '22', borderColor: badge.color }
+                                    : { backgroundColor: colors.surface, borderColor: colors.border },
+                            ]}>
+                                <Ionicons
+                                    name={badge.unlocked ? badge.icon : 'lock-closed'}
+                                    size={18}
+                                    color={badge.unlocked ? badge.color : colors.textMuted}
+                                />
+                            </View>
+                            <Text style={[
+                                styles.badgeName,
+                                !badge.unlocked && { color: colors.textMuted },
+                            ]}>
+                                {badge.unlocked ? badge.name : '???'}
+                            </Text>
+                            <Text style={styles.badgeDesc}>
+                                {badge.description}
+                            </Text>
+                        </View>
+                    ))}
+                </View>
+
                 {/* Lookmaxxing Card */}
                 <Text style={styles.sectionLabel}>APPEARANCE</Text>
                 <TouchableOpacity
@@ -206,7 +249,7 @@ const ProfileScreen = ({ navigation }) => {
                     activeOpacity={0.7}
                 >
                     <View style={styles.lookmaxxLeft}>
-                        <Text style={styles.lookmaxxIcon}>✨</Text>
+                        <Ionicons name="sparkles-outline" size={22} color={colors.primary} />
                         <View>
                             <Text style={styles.lookmaxxTitle}>LOOKMAXXING</Text>
                             <Text style={styles.lookmaxxSub}>
@@ -395,6 +438,41 @@ const styles = StyleSheet.create({
         fontSize: 7,
         marginTop: 2,
     },
+    // Badge grid
+    badgeGrid: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: spacing[2],
+    },
+    badgeItem: {
+        width: '30%',
+        backgroundColor: colors.surface,
+        borderWidth: 1,
+        borderColor: colors.border,
+        padding: spacing[2],
+        alignItems: 'center',
+        gap: 4,
+    },
+    badgeIcon: {
+        width: 36,
+        height: 36,
+        borderRadius: 18,
+        borderWidth: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    badgeName: {
+        ...textStyles.label,
+        color: colors.text,
+        fontSize: 8,
+        textAlign: 'center',
+    },
+    badgeDesc: {
+        ...textStyles.caption,
+        color: colors.textDim,
+        fontSize: 6,
+        textAlign: 'center',
+    },
 
     // Lookmaxx card
     lookmaxxCard: {
@@ -411,7 +489,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         gap: spacing[2],
     },
-    lookmaxxIcon: { fontSize: 22 },
     lookmaxxTitle: {
         ...textStyles.label,
         color: colors.primary,
