@@ -14,6 +14,7 @@ import {
     StyleSheet,
     ScrollView,
     StatusBar,
+    Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../theme/colors';
@@ -117,6 +118,24 @@ const DashboardScreen = ({ navigation }) => {
             daysSinceCommitment: commitmentState.getDaysSinceCommitment?.() || 0,
             skincareCompleted,
         });
+
+        // Streak milestone celebrations
+        const streak = workoutState.currentStreak || 0;
+        const milestones = [
+            { days: 100, title: 'LEGENDARY STATUS', msg: '100-day streak! You are truly UNBREAKABLE.' },
+            { days: 30, title: 'MACHINE MODE', msg: '30-day streak! Nothing can stop you.' },
+            { days: 7, title: 'MOMENTUM BUILT', msg: '7-day streak! You\'re building a habit.' },
+        ];
+        const milestone = milestones.find(m => streak === m.days);
+        if (milestone) {
+            setTimeout(() => {
+                Alert.alert(
+                    milestone.title,
+                    milestone.msg,
+                    [{ text: 'KEEP GOING', style: 'default' }]
+                );
+            }, 1500);
+        }
 
         return () => clearInterval(interval);
     }, []);

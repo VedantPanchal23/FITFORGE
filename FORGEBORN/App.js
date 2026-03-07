@@ -44,6 +44,7 @@ import useCommitmentStore from './src/store/commitmentStore';
 import useUserStore from './src/store/userStore';
 import useObligationStore from './src/store/obligationStore';
 import { colors } from './src/ui/theme/colors';
+import { initNotifications } from './src/services/notificationService';
 
 const Tab = createBottomTabNavigator();
 const WorkoutStack = createNativeStackNavigator();
@@ -201,6 +202,10 @@ export default function App() {
   useEffect(() => {
     if (!hasCommitted || !hasCompletedOnboarding) return;
     const interval = setInterval(tick, 1000);
+
+    // Init notifications
+    initNotifications().catch(() => { });
+
     return () => clearInterval(interval);
   }, [hasCommitted, hasCompletedOnboarding]);
 
