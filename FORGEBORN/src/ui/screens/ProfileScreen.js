@@ -6,10 +6,15 @@ import {
     StatusBar,
     TouchableOpacity,
     Alert,
+    Animated,
+    Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { BlurView } from 'expo-blur';
 import { colors, spacing, radius } from '../theme';
-import { Card, Typography, Button, ProgressBar } from '../components';
+import { Card, Typography, Button, ProgressBar, ScreenWrapper } from '../components';
+
+const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 import useUserStore from '../../store/userStore';
 import useCommitmentStore from '../../store/commitmentStore';
 import useWorkoutStore from '../../store/workoutStore';
@@ -85,211 +90,261 @@ const ProfileScreen = ({ navigation }) => {
         );
     };
 
+    // Scroll & Sticky Header Animations
+    const scrollY = React.useRef(new Animated.Value(0)).current;
+
+    const headerHeight = scrollY.interpolate({
+        inputRange: [0, 60],
+        outputRange: [100, 60],
+        extrapolate: 'clamp',
+    });
+
+    const headerBlur = scrollY.interpolate({
+        inputRange: [0, 20, 60],
+        outputRange: [0, 0, 100],
+        extrapolate: 'clamp',
+    });
+
+    const headerOpacity = scrollY.interpolate({
+        inputRange: [30, 60],
+        outputRange: [0, 1],
+        extrapolate: 'clamp',
+    });
+
     return (
         <View style={styles.container}>
             <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
-            <ScrollView
+
+            {/* Sticky Blurring Header */}
+            <Animated.View style={[styles.stickyHeader, { height: headerHeight }]}>
+                {Platform.OS === 'ios' ? (
+                    <AnimatedBlurView
+                        tint="light"
+                        intensity={headerBlur}
+                        style={StyleSheet.absoluteFill}
+                    />
+                ) : (
+                    <Animated.View style={[
+                        StyleSheet.absoluteFill,
+                        { backgroundColor: colors.background, opacity: headerOpacity }
+                    ]} />
+                )}
+                <View style={styles.stickyHeaderContent}>
+                    <Animated.Text style={[styles.stickyTitle, { opacity: headerOpacity }]}>
+                        {name}
+                    </Animated.Text>
+                </View>
+            </Animated.View>
+
+            <Animated.ScrollView
                 style={styles.scrollView}
                 contentContainerStyle={styles.scrollContent}
                 showsVerticalScrollIndicator={false}
+                onScroll={Animated.event(
+                    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                    { useNativeDriver: false }
+                )}
+                scrollEventThrottle={16}
             >
-                {/* Profile Header */}
-                <Card style={styles.profileCard}>
-                    <View style={styles.avatar}>
-                        <Typography variant="largeTitle" style={{ fontSize: 32, color: colors.textInverse }}>{name[0]}</Typography>
-                    </View>
-                    <Typography variant="title2">{name}</Typography>
-                    <Typography variant="subheadline" color={colors.textSecondary} style={{ marginBottom: spacing[3], marginTop: 2 }}>
-                        Day {days} • Level {habitLevel}
-                    </Typography>
-                    <ProgressBar progress={(habitXP % 100) / 100} color={colors.primary} />
-                    <Typography variant="caption" color={colors.textDim} style={{ marginTop: spacing[2] }}>{habitXP} Total XP</Typography>
-                </Card>
-
-                {/* Body Stats */}
-                <View style={styles.sectionHeader}>
-                    <Typography variant="title3">Body Stats</Typography>
-                </View>
-                <View style={styles.statsRow}>
-                    <Card style={styles.statCard}>
-                        <Typography variant="title2">{weight}</Typography>
-                        <Typography variant="caption" color={colors.textDim}>kg</Typography>
-                        <Typography variant="caption" color={colors.textSecondary} style={{ marginTop: spacing[1] }}>Weight</Typography>
-                    </Card>
-                    <Card style={styles.statCard}>
-                        <Typography variant="title2">{height}</Typography>
-                        <Typography variant="caption" color={colors.textDim}>cm</Typography>
-                        <Typography variant="caption" color={colors.textSecondary} style={{ marginTop: spacing[1] }}>Height</Typography>
-                    </Card>
-                    <Card style={styles.statCard}>
-                        <Typography variant="title2">{bmi}</Typography>
-                        <Typography variant="caption" color={colors.textDim}>{bmiCategory}</Typography>
-                        <Typography variant="caption" color={colors.textSecondary} style={{ marginTop: spacing[1] }}>BMI</Typography>
-                    </Card>
-                </View>
-
-                {/* Training Profile */}
-                <View style={styles.sectionHeader}>
-                    <Typography variant="title3">Training Profile</Typography>
-                </View>
-                <Card style={styles.infoCard}>
-                    <View style={styles.infoRow}>
-                        <Typography variant="body" color={colors.textSecondary}>Goals</Typography>
-                        <Typography variant="body" style={{ flex: 1, textAlign: 'right', marginLeft: spacing[4] }}>
-                            {(profile?.fitnessGoal || []).join(', ') || 'Not set'}
+                <ScreenWrapper staggerScale={0.7}>
+                    {/* Profile Header */}
+                    <Card style={styles.profileCard}>
+                        <View style={styles.avatar}>
+                            <Typography variant="largeTitle" style={{ fontSize: 32, color: colors.textInverse }}>{name[0]}</Typography>
+                        </View>
+                        <Typography variant="title2">{name}</Typography>
+                        <Typography variant="subheadline" color={colors.textSecondary} style={{ marginBottom: spacing[3], marginTop: 2 }}>
+                            Day {days} • Level {habitLevel}
                         </Typography>
-                    </View>
-                    <View style={styles.infoRow}>
-                        <Typography variant="body" color={colors.textSecondary}>Level</Typography>
-                        <Typography variant="body">{profile?.experienceLevel || 'Not set'}</Typography>
-                    </View>
-                    <View style={styles.infoRow}>
-                        <Typography variant="body" color={colors.textSecondary}>Training Days</Typography>
-                        <Typography variant="body">{profile?.trainingDaysPerWeek || '–'}/week</Typography>
-                    </View>
-                    <View style={styles.infoRow}>
-                        <Typography variant="body" color={colors.textSecondary}>Diet</Typography>
-                        <Typography variant="body">{profile?.dietPreference || 'Not set'}</Typography>
-                    </View>
-                    <View style={[styles.infoRow, { borderBottomWidth: 0 }]}>
-                        <Typography variant="body" color={colors.textSecondary}>Age</Typography>
-                        <Typography variant="body">{profile?.age || '–'}</Typography>
-                    </View>
-                </Card>
+                        <ProgressBar progress={(habitXP % 100) / 100} color={colors.primary} />
+                        <Typography variant="caption" color={colors.textDim} style={{ marginTop: spacing[2] }}>{habitXP} Total XP</Typography>
+                    </Card>
 
-                {/* All-Time Stats */}
-                <View style={styles.sectionHeader}>
-                    <Typography variant="title3">All-Time Stats</Typography>
-                </View>
-                <Card style={styles.allTimeGridCard}>
-                    <View style={styles.allTimeGrid}>
-                        <View style={styles.allTimeStat}>
-                            <Typography variant="title2">{totalWorkouts}</Typography>
-                            <Typography variant="caption" color={colors.textSecondary}>Workouts</Typography>
-                        </View>
-                        <View style={styles.allTimeStat}>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-                                <Ionicons name="flame" size={16} color="#F59E0B" />
-                                <Typography variant="title2">{workoutStreak}</Typography>
-                            </View>
-                            <Typography variant="caption" color={colors.textSecondary}>Streak</Typography>
-                        </View>
-                        <View style={styles.allTimeStat}>
-                            <Typography variant="title2">{longestStreak}</Typography>
-                            <Typography variant="caption" color={colors.textSecondary}>Best Streak</Typography>
-                        </View>
-                        <View style={styles.allTimeStat}>
-                            <Typography variant="title2">{totalHabitsCompleted}</Typography>
-                            <Typography variant="caption" color={colors.textSecondary}>Habits Done</Typography>
-                        </View>
-                        <View style={styles.allTimeStat}>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-                                <Ionicons name="star" size={16} color="#F59E0B" />
-                                <Typography variant="title2">{perfectDays}</Typography>
-                            </View>
-                            <Typography variant="caption" color={colors.textSecondary}>Perfect Days</Typography>
-                        </View>
-                        <View style={styles.allTimeStat}>
-                            <Typography variant="title2">{days}</Typography>
-                            <Typography variant="caption" color={colors.textSecondary}>Commitment</Typography>
-                        </View>
+                    {/* Body Stats */}
+                    <View style={styles.sectionHeader}>
+                        <Typography variant="title3">Body Stats</Typography>
                     </View>
-                </Card>
+                    <View style={styles.statsRow}>
+                        <Card style={styles.statCard}>
+                            <Typography variant="title2">{weight}</Typography>
+                            <Typography variant="caption" color={colors.textDim}>kg</Typography>
+                            <Typography variant="caption" color={colors.textSecondary} style={{ marginTop: spacing[1] }}>Weight</Typography>
+                        </Card>
+                        <Card style={styles.statCard}>
+                            <Typography variant="title2">{height}</Typography>
+                            <Typography variant="caption" color={colors.textDim}>cm</Typography>
+                            <Typography variant="caption" color={colors.textSecondary} style={{ marginTop: spacing[1] }}>Height</Typography>
+                        </Card>
+                        <Card style={styles.statCard}>
+                            <Typography variant="title2">{bmi}</Typography>
+                            <Typography variant="caption" color={colors.textDim}>{bmiCategory}</Typography>
+                            <Typography variant="caption" color={colors.textSecondary} style={{ marginTop: spacing[1] }}>BMI</Typography>
+                        </Card>
+                    </View>
 
-                {/* Achievement Badges */}
-                <View style={styles.sectionHeader}>
-                    <Typography variant="title3">Achievements</Typography>
-                    <Typography variant="caption" color={colors.textSecondary}>{unlockedCount}/{BADGES.length}</Typography>
-                </View>
-                <Card style={styles.allTimeGridCard}>
-                    <View style={styles.badgeGrid}>
-                        {allBadges.map(badge => (
-                            <View key={badge.id} style={styles.badgeItem}>
-                                <View style={[
-                                    styles.badgeIcon,
-                                    badge.unlocked
-                                        ? { backgroundColor: badge.color + '15', borderColor: badge.color }
-                                        : { backgroundColor: colors.surfaceLight, borderColor: colors.borderLight },
-                                ]}>
-                                    <Ionicons
-                                        name={badge.unlocked ? badge.icon : 'lock-closed'}
-                                        size={24}
-                                        color={badge.unlocked ? badge.color : colors.textMuted}
-                                    />
+                    {/* Training Profile */}
+                    <View style={styles.sectionHeader}>
+                        <Typography variant="title3">Training Profile</Typography>
+                    </View>
+                    <Card style={styles.infoCard}>
+                        <View style={styles.infoRow}>
+                            <Typography variant="body" color={colors.textSecondary}>Goals</Typography>
+                            <Typography variant="body" style={{ flex: 1, textAlign: 'right', marginLeft: spacing[4] }}>
+                                {(profile?.fitnessGoal || []).join(', ') || 'Not set'}
+                            </Typography>
+                        </View>
+                        <View style={styles.infoRow}>
+                            <Typography variant="body" color={colors.textSecondary}>Level</Typography>
+                            <Typography variant="body">{profile?.experienceLevel || 'Not set'}</Typography>
+                        </View>
+                        <View style={styles.infoRow}>
+                            <Typography variant="body" color={colors.textSecondary}>Training Days</Typography>
+                            <Typography variant="body">{profile?.trainingDaysPerWeek || '–'}/week</Typography>
+                        </View>
+                        <View style={styles.infoRow}>
+                            <Typography variant="body" color={colors.textSecondary}>Diet</Typography>
+                            <Typography variant="body">{profile?.dietPreference || 'Not set'}</Typography>
+                        </View>
+                        <View style={[styles.infoRow, { borderBottomWidth: 0 }]}>
+                            <Typography variant="body" color={colors.textSecondary}>Age</Typography>
+                            <Typography variant="body">{profile?.age || '–'}</Typography>
+                        </View>
+                    </Card>
+
+                    {/* All-Time Stats */}
+                    <View style={styles.sectionHeader}>
+                        <Typography variant="title3">All-Time Stats</Typography>
+                    </View>
+                    <Card style={styles.allTimeGridCard}>
+                        <View style={styles.allTimeGrid}>
+                            <View style={styles.allTimeStat}>
+                                <Typography variant="title2">{totalWorkouts}</Typography>
+                                <Typography variant="caption" color={colors.textSecondary}>Workouts</Typography>
+                            </View>
+                            <View style={styles.allTimeStat}>
+                                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                                    <Ionicons name="flame" size={16} color="#F59E0B" />
+                                    <Typography variant="title2">{workoutStreak}</Typography>
                                 </View>
-                                <Typography variant="caption" style={{
-                                    fontWeight: 'bold',
-                                    marginTop: spacing[2],
-                                    color: badge.unlocked ? colors.text : colors.textMuted,
-                                    textAlign: 'center'
-                                }}>
-                                    {badge.unlocked ? badge.name : 'Unlocked ???'}
-                                </Typography>
-                                <Typography variant="caption" color={colors.textMuted} style={{ fontSize: 10, textAlign: 'center', marginTop: 2 }}>
-                                    {badge.description}
-                                </Typography>
+                                <Typography variant="caption" color={colors.textSecondary}>Streak</Typography>
                             </View>
-                        ))}
+                            <View style={styles.allTimeStat}>
+                                <Typography variant="title2">{longestStreak}</Typography>
+                                <Typography variant="caption" color={colors.textSecondary}>Best Streak</Typography>
+                            </View>
+                            <View style={styles.allTimeStat}>
+                                <Typography variant="title2">{totalHabitsCompleted}</Typography>
+                                <Typography variant="caption" color={colors.textSecondary}>Habits Done</Typography>
+                            </View>
+                            <View style={styles.allTimeStat}>
+                                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                                    <Ionicons name="star" size={16} color="#F59E0B" />
+                                    <Typography variant="title2">{perfectDays}</Typography>
+                                </View>
+                                <Typography variant="caption" color={colors.textSecondary}>Perfect Days</Typography>
+                            </View>
+                            <View style={styles.allTimeStat}>
+                                <Typography variant="title2">{days}</Typography>
+                                <Typography variant="caption" color={colors.textSecondary}>Commitment</Typography>
+                            </View>
+                        </View>
+                    </Card>
+
+                    {/* Achievement Badges */}
+                    <View style={styles.sectionHeader}>
+                        <Typography variant="title3">Achievements</Typography>
+                        <Typography variant="caption" color={colors.textSecondary}>{unlockedCount}/{BADGES.length}</Typography>
                     </View>
-                </Card>
-
-                {/* Navigation Cards */}
-                <View style={styles.sectionHeader}>
-                    <Typography variant="title3">More Tools</Typography>
-                </View>
-                <Card style={[styles.infoCard, { padding: 0, paddingHorizontal: spacing[4] }]}>
-                    <TouchableOpacity
-                        style={styles.navRow}
-                        onPress={() => navigation.navigate('Lookmaxxing')}
-                        activeOpacity={0.7}
-                    >
-                        <View style={styles.navLeft}>
-                            <View style={[styles.navIconBox, { backgroundColor: 'rgba(16, 185, 129, 0.1)' }]}>
-                                <Ionicons name="sparkles" size={20} color={colors.primary} />
-                            </View>
-                            <View>
-                                <Typography variant="body">Appearance</Typography>
-                                <Typography variant="caption" color={colors.textSecondary}>
-                                    AM: {routineStatus.amCompleted}/{routineStatus.amTotal} • PM: {routineStatus.pmCompleted}/{routineStatus.pmTotal}
-                                </Typography>
-                            </View>
+                    <Card style={styles.allTimeGridCard}>
+                        <View style={styles.badgeGrid}>
+                            {allBadges.map(badge => (
+                                <View key={badge.id} style={styles.badgeItem}>
+                                    <View style={[
+                                        styles.badgeIcon,
+                                        badge.unlocked
+                                            ? { backgroundColor: badge.color + '15', borderColor: badge.color }
+                                            : { backgroundColor: colors.surfaceLight, borderColor: colors.borderLight },
+                                    ]}>
+                                        <Ionicons
+                                            name={badge.unlocked ? badge.icon : 'lock-closed'}
+                                            size={24}
+                                            color={badge.unlocked ? badge.color : colors.textMuted}
+                                        />
+                                    </View>
+                                    <Typography variant="caption" style={{
+                                        fontWeight: 'bold',
+                                        marginTop: spacing[2],
+                                        color: badge.unlocked ? colors.text : colors.textMuted,
+                                        textAlign: 'center'
+                                    }}>
+                                        {badge.unlocked ? badge.name : 'Unlocked ???'}
+                                    </Typography>
+                                    <Typography variant="caption" color={colors.textMuted} style={{ fontSize: 10, textAlign: 'center', marginTop: 2 }}>
+                                        {badge.description}
+                                    </Typography>
+                                </View>
+                            ))}
                         </View>
-                        <Ionicons name="chevron-forward" size={20} color={colors.textDim} />
+                    </Card>
+
+                    {/* Navigation Cards */}
+                    <View style={styles.sectionHeader}>
+                        <Typography variant="title3">More Tools</Typography>
+                    </View>
+                    <Card style={[styles.infoCard, { padding: 0, paddingHorizontal: spacing[4] }]}>
+                        <TouchableOpacity
+                            style={styles.navRow}
+                            onPress={() => navigation.navigate('Lookmaxxing')}
+                            activeOpacity={0.7}
+                        >
+                            <View style={styles.navLeft}>
+                                <View style={[styles.navIconBox, { backgroundColor: 'rgba(16, 185, 129, 0.1)' }]}>
+                                    <Ionicons name="sparkles" size={20} color={colors.primary} />
+                                </View>
+                                <View>
+                                    <Typography variant="body">Appearance</Typography>
+                                    <Typography variant="caption" color={colors.textSecondary}>
+                                        AM: {routineStatus.amCompleted}/{routineStatus.amTotal} • PM: {routineStatus.pmCompleted}/{routineStatus.pmTotal}
+                                    </Typography>
+                                </View>
+                            </View>
+                            <Ionicons name="chevron-forward" size={20} color={colors.textDim} />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={[styles.navRow, { borderBottomWidth: 0 }]}
+                            onPress={() => navigation.navigate('Progress')}
+                            activeOpacity={0.7}
+                        >
+                            <View style={styles.navLeft}>
+                                <View style={[styles.navIconBox, { backgroundColor: 'rgba(59, 130, 246, 0.1)' }]}>
+                                    <Ionicons name="analytics" size={20} color="#3B82F6" />
+                                </View>
+                                <View>
+                                    <Typography variant="body">Progress</Typography>
+                                    <Typography variant="caption" color={colors.textSecondary}>
+                                        {weightLog.length > 0
+                                            ? `${weightLog[weightLog.length - 1].weight} kg • ${weightLog.length} entries`
+                                            : 'Weight & measurements'}
+                                    </Typography>
+                                </View>
+                            </View>
+                            <Ionicons name="chevron-forward" size={20} color={colors.textDim} />
+                        </TouchableOpacity>
+                    </Card>
+
+                    {/* DEV Reset */}
+                    <TouchableOpacity
+                        style={styles.devResetBtn}
+                        onPress={handleDevReset}
+                    >
+                        <Ionicons name="trash" size={18} color={colors.danger} />
+                        <Typography variant="body" color={colors.danger}>Dev Reset (All Data)</Typography>
                     </TouchableOpacity>
 
-                    <TouchableOpacity
-                        style={[styles.navRow, { borderBottomWidth: 0 }]}
-                        onPress={() => navigation.navigate('Progress')}
-                        activeOpacity={0.7}
-                    >
-                        <View style={styles.navLeft}>
-                            <View style={[styles.navIconBox, { backgroundColor: 'rgba(59, 130, 246, 0.1)' }]}>
-                                <Ionicons name="analytics" size={20} color="#3B82F6" />
-                            </View>
-                            <View>
-                                <Typography variant="body">Progress</Typography>
-                                <Typography variant="caption" color={colors.textSecondary}>
-                                    {weightLog.length > 0
-                                        ? `${weightLog[weightLog.length - 1].weight} kg • ${weightLog.length} entries`
-                                        : 'Weight & measurements'}
-                                </Typography>
-                            </View>
-                        </View>
-                        <Ionicons name="chevron-forward" size={20} color={colors.textDim} />
-                    </TouchableOpacity>
-                </Card>
-
-                {/* DEV Reset */}
-                <TouchableOpacity
-                    style={styles.devResetBtn}
-                    onPress={handleDevReset}
-                >
-                    <Ionicons name="trash" size={18} color={colors.danger} />
-                    <Typography variant="body" color={colors.danger}>Dev Reset (All Data)</Typography>
-                </TouchableOpacity>
-
-                <View style={{ height: 40 }} />
-            </ScrollView>
+                    <View style={{ height: 40 }} />
+                </ScreenWrapper>
+            </Animated.ScrollView>
         </View>
     );
 };
@@ -304,10 +359,33 @@ const styles = StyleSheet.create({
     },
     scrollContent: {
         paddingHorizontal: spacing[4],
-        paddingTop: spacing[12],
+        paddingTop: spacing[8] + 100, // Account for sticky header
         paddingBottom: spacing[8],
     },
-
+    stickyHeader: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 100,
+        overflow: 'hidden',
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderBottomColor: 'rgba(0,0,0,0.05)',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        paddingBottom: spacing[4],
+    },
+    stickyHeaderContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: spacing[4],
+    },
+    stickyTitle: {
+        fontFamily: 'Inter-SemiBold',
+        fontSize: 17, // Standard iOS header size
+        color: colors.text,
+        letterSpacing: -0.5,
+    },
     sectionHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
