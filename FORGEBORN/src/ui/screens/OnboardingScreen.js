@@ -1,27 +1,6 @@
-/**
- * FORGEBORN — ONBOARDING SCREEN
- * 
- * Multi-step questionnaire that collects everything needed
- * to forge the user's personalized plan.
- * 
- * 9 Steps:
- * 1. Name
- * 2. Gender
- * 3. Body stats (Age, Weight, Height)
- * 4. Fitness Goal
- * 5. Experience Level
- * 6. Training Days
- * 7. Cardio Preference
- * 8. Yoga & Injuries
- * 9. Diet & Meals
- * 
- * After completion, the system OWNS you.
- */
-
 import React, { useState, useRef } from 'react';
 import {
     View,
-    Text,
     TextInput,
     TouchableOpacity,
     StyleSheet,
@@ -31,10 +10,10 @@ import {
     Dimensions,
     KeyboardAvoidingView,
     Platform,
+    StatusBar,
 } from 'react-native';
-import { colors } from '../theme/colors';
-import { textStyles } from '../theme/typography';
-import { spacing, screen } from '../theme/spacing';
+import { colors, spacing, radius } from '../theme';
+import { Typography, Button } from '../components';
 import useUserStore, {
     FitnessGoal,
     ExperienceLevel,
@@ -59,19 +38,25 @@ const OptionButton = ({ label, sublabel, selected, onPress, danger, containerSty
         onPress={onPress}
         activeOpacity={0.7}
     >
-        <Text style={[
-            styles.optionText,
-            selected && styles.optionTextActive,
-        ]}>
+        <Typography
+            variant="body"
+            style={[
+                { fontWeight: '700' },
+                selected ? { color: danger ? colors.danger : colors.primaryDark } : { color: colors.textSecondary }
+            ]}
+        >
             {label}
-        </Text>
+        </Typography>
         {sublabel && (
-            <Text style={[
-                styles.optionSublabel,
-                selected && styles.optionSublabelActive,
-            ]}>
+            <Typography
+                variant="caption"
+                style={[
+                    { marginTop: spacing[1] },
+                    selected ? { color: danger ? colors.danger : colors.text } : { color: colors.textDim }
+                ]}
+            >
                 {sublabel}
-            </Text>
+            </Typography>
         )}
     </TouchableOpacity>
 );
@@ -79,7 +64,9 @@ const OptionButton = ({ label, sublabel, selected, onPress, danger, containerSty
 // ─── Number Input Component ──────────────────────────────────────────────────
 const NumberInput = ({ label, value, onChangeText, unit, placeholder }) => (
     <View style={styles.numberInputContainer}>
-        <Text style={styles.numberInputLabel}>{label}</Text>
+        <Typography variant="label" color={colors.textSecondary} style={{ marginBottom: spacing[2] }}>
+            {label}
+        </Typography>
         <View style={styles.numberInputRow}>
             <TextInput
                 style={styles.numberInput}
@@ -90,7 +77,7 @@ const NumberInput = ({ label, value, onChangeText, unit, placeholder }) => (
                 placeholderTextColor={colors.textDim}
                 maxLength={4}
             />
-            {unit && <Text style={styles.numberInputUnit}>{unit}</Text>}
+            {unit && <Typography variant="body" color={colors.textDim}>{unit}</Typography>}
         </View>
     </View>
 );
@@ -205,15 +192,14 @@ const OnboardingScreen = ({ onComplete }) => {
 
     const renderStep0_Name = () => (
         <View style={styles.stepContent}>
-            <Text style={styles.stepTitle}>WHAT'S YOUR NAME,{'\n'}WARRIOR?</Text>
-            <Text style={styles.stepSubtitle}>This is permanent.</Text>
+            <Typography variant="largeTitle" style={styles.stepTitle}>What's your name?</Typography>
+            <Typography variant="body" color={colors.textDim} style={styles.stepSubtitle}>This is the name you will go by.</Typography>
             <TextInput
                 style={styles.nameInput}
                 value={name}
                 onChangeText={setName}
                 placeholder="YOUR NAME"
                 placeholderTextColor={colors.textDim}
-                autoCapitalize="characters"
                 autoFocus
                 maxLength={20}
             />
@@ -222,8 +208,8 @@ const OnboardingScreen = ({ onComplete }) => {
 
     const renderStep1_Gender = () => (
         <View style={styles.stepContent}>
-            <Text style={styles.stepTitle}>GENDER</Text>
-            <Text style={styles.stepSubtitle}>For accurate calorie calculations.</Text>
+            <Typography variant="largeTitle" style={styles.stepTitle}>Gender</Typography>
+            <Typography variant="body" color={colors.textDim} style={styles.stepSubtitle}>For accurate calorie and macro calculations.</Typography>
             <View style={styles.optionsGrid}>
                 <OptionButton
                     label="MALE"
@@ -243,8 +229,8 @@ const OnboardingScreen = ({ onComplete }) => {
 
     const renderStep2_BodyStats = () => (
         <View style={styles.stepContent}>
-            <Text style={styles.stepTitle}>YOUR BODY</Text>
-            <Text style={styles.stepSubtitle}>We need these numbers to forge your perfect plan.</Text>
+            <Typography variant="largeTitle" style={styles.stepTitle}>Your Body</Typography>
+            <Typography variant="body" color={colors.textDim} style={styles.stepSubtitle}>We need these numbers to forge your perfect plan.</Typography>
             <NumberInput label="AGE" value={age} onChangeText={setAge} unit="years" placeholder="25" />
             <NumberInput label="WEIGHT" value={weight} onChangeText={setWeight} unit="kg" placeholder="70" />
             <NumberInput label="HEIGHT" value={height} onChangeText={setHeight} unit="cm" placeholder="175" />
@@ -253,8 +239,8 @@ const OnboardingScreen = ({ onComplete }) => {
 
     const renderStep3_Goal = () => (
         <View style={styles.stepContent}>
-            <Text style={styles.stepTitle}>WHAT DO YOU{'\n'}WANT TO BUILD?</Text>
-            <Text style={styles.stepSubtitle}>Choose your path. Select multiple.</Text>
+            <Typography variant="largeTitle" style={styles.stepTitle}>Goals</Typography>
+            <Typography variant="body" color={colors.textDim} style={styles.stepSubtitle}>Choose your path. Select multiple.</Typography>
             <ScrollView style={styles.optionsList} showsVerticalScrollIndicator={false} nestedScrollEnabled>
                 {[
                     { key: FitnessGoal.FULL_BODY, label: 'FULL BODY', sub: 'Complete balanced training' },
@@ -290,8 +276,8 @@ const OnboardingScreen = ({ onComplete }) => {
 
     const renderStep4_Experience = () => (
         <View style={styles.stepContent}>
-            <Text style={styles.stepTitle}>YOUR LEVEL</Text>
-            <Text style={styles.stepSubtitle}>Be honest. The system adjusts everything.</Text>
+            <Typography variant="largeTitle" style={styles.stepTitle}>Your Level</Typography>
+            <Typography variant="body" color={colors.textDim} style={styles.stepSubtitle}>Be honest. The system adjusts everything for you.</Typography>
             <View style={styles.optionsGrid}>
                 {[
                     { key: ExperienceLevel.BEGINNER, label: 'BEGINNER', sub: '0-6 months training' },
@@ -313,8 +299,8 @@ const OnboardingScreen = ({ onComplete }) => {
 
     const renderStep5_TrainingDays = () => (
         <View style={styles.stepContent}>
-            <Text style={styles.stepTitle}>HOW MANY DAYS{'\n'}CAN YOU TRAIN?</Text>
-            <Text style={styles.stepSubtitle}>Be realistic. Consistency beats intensity.</Text>
+            <Typography variant="largeTitle" style={styles.stepTitle}>Training Days</Typography>
+            <Typography variant="body" color={colors.textDim} style={styles.stepSubtitle}>How many days per week can you realistically train?</Typography>
             <View style={styles.daysSelector}>
                 {[3, 4, 5, 6, 7].map(day => (
                     <TouchableOpacity
@@ -325,35 +311,35 @@ const OnboardingScreen = ({ onComplete }) => {
                         ]}
                         onPress={() => { setTrainingDays(day); Vibration.vibrate(30); }}
                     >
-                        <Text style={[
-                            styles.dayNumber,
-                            trainingDays === day && styles.dayNumberActive,
-                        ]}>
+                        <Typography
+                            variant="largeTitle"
+                            style={trainingDays === day ? { color: colors.primaryDark } : { color: colors.textSecondary }}
+                        >
                             {day}
-                        </Text>
-                        <Text style={[
-                            styles.dayLabel,
-                            trainingDays === day && styles.dayLabelActive,
-                        ]}>
+                        </Typography>
+                        <Typography
+                            variant="caption"
+                            style={[{ marginTop: spacing[1] }, trainingDays === day ? { color: colors.text } : { color: colors.textDim }]}
+                        >
                             DAYS
-                        </Text>
+                        </Typography>
                     </TouchableOpacity>
                 ))}
             </View>
-            <Text style={styles.dayHint}>
+            <Typography variant="body" color={colors.textSecondary} style={styles.dayHint}>
                 {trainingDays === 3 && 'Full body each session. Great for beginners.'}
                 {trainingDays === 4 && 'Upper/Lower split. Solid balanced program.'}
                 {trainingDays === 5 && 'Push/Pull/Legs + Upper/Lower. High volume.'}
                 {trainingDays === 6 && 'Push/Pull/Legs ×2. Maximum frequency.'}
                 {trainingDays === 7 && 'Every day. Rest is for the weak.'}
-            </Text>
+            </Typography>
         </View>
     );
 
     const renderStep6_Cardio = () => (
         <View style={styles.stepContent}>
-            <Text style={styles.stepTitle}>CARDIO?</Text>
-            <Text style={styles.stepSubtitle}>Added to your training for endurance & heart health.</Text>
+            <Typography variant="largeTitle" style={styles.stepTitle}>Cardio?</Typography>
+            <Typography variant="body" color={colors.textDim} style={styles.stepSubtitle}>Added to your training for endurance & heart health.</Typography>
             <View style={styles.toggleRow}>
                 <OptionButton
                     label="YES"
@@ -371,9 +357,9 @@ const OnboardingScreen = ({ onComplete }) => {
 
             {wantsCardio && (
                 <>
-                    <Text style={[styles.stepSubtitle, { marginTop: spacing[4] }]}>
-                        CHOOSE YOUR WEAPONS (select multiple)
-                    </Text>
+                    <Typography variant="label" color={colors.textSecondary} style={{ marginTop: spacing[6], marginBottom: spacing[3] }}>
+                        CHOOSE YOUR WEAPONS
+                    </Typography>
                     <View style={styles.optionsGrid}>
                         {[
                             { key: CardioType.RUNNING, label: 'RUNNING', sub: 'ENDURANCE' },
@@ -406,9 +392,11 @@ const OnboardingScreen = ({ onComplete }) => {
 
     const renderStep7_YogaInjuries = () => (
         <View style={styles.stepContent}>
-            <Text style={styles.stepTitle}>YOGA & INJURIES</Text>
+            <Typography variant="largeTitle" style={styles.stepTitle}>Mobility & Injuries</Typography>
 
-            <Text style={styles.sectionTitle}>WANT YOGA / MOBILITY?</Text>
+            <Typography variant="label" color={colors.textSecondary} style={{ marginBottom: spacing[3] }}>
+                WANT YOGA / MOBILITY?
+            </Typography>
             <View style={styles.toggleRow}>
                 <OptionButton
                     label="YES"
@@ -424,12 +412,12 @@ const OnboardingScreen = ({ onComplete }) => {
                 />
             </View>
 
-            <Text style={[styles.sectionTitle, { marginTop: spacing[6] }]}>
+            <Typography variant="label" color={colors.textSecondary} style={{ marginTop: spacing[8], marginBottom: spacing[1] }}>
                 ANY INJURIES?
-            </Text>
-            <Text style={styles.stepSubtitle}>
+            </Typography>
+            <Typography variant="caption" color={colors.textDim} style={{ marginBottom: spacing[3] }}>
                 We'll adjust exercises to protect you.
-            </Text>
+            </Typography>
             <View style={styles.optionsGrid}>
                 {[
                     { key: InjuryArea.NONE, label: 'NO INJURIES', sub: 'I\'m solid' },
@@ -454,9 +442,11 @@ const OnboardingScreen = ({ onComplete }) => {
 
     const renderStep8_Diet = () => (
         <View style={styles.stepContent}>
-            <Text style={styles.stepTitle}>FUEL YOUR FORGE</Text>
+            <Typography variant="largeTitle" style={styles.stepTitle}>Fuel Your Forge</Typography>
 
-            <Text style={styles.sectionTitle}>DIET PREFERENCE</Text>
+            <Typography variant="label" color={colors.textSecondary} style={{ marginBottom: spacing[3] }}>
+                DIET PREFERENCE
+            </Typography>
             <View style={styles.optionsGrid}>
                 {[
                     { key: DietPreference.NO_PREFERENCE, label: 'NO PREFERENCE', sub: 'I eat everything' },
@@ -475,9 +465,9 @@ const OnboardingScreen = ({ onComplete }) => {
                 ))}
             </View>
 
-            <Text style={[styles.sectionTitle, { marginTop: spacing[6] }]}>
+            <Typography variant="label" color={colors.textSecondary} style={{ marginTop: spacing[8], marginBottom: spacing[3] }}>
                 MEALS PER DAY
-            </Text>
+            </Typography>
             <View style={styles.daysSelector}>
                 {[3, 4, 5, 6].map(num => (
                     <TouchableOpacity
@@ -488,18 +478,18 @@ const OnboardingScreen = ({ onComplete }) => {
                         ]}
                         onPress={() => { setMealsPerDay(num); Vibration.vibrate(30); }}
                     >
-                        <Text style={[
-                            styles.dayNumber,
-                            mealsPerDay === num && styles.dayNumberActive,
-                        ]}>
+                        <Typography
+                            variant="largeTitle"
+                            style={mealsPerDay === num ? { color: colors.primaryDark } : { color: colors.textSecondary }}
+                        >
                             {num}
-                        </Text>
-                        <Text style={[
-                            styles.dayLabel,
-                            mealsPerDay === num && styles.dayLabelActive,
-                        ]}>
+                        </Typography>
+                        <Typography
+                            variant="caption"
+                            style={[{ marginTop: spacing[1] }, mealsPerDay === num ? { color: colors.text } : { color: colors.textDim }]}
+                        >
                             MEALS
-                        </Text>
+                        </Typography>
                     </TouchableOpacity>
                 ))}
             </View>
@@ -528,6 +518,8 @@ const OnboardingScreen = ({ onComplete }) => {
             style={styles.container}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
+            <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
+
             {/* Progress bar */}
             <View style={styles.progressContainer}>
                 <View style={styles.progressTrack}>
@@ -543,9 +535,9 @@ const OnboardingScreen = ({ onComplete }) => {
                         ]}
                     />
                 </View>
-                <Text style={styles.progressText}>
+                <Typography variant="caption" color={colors.textDim} style={{ width: 40, textAlign: 'right' }}>
                     {step + 1} / {TOTAL_STEPS}
-                </Text>
+                </Typography>
             </View>
 
             {/* Step content */}
@@ -560,29 +552,32 @@ const OnboardingScreen = ({ onComplete }) => {
             {/* Navigation buttons */}
             <View style={styles.navContainer}>
                 {step > 0 ? (
-                    <TouchableOpacity style={styles.backButton} onPress={prevStep}>
-                        <Text style={styles.backText}>← BACK</Text>
-                    </TouchableOpacity>
+                    <Button
+                        title="← Back"
+                        onPress={prevStep}
+                        variant="ghost"
+                        style={{ paddingHorizontal: spacing[2] }}
+                        textStyle={{ color: colors.textSecondary }}
+                    />
                 ) : (
-                    <View style={styles.backButton} />
+                    <View style={{ width: 80 }} />
                 )}
 
                 {isLastStep ? (
-                    <TouchableOpacity
-                        style={[styles.nextButton, styles.forgeButton, !canProceed() && styles.nextButtonDisabled]}
+                    <Button
+                        title="FORGE MY PLAN"
                         onPress={handleFinish}
                         disabled={!canProceed()}
-                    >
-                        <Text style={styles.forgeText}>FORGE MY PLAN</Text>
-                    </TouchableOpacity>
+                        style={{ paddingHorizontal: spacing[8] }}
+                    />
                 ) : (
-                    <TouchableOpacity
-                        style={[styles.nextButton, !canProceed() && styles.nextButtonDisabled]}
+                    <Button
+                        title="Next →"
                         onPress={nextStep}
                         disabled={!canProceed()}
-                    >
-                        <Text style={styles.nextText}>NEXT →</Text>
-                    </TouchableOpacity>
+                        style={!canProceed() ? { backgroundColor: colors.border } : {}}
+                        textStyle={!canProceed() ? { color: colors.textDim } : {}}
+                    />
                 )}
             </View>
         </KeyboardAvoidingView>
@@ -598,55 +593,42 @@ const styles = StyleSheet.create({
 
     // Progress
     progressContainer: {
-        paddingTop: screen.paddingTop,
-        paddingHorizontal: screen.paddingHorizontal,
-        paddingBottom: spacing[3],
+        paddingTop: spacing[14], // For status bar area
+        paddingHorizontal: spacing[6],
+        paddingBottom: spacing[4],
         flexDirection: 'row',
         alignItems: 'center',
         gap: spacing[3],
     },
     progressTrack: {
         flex: 1,
-        height: 4,
+        height: 8,
         backgroundColor: colors.surface,
+        borderRadius: radius.full,
+        overflow: 'hidden',
     },
     progressFill: {
         height: '100%',
         backgroundColor: colors.primary,
-    },
-    progressText: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        width: 40,
-        textAlign: 'right',
+        borderRadius: radius.full,
     },
 
     // Content
     scrollContent: {
         flex: 1,
-        paddingHorizontal: screen.paddingHorizontal,
+        paddingHorizontal: spacing[6],
     },
     stepContent: {
         paddingTop: spacing[4],
-        paddingBottom: spacing[8],
+        paddingBottom: spacing[12],
     },
 
     // Typography
     stepTitle: {
-        ...textStyles.h1,
-        color: colors.text,
         marginBottom: spacing[2],
-        lineHeight: 38,
     },
     stepSubtitle: {
-        ...textStyles.body,
-        color: colors.textDim,
-        marginBottom: spacing[5],
-    },
-    sectionTitle: {
-        ...textStyles.label,
-        color: colors.textSecondary,
-        marginBottom: spacing[3],
+        marginBottom: spacing[8],
     },
 
     // Name input
@@ -654,87 +636,60 @@ const styles = StyleSheet.create({
         backgroundColor: colors.surface,
         borderWidth: 1,
         borderColor: colors.border,
-        borderBottomColor: colors.primary,
-        borderBottomWidth: 2,
-        padding: spacing[4],
+        borderRadius: radius.md,
+        padding: spacing[5],
         color: colors.text,
         fontSize: 24,
         fontWeight: '700',
-        letterSpacing: 2,
         textAlign: 'center',
     },
 
     // Option buttons
     optionsGrid: {
-        gap: spacing[2],
+        gap: spacing[3],
     },
     optionsList: {
         flex: 1,
-        gap: spacing[2],
+        gap: spacing[3],
     },
     optionButton: {
         backgroundColor: colors.surface,
-        borderWidth: 1,
+        borderWidth: 1.5,
         borderColor: colors.border,
-        padding: spacing[4],
-        marginBottom: spacing[2],
+        borderRadius: radius.md,
+        padding: spacing[5],
+        marginBottom: spacing[1],
     },
     optionButtonActive: {
         borderColor: colors.primary,
-        backgroundColor: colors.primaryMuted,
+        backgroundColor: colors.primaryLight,
     },
     optionButtonDanger: {
-        borderColor: colors.warning,
-        backgroundColor: 'rgba(255, 68, 0, 0.1)',
-    },
-    optionText: {
-        ...textStyles.label,
-        color: colors.textSecondary,
-        fontSize: 14,
-    },
-    optionTextActive: {
-        color: colors.text,
-    },
-    optionSublabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        marginTop: spacing[1],
-    },
-    optionSublabelActive: {
-        color: colors.textSecondary,
+        borderColor: colors.danger,
+        backgroundColor: 'rgba(239, 68, 68, 0.05)',
     },
 
     // Number inputs
     numberInputContainer: {
-        marginBottom: spacing[4],
-    },
-    numberInputLabel: {
-        ...textStyles.label,
-        color: colors.textSecondary,
-        marginBottom: spacing[2],
+        marginBottom: spacing[6],
     },
     numberInputRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: spacing[2],
+        gap: spacing[3],
     },
     numberInput: {
         flex: 1,
         backgroundColor: colors.surface,
         borderWidth: 1,
         borderColor: colors.border,
-        borderBottomColor: colors.primary,
-        borderBottomWidth: 2,
+        borderRadius: radius.md,
         padding: spacing[4],
         color: colors.text,
         fontSize: 24,
         fontWeight: '700',
         textAlign: 'center',
-        maxWidth: 150,
-    },
-    numberInputUnit: {
-        ...textStyles.label,
-        color: colors.textDim,
+        maxWidth: 160,
     },
 
     // Days selector
@@ -747,41 +702,25 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         backgroundColor: colors.surface,
-        borderWidth: 1,
+        borderWidth: 1.5,
         borderColor: colors.border,
-        paddingVertical: spacing[4],
+        borderRadius: radius.md,
+        paddingVertical: spacing[5],
     },
     dayButtonActive: {
         borderColor: colors.primary,
-        backgroundColor: colors.primaryMuted,
-    },
-    dayNumber: {
-        fontSize: 28,
-        fontWeight: '900',
-        color: colors.textSecondary,
-    },
-    dayNumberActive: {
-        color: colors.primary,
-    },
-    dayLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        marginTop: spacing[1],
-    },
-    dayLabelActive: {
-        color: colors.textSecondary,
+        backgroundColor: colors.primaryLight,
     },
     dayHint: {
-        ...textStyles.body,
-        color: colors.textDim,
         textAlign: 'center',
-        marginTop: spacing[4],
+        marginTop: spacing[6],
+        fontStyle: 'italic',
     },
 
     // Toggle row
     toggleRow: {
         flexDirection: 'row',
-        gap: spacing[2],
+        gap: spacing[3],
     },
     toggleButton: {
         flex: 1,
@@ -792,42 +731,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingHorizontal: screen.paddingHorizontal,
+        paddingHorizontal: spacing[6],
         paddingVertical: spacing[4],
         borderTopWidth: 1,
-        borderTopColor: colors.border,
+        borderTopColor: colors.borderLight,
         backgroundColor: colors.background,
-    },
-    backButton: {
-        paddingVertical: spacing[3],
-        paddingHorizontal: spacing[4],
-        minWidth: 80,
-    },
-    backText: {
-        ...textStyles.buttonSmall,
-        color: colors.textDim,
-    },
-    nextButton: {
-        backgroundColor: colors.primary,
-        paddingVertical: spacing[3],
-        paddingHorizontal: spacing[6],
-    },
-    nextButtonDisabled: {
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-    },
-    nextText: {
-        ...textStyles.button,
-        color: colors.text,
-    },
-    forgeButton: {
-        paddingHorizontal: spacing[8],
-    },
-    forgeText: {
-        ...textStyles.button,
-        color: colors.text,
-        fontSize: 16,
+        paddingBottom: Platform.OS === 'ios' ? spacing[8] : spacing[4],
     },
 });
 

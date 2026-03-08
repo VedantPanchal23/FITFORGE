@@ -1,32 +1,14 @@
-/**
- * FORGEBORN — LOCK SCREEN
- * 
- * When an obligation is BOUND (due), this screen takes over.
- * There is NO escape.
- * 
- * The user sees:
- * - Obligation name
- * - Units remaining
- * - Time remaining
- * - EXECUTE button
- * 
- * Nothing else. No navigation. No menu. No escape.
- */
-
 import React, { useState, useEffect, useRef } from 'react';
 import {
     View,
-    Text,
-    TouchableOpacity,
     StyleSheet,
     Animated,
     Vibration,
     BackHandler,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../theme/colors';
-import { textStyles } from '../theme/typography';
-import { spacing, screen } from '../theme/spacing';
+import { colors, spacing, radius } from '../theme';
+import { Typography, Button, ProgressBar } from '../components';
 import useObligationStore from '../../store/obligationStore';
 
 const LockScreen = () => {
@@ -42,7 +24,7 @@ const LockScreen = () => {
 
     // Pulse animation for the execute button
     const pulseAnim = useRef(new Animated.Value(1)).current;
-    const glowAnim = useRef(new Animated.Value(0.3)).current;
+    const glowAnim = useRef(new Animated.Value(0.1)).current;
 
     // Block back button
     useEffect(() => {
@@ -104,12 +86,12 @@ const LockScreen = () => {
         Animated.loop(
             Animated.sequence([
                 Animated.timing(glowAnim, {
-                    toValue: 0.6,
+                    toValue: 0.25,
                     duration: 1000,
                     useNativeDriver: true,
                 }),
                 Animated.timing(glowAnim, {
-                    toValue: 0.3,
+                    toValue: 0.1,
                     duration: 1000,
                     useNativeDriver: true,
                 }),
@@ -130,7 +112,7 @@ const LockScreen = () => {
     if (!obligation) {
         return (
             <View style={styles.container}>
-                <Text style={styles.errorText}>NO ACTIVE OBLIGATION</Text>
+                <Typography variant="title1" color={colors.textDim}>NO ACTIVE OBLIGATION</Typography>
             </View>
         );
     }
@@ -140,65 +122,85 @@ const LockScreen = () => {
 
     return (
         <View style={styles.container}>
-            {/* Background glow */}
+            {/* Background glow (Red for danger/urgency) */}
             <Animated.View style={[styles.glow, { opacity: glowAnim }]} />
 
             {/* Lock indicator */}
             <View style={styles.lockIndicator}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                    <Ionicons name="lock-closed" size={16} color={colors.danger} />
-                    <Text style={styles.lockText}>LOCKED</Text>
-                </View>
+                <Ionicons name="lock-closed" size={16} color={colors.danger} />
+                <Typography variant="body" color={colors.danger} style={{ fontWeight: 'bold', marginLeft: 6 }}>
+                    LOCKED
+                </Typography>
             </View>
 
             {/* Obligation name */}
-            <Text style={styles.obligationName}>{obligation.name}</Text>
-            <Text style={styles.obligationType}>{obligation.type}</Text>
+            <Typography variant="largeTitle" style={{ textAlign: 'center', marginBottom: spacing[2], textTransform: 'uppercase' }}>
+                {obligation.name}
+            </Typography>
+            <Typography variant="subheadline" color={colors.textDim} style={{ marginBottom: spacing[8], textTransform: 'uppercase', letterSpacing: 1 }}>
+                {obligation.type}
+            </Typography>
 
             {/* Progress */}
             <View style={styles.progressContainer}>
-                <Text style={styles.progressLabel}>PROGRESS</Text>
-                <View style={styles.progressBar}>
-                    <View style={[styles.progressFill, { width: `${progress * 100}%` }]} />
-                </View>
-                <Text style={styles.progressText}>
+                <Typography variant="caption" color={colors.textSecondary} style={{ marginBottom: spacing[2], letterSpacing: 1 }}>
+                    PROGRESS
+                </Typography>
+                <ProgressBar progress={progress} color={colors.danger} />
+                <Typography variant="headline" style={{ textAlign: 'center', marginTop: spacing[3] }}>
                     {obligation.unitsCompleted} / {obligation.unitsRequired}
-                </Text>
+                </Typography>
             </View>
 
             {/* Units remaining - BIG */}
             <View style={styles.unitsContainer}>
-                <Text style={styles.unitsRemaining}>{unitsRemaining}</Text>
-                <Text style={styles.unitsLabel}>UNITS REMAINING</Text>
+                <Typography variant="largeTitle" style={{ fontSize: 130, lineHeight: 140, fontWeight: '900', color: colors.danger }}>
+                    {unitsRemaining}
+                </Typography>
+                <Typography variant="label" color={colors.textSecondary} style={{ letterSpacing: 2 }}>
+                    UNITS REMAINING
+                </Typography>
             </View>
 
             {/* Time remaining */}
             <View style={styles.timerContainer}>
-                <Text style={styles.timerLabel}>TIME UNTIL FAILURE</Text>
-                <Text style={styles.timer}>{timeRemaining}</Text>
+                <Typography variant="caption" color={colors.danger} style={{ marginBottom: spacing[1], letterSpacing: 1 }}>
+                    TIME UNTIL FAILURE
+                </Typography>
+                <Typography variant="title1" color={colors.danger} style={{ fontFamily: 'monospace', letterSpacing: 2 }}>
+                    {timeRemaining}
+                </Typography>
             </View>
 
             {/* Execute button */}
             <Animated.View style={[styles.executeContainer, { transform: [{ scale: pulseAnim }] }]}>
-                <TouchableOpacity
-                    style={styles.executeButton}
+                <Button
+                    title="EXECUTE"
                     onPress={handleExecute}
-                    activeOpacity={0.7}
-                >
-                    <Text style={styles.executeText}>EXECUTE</Text>
-                    <Text style={styles.executeSubtext}>+1 UNIT</Text>
-                </TouchableOpacity>
+                    style={{
+                        backgroundColor: colors.danger,
+                        paddingVertical: spacing[5],
+                        paddingHorizontal: spacing[12],
+                        borderRadius: radius.full
+                    }}
+                    textStyle={{ fontSize: 28, letterSpacing: 2, fontWeight: '900', color: colors.textInverse }}
+                />
+                <Typography variant="caption" style={{ textAlign: 'center', marginTop: spacing[3], color: colors.danger, fontWeight: 'bold' }}>
+                    +1 UNIT
+                </Typography>
             </Animated.View>
 
             {/* Escape attempts warning */}
             {activeLock && activeLock.escapeAttempts > 0 && (
-                <Text style={styles.escapeWarning}>
+                <Typography variant="caption" color={colors.danger} style={{ marginBottom: spacing[4], fontWeight: 'bold' }}>
                     ESCAPE ATTEMPTS: {activeLock.escapeAttempts}
-                </Text>
+                </Typography>
             )}
 
             {/* Bottom creed */}
-            <Text style={styles.creed}>THERE IS NO ESCAPE</Text>
+            <Typography variant="caption" color={colors.textDim} style={{ position: 'absolute', bottom: 40, letterSpacing: 3 }}>
+                THERE IS NO ESCAPE
+            </Typography>
         </View>
     );
 };
@@ -209,73 +211,34 @@ const styles = StyleSheet.create({
         backgroundColor: colors.background,
         alignItems: 'center',
         justifyContent: 'center',
-        paddingHorizontal: screen.paddingHorizontal,
+        paddingHorizontal: spacing[6],
     },
 
     glow: {
         position: 'absolute',
         width: '150%',
         height: '150%',
-        backgroundColor: colors.primary,
+        backgroundColor: colors.danger,
         borderRadius: 1000,
     },
 
     lockIndicator: {
         position: 'absolute',
         top: 60,
-        backgroundColor: colors.primaryMuted,
+        backgroundColor: 'rgba(239, 68, 68, 0.1)',
         paddingVertical: spacing[2],
         paddingHorizontal: spacing[4],
+        borderRadius: radius.full,
+        flexDirection: 'row',
+        alignItems: 'center',
         borderWidth: 1,
-        borderColor: colors.primary,
-    },
-
-    lockText: {
-        ...textStyles.label,
-        color: colors.primary,
-    },
-
-    obligationName: {
-        ...textStyles.h1,
-        color: colors.text,
-        textAlign: 'center',
-        marginBottom: spacing[1],
-    },
-
-    obligationType: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        marginBottom: spacing[8],
+        borderColor: 'rgba(239, 68, 68, 0.3)',
     },
 
     progressContainer: {
         width: '100%',
         marginBottom: spacing[6],
-    },
-
-    progressLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        marginBottom: spacing[2],
-    },
-
-    progressBar: {
-        height: 8,
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        marginBottom: spacing[2],
-    },
-
-    progressFill: {
-        height: '100%',
-        backgroundColor: colors.success,
-    },
-
-    progressText: {
-        ...textStyles.label,
-        color: colors.textSecondary,
-        textAlign: 'center',
+        alignItems: 'center',
     },
 
     unitsContainer: {
@@ -283,77 +246,13 @@ const styles = StyleSheet.create({
         marginBottom: spacing[6],
     },
 
-    unitsRemaining: {
-        fontSize: 120,
-        fontWeight: '900',
-        color: colors.primary,
-        lineHeight: 130,
-    },
-
-    unitsLabel: {
-        ...textStyles.label,
-        color: colors.textDim,
-    },
-
     timerContainer: {
         alignItems: 'center',
-        marginBottom: spacing[8],
-    },
-
-    timerLabel: {
-        ...textStyles.caption,
-        color: colors.warning,
-        marginBottom: spacing[1],
-    },
-
-    timer: {
-        ...textStyles.h2,
-        color: colors.warning,
-        fontFamily: 'monospace',
+        marginBottom: spacing[10],
     },
 
     executeContainer: {
         marginBottom: spacing[6],
-    },
-
-    executeButton: {
-        backgroundColor: colors.primary,
-        paddingVertical: spacing[5],
-        paddingHorizontal: spacing[12],
-        borderWidth: 2,
-        borderColor: colors.primary,
-        alignItems: 'center',
-    },
-
-    executeText: {
-        ...textStyles.button,
-        color: colors.text,
-        fontSize: 24,
-    },
-
-    executeSubtext: {
-        ...textStyles.caption,
-        color: colors.text,
-        opacity: 0.8,
-        marginTop: spacing[1],
-    },
-
-    escapeWarning: {
-        ...textStyles.caption,
-        color: colors.danger,
-        marginBottom: spacing[4],
-    },
-
-    creed: {
-        position: 'absolute',
-        bottom: 40,
-        ...textStyles.caption,
-        color: colors.textDim,
-    },
-
-    errorText: {
-        ...textStyles.h2,
-        color: colors.textDim,
     },
 });
 

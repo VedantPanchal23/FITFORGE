@@ -1,29 +1,18 @@
-/**
- * FORGEBORN — WORKOUT HOME SCREEN
- * 
- * Today's workout plan generated from your profile.
- * Features: exercise list with instructions, muscle tags, START button.
- * Navigates to ActiveWorkoutScreen when started.
- */
-
 import React, { useEffect } from 'react';
 import {
     View,
-    Text,
     StyleSheet,
     ScrollView,
     StatusBar,
     TouchableOpacity,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../theme/colors';
-import { textStyles } from '../theme/typography';
-import { spacing, screen } from '../theme/spacing';
+import { colors, spacing, radius } from '../theme';
+import { Card, Typography, Button } from '../components';
 import useUserStore from '../../store/userStore';
 import useCommitmentStore from '../../store/commitmentStore';
 import useWorkoutStore from '../../store/workoutStore';
 
-// Muscle group icons
 const MUSCLE_ICONS = {
     CHEST: 'body-outline', BACK: 'arrow-undo-outline', SHOULDERS: 'barbell-outline',
     BICEPS: 'fitness-outline', TRICEPS: 'fitness-outline', LEGS: 'footsteps-outline',
@@ -41,19 +30,16 @@ const WorkoutHomeScreen = ({ navigation }) => {
     const generatePlan = useWorkoutStore((s) => s.generatePlan);
     const getTodaysWorkout = useWorkoutStore((s) => s.getTodaysWorkout);
     const startWorkout = useWorkoutStore((s) => s.startWorkout);
-    const totalWorkouts = useWorkoutStore((s) => s.totalWorkoutsCompleted);
-    const currentStreak = useWorkoutStore((s) => s.currentStreak);
-    const workoutHistory = useWorkoutStore((s) => s.workoutHistory);
+    const totalWorkouts = useWorkoutStore((s) => s.totalWorkoutsCompleted || 0);
+    const currentStreak = useWorkoutStore((s) => s.currentStreak || 0);
     const getThisWeekWorkouts = useWorkoutStore((s) => s.getThisWeekWorkouts);
 
-    // Generate plan if not exists
     useEffect(() => {
         if (!currentPlan && profile) {
             generatePlan(profile);
         }
     }, [profile, currentPlan]);
 
-    // Navigate to active workout if one is in progress
     useEffect(() => {
         if (activeWorkout) navigation.navigate('ActiveWorkout');
     }, [activeWorkout]);
@@ -64,16 +50,16 @@ const WorkoutHomeScreen = ({ navigation }) => {
     if (!todaysWorkout) {
         return (
             <View style={styles.container}>
-                <StatusBar barStyle="light-content" backgroundColor={colors.background} />
+                <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
                 <View style={styles.emptyState}>
-                    <Ionicons name="barbell" size={48} color={colors.textDim} />
-                    <Text style={styles.emptyText}>GENERATING YOUR PLAN...</Text>
-                    <TouchableOpacity
-                        style={styles.genBtn}
+                    <Ionicons name="barbell-outline" size={64} color={colors.textMuted} />
+                    <Typography variant="headline" style={{ marginTop: spacing[4], marginBottom: spacing[6] }}>
+                        Generating your plan...
+                    </Typography>
+                    <Button
+                        title="Generate Plan"
                         onPress={() => profile && generatePlan(profile)}
-                    >
-                        <Text style={styles.genBtnText}>GENERATE</Text>
-                    </TouchableOpacity>
+                    />
                 </View>
             </View>
         );
@@ -86,424 +72,269 @@ const WorkoutHomeScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <StatusBar barStyle="light-content" backgroundColor={colors.background} />
+            <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
             <ScrollView
-                style={styles.scrollView}
-                contentContainerStyle={styles.scrollContent}
                 showsVerticalScrollIndicator={false}
+                contentContainerStyle={styles.scrollContent}
             >
                 {/* Header */}
-                <Text style={styles.title}>WORKOUT</Text>
-                <Text style={styles.subtitle}>{currentPlan?.splitName || 'YOUR PLAN'}</Text>
+                <View style={styles.header}>
+                    <Typography variant="largeTitle">Workout</Typography>
+                    <Typography variant="subheadline">{currentPlan?.splitName || 'Your Plan'}</Typography>
+                </View>
 
                 {/* Stats row */}
-                <View style={styles.statsRow}>
-                    <View style={styles.statItem}>
-                        <Text style={styles.statNum}>{totalWorkouts}</Text>
-                        <Text style={styles.statLabel}>TOTAL</Text>
+                <View style={styles.statsGrid}>
+                    <View style={styles.statBox}>
+                        <Typography variant="caption">Total</Typography>
+                        <Typography variant="title1" style={{ marginTop: spacing[1] }}>{totalWorkouts}</Typography>
                     </View>
-                    <View style={styles.statItem}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-                            <Ionicons name="flame" size={14} color={colors.primary} />
-                            <Text style={styles.statNum}>{currentStreak}</Text>
+                    <View style={[styles.statBox, styles.statBoxCenter]}>
+                        <Typography variant="caption">Streak</Typography>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: spacing[1] }}>
+                            <Ionicons name="flame" size={18} color={colors.primary} style={{ marginRight: 4 }} />
+                            <Typography variant="title1">{currentStreak}</Typography>
                         </View>
-                        <Text style={styles.statLabel}>STREAK</Text>
                     </View>
-                    <View style={styles.statItem}>
-                        <Text style={styles.statNum}>{weekWorkouts.length}</Text>
-                        <Text style={styles.statLabel}>THIS WEEK</Text>
+                    <View style={styles.statBox}>
+                        <Typography variant="caption">This Week</Typography>
+                        <Typography variant="title1" style={{ marginTop: spacing[1] }}>{weekWorkouts.length}</Typography>
                     </View>
                 </View>
 
                 {/* Today's Plan Card */}
-                <View style={styles.todayCard}>
-                    <View style={styles.todayHeader}>
-                        <View>
-                            <Text style={styles.todayLabel}>TODAY — DAY {todaysWorkout.dayNumber}</Text>
-                            <Text style={styles.todayName}>{todaysWorkout.name}</Text>
-                        </View>
-                        <View style={styles.todayMeta}>
-                            <Text style={styles.metaVal}>{todaysWorkout.exerciseCount}</Text>
-                            <Text style={styles.metaLabel}>EXERCISES</Text>
-                        </View>
-                    </View>
-
-                    {/* Muscle group tags */}
-                    <View style={styles.muscleTags}>
-                        {todaysWorkout.muscles.map((m, i) => (
-                            <View key={i} style={styles.muscleTag}>
-                                <Ionicons name={MUSCLE_ICONS[m] || 'fitness-outline'} size={10} color={colors.textSecondary} />
-                                <Text style={styles.muscleTagText}>{m}</Text>
+                <Card style={styles.todayCard} noPadding>
+                    <View style={{ padding: spacing[5] }}>
+                        <View style={styles.todayHeader}>
+                            <View style={{ flex: 1 }}>
+                                <Typography variant="caption" color={colors.primary} style={{ marginBottom: spacing[1] }}>
+                                    TODAY — DAY {todaysWorkout.dayNumber}
+                                </Typography>
+                                <Typography variant="title1">{todaysWorkout.name}</Typography>
                             </View>
-                        ))}
+                            <View style={styles.exercisesBadge}>
+                                <Typography variant="title2">{todaysWorkout.exerciseCount}</Typography>
+                                <Typography variant="caption" color={colors.textSecondary}>Exer.</Typography>
+                            </View>
+                        </View>
+
+                        {/* Muscle group tags */}
+                        <View style={styles.muscleTags}>
+                            {todaysWorkout.muscles.map((m, i) => (
+                                <View key={i} style={styles.muscleTag}>
+                                    <Ionicons name={MUSCLE_ICONS[m] || 'fitness-outline'} size={14} color={colors.primary} />
+                                    <Typography variant="caption" color={colors.primary} style={{ marginLeft: spacing[1] }}>
+                                        {m}
+                                    </Typography>
+                                </View>
+                            ))}
+                        </View>
+
+                        <View style={styles.durationRow}>
+                            <Ionicons name="time-outline" size={16} color={colors.textDim} />
+                            <Typography variant="subheadline" color={colors.textDim} style={{ marginLeft: spacing[1] }}>
+                                ~{todaysWorkout.estimatedMinutes} min • {todaysWorkout.totalSets} sets
+                            </Typography>
+                        </View>
                     </View>
 
-                    <View style={styles.durationRow}>
-                        <Ionicons name="time-outline" size={14} color={colors.textDim} />
-                        <Text style={styles.durationText}>
-                            ~{todaysWorkout.estimatedMinutes} min • {todaysWorkout.totalSets} total sets
-                        </Text>
-                    </View>
-                </View>
+                    <Button
+                        title="Start Workout"
+                        onPress={handleStart}
+                        size="lg"
+                        style={styles.startButton}
+                    />
+                </Card>
 
                 {/* Exercise List */}
-                <Text style={styles.sectionLabel}>EXERCISES</Text>
+                <Typography variant="title2" style={styles.sectionLabel}>Exercises</Typography>
 
                 {todaysWorkout.exercises.map((exercise, index) => (
-                    <View key={exercise.id} style={styles.exerciseCard}>
-                        <View style={styles.exerciseLeft}>
-                            <View style={styles.exerciseNum}>
-                                <Text style={styles.exerciseNumText}>{index + 1}</Text>
-                            </View>
-                            <View style={styles.exerciseInfo}>
-                                <Text style={styles.exerciseName}>{exercise.name}</Text>
-                                <Text style={styles.exerciseMuscle}>
-                                    {exercise.muscle}
-                                    {exercise.secondary?.length > 0 && ` + ${exercise.secondary.join(', ')}`}
-                                </Text>
-                                <Text style={styles.exerciseSets}>
-                                    {exercise.sets} × {exercise.reps} • Rest {exercise.rest}s
-                                </Text>
-                            </View>
+                    <Card key={exercise.id} style={styles.exerciseCard}>
+                        <View style={styles.exerciseNum}>
+                            <Typography variant="headline" color={colors.textSecondary}>{index + 1}</Typography>
                         </View>
-                        <View style={styles.exerciseRight}>
-                            <View style={[styles.diffBadge,
-                            exercise.difficulty === 'ADVANCED' && { borderColor: colors.danger },
-                            exercise.difficulty === 'INTERMEDIATE' && { borderColor: colors.warning },
-                            ]}>
-                                <Text style={[styles.diffText,
-                                exercise.difficulty === 'ADVANCED' && { color: colors.danger },
-                                exercise.difficulty === 'INTERMEDIATE' && { color: colors.warning },
-                                ]}>
-                                    {exercise.difficulty[0]}
-                                </Text>
-                            </View>
+                        <View style={styles.exerciseInfo}>
+                            <Typography variant="headline">{exercise.name}</Typography>
+                            <Typography variant="caption" color={colors.textDim} style={{ marginTop: 2 }}>
+                                {exercise.muscle}
+                                {exercise.secondary?.length > 0 && ` + ${exercise.secondary.join(', ')}`}
+                            </Typography>
+                            <Typography variant="caption" color={colors.textSecondary} style={{ marginTop: spacing[1] }}>
+                                {exercise.sets} Sets × {exercise.reps} Reps • Rest {exercise.rest}s
+                            </Typography>
                         </View>
-                    </View>
+                    </Card>
                 ))}
 
-                {/* Start Button */}
-                <TouchableOpacity style={styles.startButton} onPress={handleStart} activeOpacity={0.8}>
-                    <Ionicons name="play" size={22} color="#000" />
-                    <Text style={styles.startText}>START WORKOUT</Text>
-                </TouchableOpacity>
-
                 {/* View Log */}
-                <TouchableOpacity
-                    style={styles.logButton}
+                <Button
+                    variant="outline"
+                    title="View Workout Log"
+                    icon={<Ionicons name="calendar-outline" size={18} color={colors.text} />}
                     onPress={() => navigation.navigate('WorkoutLog')}
-                    activeOpacity={0.7}
-                >
-                    <Ionicons name="calendar-outline" size={18} color={colors.primary} />
-                    <Text style={styles.logButtonText}>VIEW WORKOUT LOG</Text>
-                </TouchableOpacity>
+                    style={{ marginTop: spacing[4], marginBottom: spacing[8] }}
+                />
 
                 {/* Week overview */}
                 {currentPlan && (
                     <>
-                        <Text style={[styles.sectionLabel, { marginTop: spacing[6] }]}>
-                            WEEK OVERVIEW
-                        </Text>
+                        <Typography variant="title2" style={styles.sectionLabel}>
+                            Week Overview
+                        </Typography>
                         {currentPlan.days.map((day, i) => (
-                            <TouchableOpacity key={i} style={[styles.weekDay,
-                            i === todaysWorkout.dayIndex && styles.weekDayActive
-                            ]} activeOpacity={0.7}>
-                                <Text style={[styles.weekDayNum,
-                                i === todaysWorkout.dayIndex && { color: colors.primary }
-                                ]}>
+                            <Card
+                                key={i}
+                                style={[
+                                    styles.weekDay,
+                                    i === todaysWorkout.dayIndex && styles.weekDayActive
+                                ]}
+                            >
+                                <Typography variant="title1" color={colors.textMuted} style={styles.weekDayNum}>
                                     {i + 1}
-                                </Text>
-                                <Text style={[styles.weekDayName,
-                                i === todaysWorkout.dayIndex && { color: colors.text }
-                                ]}>
-                                    {day.name}
-                                </Text>
-                                <Text style={styles.weekDayInfo}>{day.exercises.length} exercises</Text>
+                                </Typography>
+                                <View style={{ flex: 1, marginLeft: spacing[3] }}>
+                                    <Typography variant="headline" color={i === todaysWorkout.dayIndex ? colors.text : colors.textSecondary}>
+                                        {day.name}
+                                    </Typography>
+                                    <Typography variant="caption" color={colors.textDim}>
+                                        {day.exercises.length} exercises
+                                    </Typography>
+                                </View>
                                 {i === todaysWorkout.dayIndex && (
                                     <View style={styles.todayBadge}>
-                                        <Text style={styles.todayBadgeText}>TODAY</Text>
+                                        <Typography variant="caption" color={colors.textInverse} style={{ fontSize: 10 }}>TODAY</Typography>
                                     </View>
                                 )}
-                            </TouchableOpacity>
+                            </Card>
                         ))}
                     </>
                 )}
 
-                <View style={{ height: 30 }} />
+                <View style={{ height: 40 }} />
             </ScrollView>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: colors.background },
-    scrollView: { flex: 1 },
-    scrollContent: {
-        paddingHorizontal: screen.paddingHorizontal,
-        paddingTop: spacing[12],
-        paddingBottom: spacing[4],
-    },
-
-    // Header
-    title: {
-        ...textStyles.h1,
-        color: colors.primary,
-        fontSize: 28,
-    },
-    subtitle: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        marginBottom: spacing[4],
-    },
-
-    // Stats
-    statsRow: {
-        flexDirection: 'row',
-        gap: spacing[2],
-        marginBottom: spacing[5],
-    },
-    statItem: {
+    container: {
         flex: 1,
+        backgroundColor: colors.background,
+    },
+    scrollContent: {
+        paddingHorizontal: spacing[4],
+        paddingTop: spacing[12],
+        paddingBottom: spacing[8],
+    },
+    header: {
+        marginBottom: spacing[6],
+    },
+    statsGrid: {
+        flexDirection: 'row',
         backgroundColor: colors.surface,
+        borderRadius: radius.lg,
+        padding: spacing[4],
+        marginBottom: spacing[6],
         borderWidth: 1,
-        borderColor: colors.border,
-        padding: spacing[2],
+        borderColor: colors.borderLight,
+        ...colors.shadows?.sm,
+    },
+    statBox: {
+        flex: 1,
         alignItems: 'center',
     },
-    statNum: {
-        fontSize: 18,
-        fontWeight: '900',
-        color: colors.text,
+    statBoxCenter: {
+        borderLeftWidth: 1,
+        borderRightWidth: 1,
+        borderColor: colors.borderLight,
+        paddingHorizontal: spacing[2],
     },
-    statLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 8,
-    },
-
-    // Today card
     todayCard: {
-        backgroundColor: colors.surface,
-        borderWidth: 2,
-        borderColor: colors.primary,
-        padding: spacing[4],
-        marginBottom: spacing[5],
+        marginBottom: spacing[8],
+        overflow: 'hidden', // to keep button inside card radius 
     },
     todayHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
-        marginBottom: spacing[3],
+        marginBottom: spacing[4],
     },
-    todayLabel: {
-        ...textStyles.caption,
-        color: colors.primary,
-        fontSize: 9,
-    },
-    todayName: {
-        ...textStyles.h2,
-        color: colors.text,
-        fontSize: 22,
-    },
-    todayMeta: {
+    exercisesBadge: {
         alignItems: 'center',
-    },
-    metaVal: {
-        fontSize: 24,
-        fontWeight: '900',
-        color: colors.text,
-    },
-    metaLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 8,
+        backgroundColor: colors.surfaceLight,
+        paddingHorizontal: spacing[3],
+        paddingVertical: spacing[2],
+        borderRadius: radius.md,
     },
     muscleTags: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        gap: spacing[1],
-        marginBottom: spacing[2],
+        gap: spacing[2],
+        marginBottom: spacing[4],
     },
     muscleTag: {
+        flexDirection: 'row',
+        alignItems: 'center',
         backgroundColor: colors.primaryMuted,
-        paddingVertical: 2,
+        paddingVertical: spacing[1],
         paddingHorizontal: spacing[2],
-    },
-    muscleTagText: {
-        ...textStyles.caption,
-        color: colors.primary,
-        fontSize: 9,
+        borderRadius: radius.sm,
     },
     durationRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: spacing[1],
     },
-    durationText: {
-        ...textStyles.caption,
-        color: colors.textDim,
+    startButton: {
+        borderRadius: 0, // Fill bottom of card
+        borderBottomLeftRadius: radius.lg,
+        borderBottomRightRadius: radius.lg,
     },
-
-    // Exercises
     sectionLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        marginBottom: spacing[3],
+        marginBottom: spacing[4],
     },
     exerciseCard: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        padding: spacing[3],
-        marginBottom: spacing[2],
-    },
-    exerciseLeft: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        flex: 1,
-        gap: spacing[3],
+        padding: spacing[4],
+        marginBottom: spacing[3],
     },
     exerciseNum: {
-        width: 28,
-        height: 28,
-        backgroundColor: colors.primaryMuted,
+        width: 32,
+        height: 32,
+        borderRadius: radius.full,
+        backgroundColor: colors.surfaceLight,
         justifyContent: 'center',
         alignItems: 'center',
+        marginRight: spacing[4],
     },
-    exerciseNumText: {
-        fontSize: 12,
-        fontWeight: '900',
-        color: colors.primary,
+    exerciseInfo: {
+        flex: 1
     },
-    exerciseInfo: { flex: 1 },
-    exerciseName: {
-        ...textStyles.label,
-        color: colors.text,
-        fontSize: 12,
-    },
-    exerciseMuscle: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 8,
-        marginTop: 1,
-    },
-    exerciseSets: {
-        ...textStyles.caption,
-        color: colors.textSecondary,
-        fontSize: 10,
-        marginTop: 2,
-    },
-    exerciseRight: {},
-    diffBadge: {
-        width: 22,
-        height: 22,
-        borderWidth: 1,
-        borderColor: colors.success,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    diffText: {
-        fontSize: 10,
-        fontWeight: '900',
-        color: colors.success,
-    },
-
-    // Start button
-    startButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: colors.primary,
-        padding: spacing[4],
-        marginTop: spacing[4],
-        gap: spacing[2],
-    },
-    startText: {
-        ...textStyles.button,
-        color: '#000',
-        fontSize: 16,
-    },
-    logButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderWidth: 1,
-        borderColor: colors.primary,
-        padding: spacing[3],
-        marginTop: spacing[2],
-        gap: spacing[2],
-    },
-    logButtonText: {
-        ...textStyles.label,
-        color: colors.primary,
-        fontSize: 12,
-    },
-
-    // Week overview
     weekDay: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        padding: spacing[3],
-        marginBottom: spacing[1],
-        gap: spacing[3],
+        padding: spacing[4],
+        marginBottom: spacing[3],
     },
     weekDayActive: {
         borderColor: colors.primary,
+        borderWidth: 2,
     },
     weekDayNum: {
-        fontSize: 16,
-        fontWeight: '900',
-        color: colors.textDim,
-        width: 24,
-    },
-    weekDayName: {
-        ...textStyles.label,
-        color: colors.textDim,
-        fontSize: 12,
-        flex: 1,
-    },
-    weekDayInfo: {
-        ...textStyles.caption,
-        color: colors.textMuted,
-        fontSize: 9,
+        width: 30,
+        textAlign: 'center',
     },
     todayBadge: {
         backgroundColor: colors.primary,
-        paddingVertical: 2,
+        paddingVertical: spacing[1],
         paddingHorizontal: spacing[2],
+        borderRadius: radius.sm,
     },
-    todayBadgeText: {
-        ...textStyles.caption,
-        color: '#000',
-        fontSize: 8,
-        fontWeight: '900',
-    },
-
-    // Empty
     emptyState: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        gap: spacing[3],
-    },
-    emptyText: {
-        ...textStyles.label,
-        color: colors.textDim,
-    },
-    genBtn: {
-        backgroundColor: colors.primary,
-        paddingVertical: spacing[2],
-        paddingHorizontal: spacing[5],
-    },
-    genBtnText: {
-        ...textStyles.button,
-        color: '#000',
     },
 });
 

@@ -1,8 +1,8 @@
 /**
  * FORGEBORN THEME — SPACING
  * 
- * Tight. Efficient. No wasted space.
- * Every pixel serves the mission.
+ * Elegant, breathable, professional space.
+ * Generous padding to create clean separation of components.
  */
 
 export const spacing = {
@@ -11,9 +11,9 @@ export const spacing = {
     1: 4,
     2: 8,
     3: 12,
-    4: 16,
+    4: 16,     // Standard inset
     5: 20,
-    6: 24,
+    6: 24,     // Large inset
     7: 28,
     8: 32,
     10: 40,
@@ -27,7 +27,7 @@ export const spacing = {
 
 // Screen padding
 export const screen = {
-    paddingHorizontal: spacing[5],
+    paddingHorizontal: spacing[4], // Standardize to 16px edges
     paddingVertical: spacing[6],
     paddingTop: spacing[12],
     paddingBottom: spacing[8],
@@ -40,48 +40,15 @@ export const component = {
     gapLarge: spacing[6],
 };
 
-// Border radius (MINIMAL - sharp edges)
+// Border radius (Apple Style)
 export const radius = {
     none: 0,
-    xs: 2,
-    sm: 4,
-    md: 6,
-    lg: 8,
-    // No rounded corners in FORGEBORN
-    // Buttons, cards - all sharp or minimal
-};
-
-// Shadows (subtle, dark)
-export const shadows = {
-    none: {},
-    sm: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 2,
-    },
-    md: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 8,
-        elevation: 4,
-    },
-    lg: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 8 },
-        shadowOpacity: 0.4,
-        shadowRadius: 16,
-        elevation: 8,
-    },
-    glow: (color = '#FF0000') => ({
-        shadowColor: color,
-        shadowOffset: { width: 0, height: 0 },
-        shadowOpacity: 0.5,
-        shadowRadius: 20,
-        elevation: 10,
-    }),
+    xs: 4,
+    sm: 8,     // Tags, small inputs
+    md: 12,    // Inner elements
+    lg: 16,    // Primary Cards
+    xl: 24,    // Large Modals
+    full: 9999,// Pills, circular avatars
 };
 
 // Z-index layers
@@ -90,7 +57,7 @@ export const zIndex = {
     above: 1,
     dropdown: 10,
     modal: 100,
-    lock: 999,      // Lock overlay is ALWAYS on top
+    lock: 999,
     system: 9999,
 };
 
@@ -99,6 +66,5 @@ export default {
     screen,
     component,
     radius,
-    shadows,
     zIndex,
 };

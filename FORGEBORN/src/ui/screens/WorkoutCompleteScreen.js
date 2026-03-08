@@ -1,22 +1,6 @@
-/**
- * FORGEBORN — WORKOUT COMPLETE SCREEN
- * 
- * Post-workout summary screen. Shows stats, celebrates the user.
- * Inspired by: Nike Training Club (completion badge), FitOn (summary card)
- * 
- * Features:
- * - Animated trophy entrance
- * - Stats grid (duration, sets, volume, exercises)
- * - Completion bar with color coding
- * - Newly unlocked badges display
- * - Motivational quote
- */
-
 import React, { useEffect, useRef, useState } from 'react';
 import {
     View,
-    Text,
-    TouchableOpacity,
     StyleSheet,
     StatusBar,
     Animated,
@@ -24,9 +8,8 @@ import {
     Vibration,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../theme/colors';
-import { textStyles } from '../theme/typography';
-import { spacing, screen } from '../theme/spacing';
+import { colors, spacing, radius } from '../theme';
+import { Card, Typography, Button, ProgressBar } from '../components';
 import useBadgeStore, { BADGES } from '../../store/badgeStore';
 import useWorkoutStore from '../../store/workoutStore';
 import useHabitStore from '../../store/habitStore';
@@ -138,10 +121,15 @@ const WorkoutCompleteScreen = ({ navigation, route }) => {
     };
 
     const completionRate = totalSets > 0 ? Math.round((setsCompleted / totalSets) * 100) : 0;
+    const getCompletionColor = () => {
+        if (completionRate >= 80) return colors.success;
+        if (completionRate >= 50) return colors.warning;
+        return colors.danger;
+    };
 
     return (
         <View style={styles.container}>
-            <StatusBar barStyle="light-content" backgroundColor="#000" />
+            <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
             <ScrollView
                 contentContainerStyle={styles.scrollContent}
                 showsVerticalScrollIndicator={false}
@@ -152,70 +140,73 @@ const WorkoutCompleteScreen = ({ navigation, route }) => {
                     transform: [{ scale: scaleAnim }],
                 }]}>
                     <View style={styles.trophyCircle}>
-                        <Ionicons name="trophy" size={48} color="#000" />
+                        <Ionicons name="trophy" size={56} color={colors.textInverse} />
                     </View>
-                    <Text style={styles.completeTitle}>WORKOUT COMPLETE</Text>
-                    <Text style={styles.dayName}>{dayName}</Text>
+                    <Typography variant="largeTitle" style={{ textAlign: 'center', marginBottom: spacing[1] }}>
+                        Workout Complete
+                    </Typography>
+                    <Typography variant="subheadline" color={colors.textSecondary} style={{ letterSpacing: 2, textTransform: 'uppercase' }}>
+                        {dayName}
+                    </Typography>
                 </Animated.View>
 
                 {/* Stats Grid */}
-                <Animated.View style={[styles.statsGrid, {
+                <Animated.View style={[styles.statsGridContainer, {
                     opacity: fadeAnim,
                     transform: [{ translateY: slideAnim }],
                 }]}>
-                    <View style={styles.statCard}>
-                        <Ionicons name="time-outline" size={20} color={colors.primary} />
-                        <Text style={styles.statValue}>{formatDuration(duration)}</Text>
-                        <Text style={styles.statLabel}>DURATION</Text>
-                    </View>
-                    <View style={styles.statCard}>
-                        <Ionicons name="checkmark-done" size={20} color={colors.success} />
-                        <Text style={styles.statValue}>{setsCompleted}/{totalSets}</Text>
-                        <Text style={styles.statLabel}>SETS</Text>
-                    </View>
-                    <View style={styles.statCard}>
-                        <Ionicons name="barbell-outline" size={20} color={colors.warning} />
-                        <Text style={styles.statValue}>{formatVolume(totalVolume)}</Text>
-                        <Text style={styles.statLabel}>VOLUME</Text>
-                    </View>
-                    <View style={styles.statCard}>
-                        <Ionicons name="fitness-outline" size={20} color={colors.accent} />
-                        <Text style={styles.statValue}>{exercisesDone}</Text>
-                        <Text style={styles.statLabel}>EXERCISES</Text>
+                    <View style={styles.statsGrid}>
+                        <Card style={styles.statCard}>
+                            <Ionicons name="time-outline" size={24} color={colors.primary} />
+                            <Typography variant="title2" style={{ marginTop: spacing[2] }}>{formatDuration(duration)}</Typography>
+                            <Typography variant="caption" color={colors.textSecondary}>Duration</Typography>
+                        </Card>
+                        <Card style={styles.statCard}>
+                            <Ionicons name="checkmark-done" size={24} color={colors.success} />
+                            <Typography variant="title2" style={{ marginTop: spacing[2] }}>{setsCompleted}/{totalSets}</Typography>
+                            <Typography variant="caption" color={colors.textSecondary}>Sets</Typography>
+                        </Card>
+                        <Card style={styles.statCard}>
+                            <Ionicons name="barbell-outline" size={24} color={colors.warning} />
+                            <Typography variant="title2" style={{ marginTop: spacing[2] }}>{formatVolume(totalVolume)}</Typography>
+                            <Typography variant="caption" color={colors.textSecondary}>Volume</Typography>
+                        </Card>
+                        <Card style={styles.statCard}>
+                            <Ionicons name="fitness-outline" size={24} color={colors.accent} />
+                            <Typography variant="title2" style={{ marginTop: spacing[2] }}>{exercisesDone}</Typography>
+                            <Typography variant="caption" color={colors.textSecondary}>Exercises</Typography>
+                        </Card>
                     </View>
                 </Animated.View>
 
                 {/* Completion Rate */}
-                <Animated.View style={[styles.completionBar, {
+                <Animated.View style={[styles.completionSection, {
                     opacity: fadeAnim,
                     transform: [{ translateY: slideAnim }],
                 }]}>
-                    <View style={styles.completionHeader}>
-                        <Text style={styles.completionLabel}>COMPLETION</Text>
-                        <Text style={[styles.completionPercent, {
-                            color: completionRate >= 80 ? colors.success : completionRate >= 50 ? colors.warning : colors.danger,
-                        }]}>{completionRate}%</Text>
-                    </View>
-                    <View style={styles.progressTrack}>
-                        <View style={[styles.progressFill, {
-                            width: `${completionRate}%`,
-                            backgroundColor: completionRate >= 80 ? colors.success : completionRate >= 50 ? colors.warning : colors.danger,
-                        }]} />
-                    </View>
+                    <Card style={styles.completionCard}>
+                        <View style={styles.completionHeader}>
+                            <Typography variant="headline">Completion Score</Typography>
+                            <Typography variant="title2" style={{ color: getCompletionColor() }}>{completionRate}%</Typography>
+                        </View>
+                        <ProgressBar progress={completionRate / 100} color={getCompletionColor()} />
+                    </Card>
                 </Animated.View>
 
                 {/* Newly Earned Badges */}
                 {earnedBadges.length > 0 && (
                     <Animated.View style={[styles.badgeSection, { opacity: badgeFade }]}>
-                        <Text style={styles.badgeSectionTitle}>BADGES UNLOCKED</Text>
+                        <Typography variant="headline" style={{ textAlign: 'center', marginBottom: spacing[4], color: colors.primary }}>
+                            Badges Unlocked!
+                        </Typography>
                         <View style={styles.badgeRow}>
                             {earnedBadges.map(badge => (
                                 <View key={badge.id} style={styles.earnedBadge}>
-                                    <View style={[styles.earnedBadgeIcon, { backgroundColor: badge.color + '22', borderColor: badge.color }]}>
-                                        <Ionicons name={badge.icon} size={24} color={badge.color} />
+                                    <View style={[styles.earnedBadgeIcon, { backgroundColor: badge.color + '15', borderColor: badge.color }]}>
+                                        <Ionicons name={badge.icon} size={32} color={badge.color} />
                                     </View>
-                                    <Text style={[styles.earnedBadgeName, { color: badge.color }]}>{badge.name}</Text>
-                                    <Text style={styles.earnedBadgeDesc}>{badge.description}</Text>
+                                    <Typography variant="subheadline" style={{ color: badge.color, textAlign: 'center' }}>{badge.name}</Typography>
+                                    <Typography variant="caption" color={colors.textDim} style={{ textAlign: 'center' }}>{badge.description}</Typography>
                                 </View>
                             ))}
                         </View>
@@ -223,27 +214,24 @@ const WorkoutCompleteScreen = ({ navigation, route }) => {
                 )}
 
                 {/* Motivational Text */}
-                <Animated.View style={{ opacity: fadeAnim }}>
-                    <Text style={styles.quoteText}>
+                <Animated.View style={{ opacity: fadeAnim, marginTop: spacing[6], width: '100%' }}>
+                    <Typography variant="body" color={colors.textSecondary} style={{ textAlign: 'center', fontStyle: 'italic', paddingHorizontal: spacing[4] }}>
                         {completionRate >= 90
-                            ? 'PERFECT EXECUTION. YOU ARE UNBREAKABLE.'
+                            ? '"Perfect execution. You are unbreakable."'
                             : completionRate >= 70
-                                ? 'SOLID WORK. KEEP GRINDING.'
-                                : 'EVERY REP COUNTS. COME BACK STRONGER.'
+                                ? '"Solid work. Keep grinding and pushing your limits."'
+                                : '"Every rep counts. Rest up and come back stronger."'
                         }
-                    </Text>
+                    </Typography>
                 </Animated.View>
 
                 {/* Action Buttons */}
                 <View style={styles.actions}>
-                    <TouchableOpacity
-                        style={styles.doneButton}
+                    <Button
+                        title="Finish Workout"
                         onPress={() => navigation.popToTop()}
-                        activeOpacity={0.8}
-                    >
-                        <Ionicons name="home" size={18} color="#000" />
-                        <Text style={styles.doneButtonText}>DONE</Text>
-                    </TouchableOpacity>
+                        style={{ width: '100%', borderRadius: radius.full }}
+                    />
                 </View>
             </ScrollView>
         </View>
@@ -253,178 +241,104 @@ const WorkoutCompleteScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#000',
+        backgroundColor: colors.background,
     },
     scrollContent: {
         flexGrow: 1,
-        justifyContent: 'center',
         alignItems: 'center',
-        paddingHorizontal: screen.paddingHorizontal,
-        paddingVertical: spacing[8],
+        paddingHorizontal: spacing[4],
+        paddingTop: spacing[16],
+        paddingBottom: spacing[12],
     },
 
     // Hero
     heroSection: {
         alignItems: 'center',
-        marginBottom: spacing[6],
+        marginBottom: spacing[10],
     },
     trophyCircle: {
-        width: 90,
-        height: 90,
-        borderRadius: 45,
+        width: 120,
+        height: 120,
+        borderRadius: radius.full,
         backgroundColor: colors.primary,
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: spacing[4],
-    },
-    completeTitle: {
-        ...textStyles.h1,
-        color: colors.text,
-        fontSize: 24,
-        letterSpacing: 3,
-        marginBottom: spacing[1],
-    },
-    dayName: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        letterSpacing: 2,
+        marginBottom: spacing[6],
+        shadowColor: colors.primary,
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 0.3,
+        shadowRadius: 20,
+        elevation: 10,
     },
 
     // Stats
+    statsGridContainer: {
+        width: '100%',
+        marginBottom: spacing[6],
+    },
     statsGrid: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        gap: spacing[2],
-        marginBottom: spacing[5],
+        gap: spacing[3],
         width: '100%',
     },
     statCard: {
-        width: '47%',
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        padding: spacing[3],
+        flex: 1,
+        minWidth: '45%',
         alignItems: 'center',
-        gap: spacing[1],
-    },
-    statValue: {
-        fontSize: 22,
-        fontWeight: '900',
-        color: colors.text,
-    },
-    statLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 9,
-        letterSpacing: 1,
+        padding: spacing[4],
     },
 
     // Completion
-    completionBar: {
+    completionSection: {
         width: '100%',
-        marginBottom: spacing[4],
+        marginBottom: spacing[6],
+    },
+    completionCard: {
+        padding: spacing[5],
     },
     completionHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: spacing[1],
-    },
-    completionLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        letterSpacing: 1,
-    },
-    completionPercent: {
-        fontSize: 16,
-        fontWeight: '900',
-    },
-    progressTrack: {
-        height: 6,
-        backgroundColor: colors.surface,
-        borderRadius: 3,
-        overflow: 'hidden',
-    },
-    progressFill: {
-        height: '100%',
-        borderRadius: 3,
+        marginBottom: spacing[4],
     },
 
     // Badges
     badgeSection: {
         width: '100%',
-        marginBottom: spacing[4],
+        marginBottom: spacing[6],
         borderWidth: 1,
-        borderColor: colors.primary,
-        backgroundColor: colors.primaryMuted,
-        padding: spacing[3],
-    },
-    badgeSectionTitle: {
-        ...textStyles.label,
-        color: colors.primary,
-        fontSize: 11,
-        letterSpacing: 2,
-        textAlign: 'center',
-        marginBottom: spacing[3],
+        borderColor: 'rgba(16, 185, 129, 0.3)',
+        backgroundColor: 'rgba(16, 185, 129, 0.05)',
+        borderRadius: radius.lg,
+        padding: spacing[5],
     },
     badgeRow: {
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'center',
-        gap: spacing[3],
+        gap: spacing[4],
     },
     earnedBadge: {
         alignItems: 'center',
-        width: 90,
-        gap: 4,
+        width: 110,
+        gap: spacing[1],
     },
     earnedBadgeIcon: {
-        width: 48,
-        height: 48,
-        borderRadius: 24,
+        width: 64,
+        height: 64,
+        borderRadius: radius.full,
         borderWidth: 2,
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 4,
-    },
-    earnedBadgeName: {
-        ...textStyles.label,
-        fontSize: 9,
-        textAlign: 'center',
-    },
-    earnedBadgeDesc: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 7,
-        textAlign: 'center',
-    },
-
-    // Quote
-    quoteText: {
-        ...textStyles.label,
-        color: colors.textSecondary,
-        textAlign: 'center',
-        letterSpacing: 2,
-        marginBottom: spacing[6],
-        fontSize: 11,
+        marginBottom: spacing[1],
     },
 
     // Actions
     actions: {
         width: '100%',
-    },
-    doneButton: {
-        backgroundColor: colors.primary,
-        padding: spacing[4],
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: spacing[2],
-    },
-    doneButtonText: {
-        ...textStyles.button,
-        color: '#000',
-        fontSize: 16,
+        marginTop: spacing[10],
     },
 });
 

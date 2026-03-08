@@ -1,33 +1,18 @@
-/**
- * FORGEBORN — ACTIVE WORKOUT SCREEN
- * 
- * Live workout mode inspired by Hevy + Strong.
- * Features:
- * - Table-style set logging (SET | PREVIOUS | KG | REPS | ✓)
- * - Pre-filled values from target reps & previous workouts
- * - All sets editable at once (not sequential)
- * - Auto rest timer between sets
- * - Progress bar + exercise navigation
- * - PR notification
- */
-
 import React, { useState, useEffect, useRef } from 'react';
 import {
     View,
-    Text,
-    TouchableOpacity,
     StyleSheet,
     ScrollView,
     StatusBar,
     TextInput,
-    Vibration,
     Animated,
     Alert,
+    TouchableOpacity,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../theme/colors';
-import { textStyles } from '../theme/typography';
-import { spacing, screen } from '../theme/spacing';
+import * as Haptics from 'expo-haptics';
+import { colors, spacing, radius } from '../theme';
+import { Card, Typography, Button, ProgressBar } from '../components';
 import useWorkoutStore from '../../store/workoutStore';
 
 const ActiveWorkoutScreen = ({ navigation }) => {
@@ -46,7 +31,8 @@ const ActiveWorkoutScreen = ({ navigation }) => {
     const [restTimeLeft, setRestTimeLeft] = useState(0);
     const [setInputs, setSetInputs] = useState({});
     const [prNotification, setPrNotification] = useState(null);
-    const prFadeAnim = useRef(new Animated.Value(0)).current;
+    const prTranslateAnim = useRef(new Animated.Value(-50)).current;
+    const prOpacityAnim = useRef(new Animated.Value(0)).current;
 
     // Elapsed time counter
     useEffect(() => {
@@ -69,7 +55,7 @@ const ActiveWorkoutScreen = ({ navigation }) => {
             setRestTimeLeft(left);
             if (left <= 0) {
                 endRest();
-                Vibration.vibrate([0, 200, 100, 200]);
+                Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
             }
         }, 100);
         return () => clearInterval(interval);
@@ -82,7 +68,6 @@ const ActiveWorkoutScreen = ({ navigation }) => {
         const currentSets = activeWorkout.sets[currentExercise?.id] || [];
         const previousSets = getLastWorkoutSets(currentExercise?.id);
 
-        // Parse target reps (e.g. "8-12" → 10, "10" → 10)
         const targetReps = currentExercise?.reps || currentExercise?.defaultReps || '10';
         const parsedReps = typeof targetReps === 'string' && targetReps.includes('-')
             ? Math.round((parseInt(targetReps.split('-')[0]) + parseInt(targetReps.split('-')[1])) / 2)
@@ -93,7 +78,6 @@ const ActiveWorkoutScreen = ({ navigation }) => {
             if (s.completed) {
                 newInputs[i] = { weight: String(s.weight), reps: String(s.reps) };
             } else {
-                // Pre-fill from previous workout or target
                 const prev = previousSets?.[i];
                 newInputs[i] = {
                     weight: prev ? String(prev.weight) : '',
@@ -110,9 +94,8 @@ const ActiveWorkoutScreen = ({ navigation }) => {
     const currentSets = activeWorkout.sets[currentExercise?.id] || [];
     const completedSets = currentSets.filter(s => s.completed).length;
     const totalExercises = activeWorkout.exercises.length;
-    const progress = ((activeWorkout.currentExerciseIndex) / totalExercises) * 100;
+    const progress = activeWorkout.currentExerciseIndex / Math.max(totalExercises - 1, 1);
 
-    // Calculate total completed sets across all exercises
     let totalCompletedSets = 0;
     let totalAllSets = 0;
     Object.values(activeWorkout.sets).forEach(setArr => {
@@ -120,7 +103,9 @@ const ActiveWorkoutScreen = ({ navigation }) => {
         totalCompletedSets += setArr.filter(s => s.completed).length;
     });
 
-    // Get previous workout data for this exercise
+    // Overall workout progress
+    const workoutProgress = totalCompletedSets / Math.max(totalAllSets, 1);
+
     const previousSets = getLastWorkoutSets(currentExercise?.id);
 
     const formatTime = (seconds) => {
@@ -145,48 +130,53 @@ const ActiveWorkoutScreen = ({ navigation }) => {
 
         if (parseInt(reps) <= 0) return;
 
-        // Check for PR before logging
         const volume = (parseFloat(weight) || 0) * (parseInt(reps) || 0);
         const prevPR = personalRecords?.[currentExercise.id];
         const isPR = volume > 0 && (!prevPR || volume > (prevPR.maxVolume || 0));
 
         logSet(currentExercise.id, setIndex, weight, reps);
-        Vibration.vibrate(isPR ? [0, 50, 50, 50, 50, 100, 50, 200] : 50);
 
-        // Show PR notification
         if (isPR) {
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
             setPrNotification(currentExercise.name);
-            prFadeAnim.setValue(0);
-            Animated.sequence([
-                Animated.timing(prFadeAnim, { toValue: 1, duration: 300, useNativeDriver: true }),
-                Animated.delay(2500),
-                Animated.timing(prFadeAnim, { toValue: 0, duration: 500, useNativeDriver: true }),
-            ]).start(() => setPrNotification(null));
+
+            Animated.parallel([
+                Animated.spring(prTranslateAnim, { toValue: 0, useNativeDriver: true, tension: 50, friction: 7 }),
+                Animated.timing(prOpacityAnim, { toValue: 1, duration: 200, useNativeDriver: true })
+            ]).start(() => {
+                setTimeout(() => {
+                    Animated.parallel([
+                        Animated.timing(prTranslateAnim, { toValue: -50, duration: 300, useNativeDriver: true }),
+                        Animated.timing(prOpacityAnim, { toValue: 0, duration: 300, useNativeDriver: true })
+                    ]).start(() => setPrNotification(null));
+                }, 2500);
+            });
+        } else {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
         }
 
-        // Start rest timer after completing a set (if more sets remain)
         const nextUncompleted = currentSets.findIndex((s, i) => i > setIndex && !s.completed);
         if (nextUncompleted !== -1) {
             startRest(currentExercise.rest || 60);
         }
     };
 
-    // Get next exercise for preview
     const nextExerciseData = activeWorkout.currentExerciseIndex < totalExercises - 1
         ? activeWorkout.exercises[activeWorkout.currentExerciseIndex + 1]
         : null;
 
     const handleFinish = () => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
         Alert.alert(
-            'FINISH WORKOUT',
+            'Finish Workout',
             `Complete ${activeWorkout.dayName}?\n\n${totalCompletedSets}/${totalAllSets} sets done\nTime: ${formatTime(elapsedTime)}`,
             [
-                { text: 'KEEP GOING', style: 'cancel' },
+                { text: 'Keep Going', style: 'cancel' },
                 {
-                    text: 'FINISH', style: 'destructive',
+                    text: 'Finish', style: 'default',
                     onPress: () => {
                         const record = finishWorkout();
-                        Vibration.vibrate([0, 50, 100, 50, 100, 50, 200]);
+                        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
                         navigation.replace('WorkoutComplete', {
                             duration: elapsedTime,
                             setsCompleted: totalCompletedSets,
@@ -202,13 +192,14 @@ const ActiveWorkoutScreen = ({ navigation }) => {
     };
 
     const handleCancel = () => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         Alert.alert(
-            'QUIT WORKOUT?',
+            'Quit Workout?',
             'All progress will be lost.',
             [
-                { text: 'STAY', style: 'cancel' },
+                { text: 'Stay', style: 'cancel' },
                 {
-                    text: 'QUIT', style: 'destructive',
+                    text: 'Quit', style: 'destructive',
                     onPress: () => {
                         cancelWorkout();
                         navigation.goBack();
@@ -218,106 +209,126 @@ const ActiveWorkoutScreen = ({ navigation }) => {
         );
     };
 
+    const handleNavToggle = (type) => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        if (type === 'next') nextExercise();
+        else prevExercise();
+    }
+
     return (
         <View style={styles.container}>
-            <StatusBar barStyle="light-content" backgroundColor="#000" />
+            <StatusBar barStyle="dark-content" backgroundColor={colors.surface} />
 
             {/* Top Bar */}
             <View style={styles.topBar}>
-                <TouchableOpacity onPress={handleCancel} style={styles.cancelBtn}>
-                    <Ionicons name="close" size={22} color={colors.textDim} />
+                <TouchableOpacity onPress={handleCancel} style={styles.cancelBtn} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+                    <Ionicons name="close" size={26} color={colors.textSecondary} />
                 </TouchableOpacity>
                 <View style={styles.timerBox}>
-                    <Ionicons name="time-outline" size={16} color={colors.textSecondary} />
-                    <Text style={styles.timerText}>{formatTime(elapsedTime)}</Text>
+                    <Ionicons name="time-outline" size={18} color={colors.text} />
+                    <Typography variant="headline" style={{ marginLeft: 6, fontVariant: ['tabular-nums'] }}>{formatTime(elapsedTime)}</Typography>
                 </View>
-                <TouchableOpacity onPress={handleFinish} style={styles.finishBtn}>
-                    <Ionicons name="checkmark-done" size={16} color="#000" />
-                    <Text style={styles.finishBtnText}>FINISH</Text>
-                </TouchableOpacity>
+                <Button
+                    title="Finish"
+                    onPress={handleFinish}
+                    size="sm"
+                    style={styles.finishBtn}
+                    textStyle={{ fontSize: 13 }}
+                />
             </View>
 
-            {/* Progress Bar */}
-            <View style={styles.progressBar}>
-                <View style={[styles.progressFill, { width: `${progress}%` }]} />
-            </View>
+            {/* Overall Progress Bar */}
+            <ProgressBar progress={workoutProgress} height={4} color={colors.primary} backgroundColor={colors.borderLight} style={{ borderRadius: 0 }} />
 
-            {/* PR Notification Banner */}
-            {prNotification && (
-                <Animated.View style={[styles.prBanner, { opacity: prFadeAnim }]}>
-                    <Ionicons name="trophy" size={18} color="#FFD700" />
-                    <Text style={styles.prBannerText}>NEW PERSONAL RECORD!</Text>
-                    <Ionicons name="trophy" size={18} color="#FFD700" />
-                </Animated.View>
-            )}
+            {/* PR Notification Banner - Absolutely positioned to float over UI */}
+            <Animated.View
+                style={[
+                    styles.prBanner,
+                    {
+                        opacity: prOpacityAnim,
+                        transform: [{ translateY: prTranslateAnim }],
+                    }
+                ]}
+                pointerEvents="none"
+            >
+                <Ionicons name="trophy" size={20} color="#F59E0B" />
+                <Typography variant="subheadline" color="#D97706" style={{ marginHorizontal: spacing[3], fontWeight: '800' }}>
+                    NEW PERSONAL RECORD!
+                </Typography>
+                <Ionicons name="trophy" size={20} color="#F59E0B" />
+            </Animated.View>
 
             {/* Exercise Counter */}
             <View style={styles.exerciseHeader}>
-                <Text style={styles.exerciseCounter}>
+                <Typography variant="caption" color={colors.textSecondary} style={{ letterSpacing: 1.5, fontWeight: '700' }}>
                     EXERCISE {activeWorkout.currentExerciseIndex + 1} OF {totalExercises}
-                </Text>
+                </Typography>
             </View>
 
             <ScrollView
-                style={styles.scrollView}
-                contentContainerStyle={styles.scrollContent}
                 showsVerticalScrollIndicator={false}
+                contentContainerStyle={styles.scrollContent}
+                keyboardShouldPersistTaps="handled"
             >
                 {/* Current Exercise Info */}
                 <View style={styles.exerciseCard}>
-                    <Text style={styles.exerciseName}>{currentExercise.name}</Text>
+                    <Typography variant="title1" style={{ marginBottom: spacing[3], fontSize: 32 }}>{currentExercise.name}</Typography>
                     <View style={styles.exerciseMeta}>
                         <View style={styles.metaBadge}>
-                            <Text style={styles.metaBadgeText}>{currentExercise.muscle}</Text>
+                            <Typography variant="caption" color={colors.primary} style={{ fontWeight: '700' }}>{currentExercise.muscle.toUpperCase()}</Typography>
                         </View>
-                        <View style={[styles.metaBadge, { borderColor: colors.textDim }]}>
-                            <Text style={[styles.metaBadgeText, { color: colors.textDim }]}>
-                                {currentExercise.equipment}
-                            </Text>
+                        <View style={[styles.metaBadge, { backgroundColor: colors.surfaceLight }]}>
+                            <Typography variant="caption" color={colors.textSecondary} style={{ fontWeight: '600' }}>{currentExercise.equipment.toUpperCase()}</Typography>
                         </View>
                     </View>
                     {currentExercise.instructions && (
-                        <Text style={styles.instructions}>{currentExercise.instructions}</Text>
+                        <Typography variant="body" color={colors.textDim} style={{ marginTop: spacing[3], lineHeight: 22 }}>
+                            {currentExercise.instructions}
+                        </Typography>
                     )}
                 </View>
 
                 {/* Rest Timer */}
                 {activeWorkout.isResting && restTimeLeft > 0 && (
-                    <View style={styles.restCard}>
+                    <Card style={styles.restCard} noPadding>
                         <View style={styles.restTop}>
                             <View style={styles.restHeader}>
-                                <Ionicons name="timer-outline" size={18} color={colors.primary} />
-                                <Text style={styles.restLabel}>REST</Text>
+                                <Ionicons name="timer-outline" size={22} color={colors.primary} />
+                                <Typography variant="headline" color={colors.primary} style={{ marginLeft: spacing[2] }}>Rest</Typography>
                             </View>
-                            <Text style={styles.restTimer}>{restTimeLeft}s</Text>
-                            <TouchableOpacity
-                                style={styles.skipRestBtn}
-                                onPress={() => endRest()}
-                            >
-                                <Text style={styles.skipRestText}>SKIP</Text>
-                                <Ionicons name="play-forward" size={14} color={colors.textSecondary} />
-                            </TouchableOpacity>
+                            <Typography variant="dataDisplay" color={colors.primary} style={{ fontSize: 44, lineHeight: 44, fontVariant: ['tabular-nums'] }}>{restTimeLeft}s</Typography>
+                            <Button
+                                variant="outline"
+                                title="Skip"
+                                size="sm"
+                                onPress={() => {
+                                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                                    endRest();
+                                }}
+                                style={{ backgroundColor: colors.surface, borderColor: colors.primary + '30' }}
+                                textStyle={{ color: colors.primary }}
+                            />
                         </View>
                         {nextExerciseData && (
                             <View style={styles.nextPreview}>
-                                <Text style={styles.nextLabel}>UP NEXT</Text>
-                                <Text style={styles.nextName}>{nextExerciseData.name}</Text>
-                                <Text style={styles.nextMuscle}>
+                                <Typography variant="caption" color={colors.textDim} style={{ letterSpacing: 1, marginBottom: 2, fontWeight: '700' }}>UP NEXT</Typography>
+                                <Typography variant="headline">{nextExerciseData.name}</Typography>
+                                <Typography variant="caption" color={colors.textSecondary}>
                                     {nextExerciseData.muscle} • {nextExerciseData.sets || nextExerciseData.defaultSets} sets × {nextExerciseData.reps || nextExerciseData.defaultReps}
-                                </Text>
+                                </Typography>
                             </View>
                         )}
-                    </View>
+                    </Card>
                 )}
 
-                {/* ─── SET TABLE (Hevy/Strong style) ─── */}
+                {/* ─── SET TABLE ─── */}
                 <View style={styles.setTable}>
                     {/* Table Header */}
                     <View style={styles.tableHeader}>
-                        <Text style={[styles.headerCell, styles.setCellSmall]}>SET</Text>
-                        <Text style={[styles.headerCell, styles.prevCell]}>PREVIOUS</Text>
-                        <Text style={[styles.headerCell, styles.inputCell]}>KG</Text>
-                        <Text style={[styles.headerCell, styles.inputCell]}>REPS</Text>
+                        <Typography variant="caption" style={[styles.headerCell, styles.setCellSmall]}>SET</Typography>
+                        <Typography variant="caption" style={[styles.headerCell, styles.prevCell]}>PREVIOUS</Typography>
+                        <Typography variant="caption" style={[styles.headerCell, styles.inputCell]}>KG</Typography>
+                        <Typography variant="caption" style={[styles.headerCell, styles.inputCell]}>REPS</Typography>
                         <View style={styles.checkCell} />
                     </View>
 
@@ -335,31 +346,28 @@ const ActiveWorkoutScreen = ({ navigation }) => {
                                 ]}
                             >
                                 {/* Set Number */}
-                                <View style={[styles.setCellSmall, styles.setNumBox]}>
-                                    <Text style={[
-                                        styles.setNumText,
-                                        s.completed && { color: colors.success }
-                                    ]}>
+                                <View style={[styles.setCellSmall, styles.setNumBox, s.completed && { backgroundColor: colors.success + '20' }]}>
+                                    <Typography variant="headline" color={s.completed ? colors.success : colors.textSecondary}>
                                         {index + 1}
-                                    </Text>
+                                    </Typography>
                                 </View>
 
                                 {/* Previous */}
                                 <View style={styles.prevCell}>
-                                    <Text style={styles.prevText}>
+                                    <Typography variant="subheadline" color={colors.textDim} style={{ textAlign: 'center' }}>
                                         {prev
                                             ? `${prev.weight > 0 ? prev.weight + ' kg' : 'BW'} × ${prev.reps}`
                                             : '—'
                                         }
-                                    </Text>
+                                    </Typography>
                                 </View>
 
                                 {/* Weight Input */}
                                 <View style={styles.inputCell}>
                                     {s.completed ? (
-                                        <Text style={styles.completedValue}>
+                                        <Typography variant="headline" color={colors.text} style={{ textAlign: 'center' }}>
                                             {s.weight > 0 ? s.weight : 'BW'}
-                                        </Text>
+                                        </Typography>
                                     ) : (
                                         <TextInput
                                             style={styles.input}
@@ -376,7 +384,7 @@ const ActiveWorkoutScreen = ({ navigation }) => {
                                 {/* Reps Input */}
                                 <View style={styles.inputCell}>
                                     {s.completed ? (
-                                        <Text style={styles.completedValue}>{s.reps}</Text>
+                                        <Typography variant="headline" color={colors.text} style={{ textAlign: 'center' }}>{s.reps}</Typography>
                                     ) : (
                                         <TextInput
                                             style={styles.input}
@@ -393,14 +401,19 @@ const ActiveWorkoutScreen = ({ navigation }) => {
                                 {/* Check Button */}
                                 <View style={styles.checkCell}>
                                     {s.completed ? (
-                                        <Ionicons name="checkmark-circle" size={28} color={colors.success} />
+                                        <View style={styles.checkDone}>
+                                            <Ionicons name="checkmark" size={24} color={colors.surface} />
+                                        </View>
                                     ) : (
                                         <TouchableOpacity
                                             onPress={() => handleLogSet(index)}
                                             style={styles.checkBtn}
-                                            activeOpacity={0.6}
+                                            activeOpacity={0.7}
+                                            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                                         >
-                                            <Ionicons name="checkmark-circle-outline" size={28} color={colors.textDim} />
+                                            <View style={styles.checkPending}>
+                                                <Ionicons name="checkmark" size={24} color={colors.primary} />
+                                            </View>
                                         </TouchableOpacity>
                                     )}
                                 </View>
@@ -412,23 +425,23 @@ const ActiveWorkoutScreen = ({ navigation }) => {
                 {/* Target info */}
                 <View style={styles.targetInfo}>
                     <View style={styles.targetRow}>
-                        <Ionicons name="information-circle-outline" size={14} color={colors.textDim} />
-                        <Text style={styles.targetText}>
+                        <Ionicons name="information-circle" size={18} color={colors.textDim} />
+                        <Typography variant="caption" color={colors.textDim} style={{ marginLeft: spacing[2], fontWeight: '600' }}>
                             TARGET: {currentExercise.sets || currentExercise.defaultSets} sets × {currentExercise.reps || currentExercise.defaultReps} reps
-                        </Text>
+                        </Typography>
                     </View>
-                    <View style={styles.targetRow}>
-                        <Ionicons name="timer-outline" size={14} color={colors.textDim} />
-                        <Text style={styles.targetText}>
+                    <View style={[styles.targetRow, { marginTop: spacing[3] }]}>
+                        <Ionicons name="timer" size={18} color={colors.textDim} />
+                        <Typography variant="caption" color={colors.textDim} style={{ marginLeft: spacing[2], fontWeight: '600' }}>
                             REST: {currentExercise.rest || 60}s between sets
-                        </Text>
+                        </Typography>
                     </View>
                     {currentExercise.tips && (
-                        <View style={styles.targetRow}>
-                            <Ionicons name="bulb-outline" size={14} color={colors.warning} />
-                            <Text style={[styles.targetText, { color: colors.warning }]}>
+                        <View style={[styles.targetRow, { marginTop: spacing[3] }]}>
+                            <Ionicons name="bulb" size={18} color={colors.warning} />
+                            <Typography variant="caption" color={colors.warning} style={{ marginLeft: spacing[2], fontWeight: '600' }}>
                                 {currentExercise.tips}
-                            </Text>
+                            </Typography>
                         </View>
                     )}
                 </View>
@@ -440,35 +453,27 @@ const ActiveWorkoutScreen = ({ navigation }) => {
             <View style={styles.navBar}>
                 <TouchableOpacity
                     style={[styles.navBtn, activeWorkout.currentExerciseIndex === 0 && styles.navBtnDisabled]}
-                    onPress={prevExercise}
+                    onPress={() => handleNavToggle('prev')}
                     disabled={activeWorkout.currentExerciseIndex === 0}
+                    activeOpacity={0.7}
                 >
-                    <Ionicons name="chevron-back" size={22} color={
+                    <Ionicons name="chevron-back" size={20} color={
                         activeWorkout.currentExerciseIndex === 0 ? colors.textMuted : colors.text
                     } />
-                    <Text style={[styles.navBtnText, activeWorkout.currentExerciseIndex === 0 && { color: colors.textMuted }]}>
-                        PREV
-                    </Text>
                 </TouchableOpacity>
 
                 <View style={styles.setsProgress}>
-                    <Text style={styles.setsProgressNum}>{totalCompletedSets}</Text>
-                    <Text style={styles.setsProgressLabel}>/ {totalAllSets} SETS</Text>
+                    <Typography variant="headline">{totalCompletedSets}</Typography>
+                    <Typography variant="caption" color={colors.textSecondary} style={{ marginLeft: 4 }}>/ {totalAllSets} Sets Logged</Typography>
                 </View>
 
                 <TouchableOpacity
-                    style={[styles.navBtn,
-                    activeWorkout.currentExerciseIndex === totalExercises - 1 && styles.navBtnDisabled
-                    ]}
-                    onPress={nextExercise}
+                    style={[styles.navBtn, activeWorkout.currentExerciseIndex === totalExercises - 1 && styles.navBtnDisabled]}
+                    onPress={() => handleNavToggle('next')}
                     disabled={activeWorkout.currentExerciseIndex === totalExercises - 1}
+                    activeOpacity={0.7}
                 >
-                    <Text style={[styles.navBtnText,
-                    activeWorkout.currentExerciseIndex === totalExercises - 1 && { color: colors.textMuted }
-                    ]}>
-                        NEXT
-                    </Text>
-                    <Ionicons name="chevron-forward" size={22} color={
+                    <Ionicons name="chevron-forward" size={20} color={
                         activeWorkout.currentExerciseIndex === totalExercises - 1 ? colors.textMuted : colors.text
                     } />
                 </TouchableOpacity>
@@ -480,17 +485,16 @@ const ActiveWorkoutScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#000',
+        backgroundColor: colors.surface,
     },
-
-    // Top bar
     topBar: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingHorizontal: screen.paddingHorizontal,
-        paddingTop: spacing[10],
-        paddingBottom: spacing[2],
+        paddingHorizontal: spacing[4],
+        paddingTop: spacing[14], // Safe area adjusted
+        paddingBottom: spacing[4],
+        backgroundColor: colors.surface,
     },
     cancelBtn: {
         padding: spacing[1],
@@ -498,196 +502,105 @@ const styles = StyleSheet.create({
     timerBox: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: spacing[1],
-    },
-    timerText: {
-        ...textStyles.h3,
-        color: colors.textSecondary,
+        backgroundColor: colors.surfaceLight,
+        paddingHorizontal: spacing[4],
+        paddingVertical: spacing[2],
+        borderRadius: radius.full,
     },
     finishBtn: {
-        backgroundColor: colors.success,
-        paddingVertical: spacing[1],
-        paddingHorizontal: spacing[3],
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 4,
+        borderRadius: radius.full,
+        paddingHorizontal: spacing[5],
+        height: 36,
     },
-    finishBtnText: {
-        ...textStyles.button,
-        color: '#000',
-        fontSize: 12,
-    },
-
-    // Progress
-    progressBar: {
-        height: 3,
-        backgroundColor: colors.surface,
-        marginHorizontal: screen.paddingHorizontal,
-    },
-    progressFill: {
-        height: '100%',
-        backgroundColor: colors.primary,
-    },
-
-    // PR Notification
     prBanner: {
+        position: 'absolute',
+        top: spacing[24],
+        left: spacing[4],
+        right: spacing[4],
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: spacing[2],
-        backgroundColor: '#FFD70020',
+        backgroundColor: '#FEF3C7',
         borderWidth: 1,
-        borderColor: '#FFD700',
-        marginHorizontal: screen.paddingHorizontal,
-        marginTop: spacing[2],
-        paddingVertical: spacing[2],
+        borderColor: '#F59E0B',
+        paddingVertical: spacing[3],
+        borderRadius: radius.lg,
+        zIndex: 100,
+        shadowColor: '#F59E0B',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 12,
+        elevation: 10,
     },
-    prBannerText: {
-        ...textStyles.label,
-        color: '#FFD700',
-        fontSize: 13,
-        letterSpacing: 2,
-    },
-
-    // Exercise header
     exerciseHeader: {
-        paddingHorizontal: screen.paddingHorizontal,
-        paddingVertical: spacing[2],
+        paddingHorizontal: spacing[4],
+        paddingVertical: spacing[6],
+        alignItems: 'center',
     },
-    exerciseCounter: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        textAlign: 'center',
-        letterSpacing: 2,
-    },
-
-    // Scroll
-    scrollView: { flex: 1 },
     scrollContent: {
-        paddingHorizontal: screen.paddingHorizontal,
+        paddingHorizontal: spacing[5],
     },
-
-    // Exercise card
     exerciseCard: {
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.primary,
-        padding: spacing[4],
-        marginBottom: spacing[4],
-    },
-    exerciseName: {
-        ...textStyles.h2,
-        color: colors.text,
-        fontSize: 20,
-        marginBottom: spacing[2],
+        marginBottom: spacing[8],
+        alignItems: 'center',
     },
     exerciseMeta: {
         flexDirection: 'row',
+        justifyContent: 'center',
         gap: spacing[2],
-        marginBottom: spacing[2],
     },
     metaBadge: {
-        borderWidth: 1,
-        borderColor: colors.primary,
-        paddingVertical: 2,
-        paddingHorizontal: spacing[2],
-    },
-    metaBadgeText: {
-        ...textStyles.caption,
-        color: colors.primary,
-        fontSize: 9,
-    },
-    instructions: {
-        ...textStyles.body,
-        color: colors.textSecondary,
-        fontSize: 12,
-        lineHeight: 18,
-    },
-
-    // Rest timer
-    restCard: {
         backgroundColor: colors.primaryMuted,
+        paddingVertical: spacing[1],
+        paddingHorizontal: spacing[3],
+        borderRadius: radius.full,
+    },
+    restCard: {
+        backgroundColor: colors.primaryLight || colors.primaryMuted,
+        borderColor: colors.primary + '30',
         borderWidth: 1,
-        borderColor: colors.primary,
-        padding: spacing[3],
-        marginBottom: spacing[4],
+        marginBottom: spacing[8],
+        shadowColor: colors.primary,
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.1,
+        shadowRadius: 16,
+        elevation: 4,
     },
     restTop: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
+        padding: spacing[6],
     },
     restHeader: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: spacing[1],
-    },
-    restLabel: {
-        ...textStyles.label,
-        color: colors.primary,
-        fontSize: 12,
-    },
-    restTimer: {
-        fontSize: 28,
-        fontWeight: '900',
-        color: colors.primary,
-    },
-    skipRestBtn: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 4,
-        paddingVertical: spacing[1],
-        paddingHorizontal: spacing[2],
-        borderWidth: 1,
-        borderColor: colors.textDim,
-    },
-    skipRestText: {
-        ...textStyles.caption,
-        color: colors.textSecondary,
-        fontSize: 10,
     },
     nextPreview: {
         borderTopWidth: 1,
-        borderTopColor: colors.primary,
-        paddingTop: spacing[2],
-        marginTop: spacing[2],
+        borderTopColor: colors.primary + '15',
+        padding: spacing[5],
+        backgroundColor: colors.surfaceLight,
+        borderBottomLeftRadius: radius.xl,
+        borderBottomRightRadius: radius.xl,
     },
-    nextLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 9,
-        letterSpacing: 2,
-        marginBottom: 2,
-    },
-    nextName: {
-        ...textStyles.label,
-        color: colors.text,
-        fontSize: 13,
-    },
-    nextMuscle: {
-        ...textStyles.caption,
-        color: colors.textSecondary,
-        fontSize: 10,
-    },
-
-    // ─── SET TABLE ────────────────────────────────────────────────
     setTable: {
-        marginBottom: spacing[3],
+        marginBottom: spacing[8],
     },
     tableHeader: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingVertical: spacing[1],
+        paddingVertical: spacing[2],
         paddingHorizontal: spacing[1],
-        marginBottom: spacing[1],
+        borderBottomWidth: 1,
+        borderBottomColor: colors.borderLight,
+        marginBottom: spacing[3],
     },
     headerCell: {
-        ...textStyles.caption,
         color: colors.textDim,
-        fontSize: 10,
-        fontWeight: '700',
         letterSpacing: 1,
         textAlign: 'center',
+        fontWeight: '700',
     },
     setCellSmall: {
         width: 36,
@@ -699,133 +612,117 @@ const styles = StyleSheet.create({
         paddingHorizontal: 4,
     },
     inputCell: {
-        width: 60,
+        width: 65,
         alignItems: 'center',
         justifyContent: 'center',
     },
     checkCell: {
-        width: 40,
+        width: 50,
         alignItems: 'center',
         justifyContent: 'center',
     },
-
-    // Set rows
     setRow: {
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: colors.surface,
+        borderRadius: radius.lg,
+        paddingVertical: spacing[3],
+        paddingHorizontal: spacing[2],
+        marginBottom: spacing[3],
+        minHeight: 64, // Taller rows for premium feel
         borderWidth: 1,
-        borderColor: colors.border,
-        paddingVertical: spacing[2],
-        paddingHorizontal: spacing[1],
-        marginBottom: spacing[1],
-        minHeight: 48,
+        borderColor: colors.borderLight + '50',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.02,
+        shadowRadius: 4,
+        elevation: 1,
     },
     setRowDone: {
-        borderColor: colors.success,
-        backgroundColor: 'rgba(46, 204, 113, 0.05)',
+        borderColor: colors.success + '40',
+        backgroundColor: colors.success + '10',
     },
     setNumBox: {
-        width: 28,
-        height: 28,
-        backgroundColor: colors.background,
+        width: 32,
+        height: 32,
+        backgroundColor: colors.surfaceLight,
+        borderRadius: radius.full,
         justifyContent: 'center',
         alignItems: 'center',
     },
-    setNumText: {
-        fontSize: 13,
-        fontWeight: '900',
-        color: colors.textDim,
-    },
-    prevText: {
-        ...textStyles.caption,
-        color: colors.textMuted,
-        fontSize: 11,
-        textAlign: 'center',
-    },
     input: {
-        backgroundColor: colors.background,
-        borderWidth: 1,
-        borderColor: colors.borderLight,
+        backgroundColor: colors.surfaceLight,
+        borderRadius: radius.md,
         color: colors.text,
-        fontSize: 15,
-        fontWeight: '700',
+        fontSize: 18,
+        fontWeight: '600',
         textAlign: 'center',
-        paddingVertical: 4,
-        paddingHorizontal: 2,
-        width: 52,
-    },
-    completedValue: {
-        fontSize: 15,
-        fontWeight: '700',
-        color: colors.success,
-        textAlign: 'center',
+        paddingVertical: spacing[3],
+        paddingHorizontal: spacing[1],
+        width: 60,
     },
     checkBtn: {
-        padding: 2,
+        padding: 4,
     },
-
-    // Target
+    checkPending: {
+        width: 40,
+        height: 40,
+        borderRadius: radius.full,
+        backgroundColor: colors.primaryMuted,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    checkDone: {
+        width: 40,
+        height: 40,
+        borderRadius: radius.full,
+        backgroundColor: colors.success,
+        alignItems: 'center',
+        justifyContent: 'center',
+        shadowColor: colors.success,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+        elevation: 4,
+    },
     targetInfo: {
-        padding: spacing[2],
-        borderTopWidth: 1,
-        borderTopColor: colors.border,
-        gap: spacing[1],
+        padding: spacing[5],
+        backgroundColor: colors.surfaceLight,
+        borderRadius: radius.lg,
+        borderWidth: 1,
+        borderColor: colors.borderLight + '40',
     },
     targetRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: spacing[1],
     },
-    targetText: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 10,
-    },
-
-    // Nav bar
     navBar: {
+        position: 'absolute',
+        bottom: 0, left: 0, right: 0,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingHorizontal: screen.paddingHorizontal,
-        paddingVertical: spacing[3],
+        paddingHorizontal: spacing[6],
+        paddingTop: spacing[4],
+        paddingBottom: spacing[8],
         borderTopWidth: 1,
-        borderTopColor: colors.border,
-        backgroundColor: '#000',
+        borderTopColor: colors.borderLight,
+        backgroundColor: colors.surface,
     },
     navBtn: {
-        flexDirection: 'row',
+        width: 48,
+        height: 48,
+        justifyContent: 'center',
         alignItems: 'center',
-        gap: spacing[1],
-        paddingVertical: spacing[2],
-        paddingHorizontal: spacing[3],
+        borderRadius: radius.full,
+        backgroundColor: colors.surfaceLight,
     },
     navBtnDisabled: {
-        opacity: 0.3,
-    },
-    navBtnText: {
-        ...textStyles.label,
-        color: colors.text,
-        fontSize: 12,
+        opacity: 0.5,
     },
     setsProgress: {
-        backgroundColor: colors.surface,
-        paddingVertical: spacing[1],
-        paddingHorizontal: spacing[3],
         flexDirection: 'row',
         alignItems: 'baseline',
-        gap: 4,
-    },
-    setsProgressNum: {
-        fontSize: 18,
-        fontWeight: '900',
-        color: colors.text,
-    },
-    setsProgressLabel: {
-        ...textStyles.caption,
-        color: colors.textSecondary,
-        fontSize: 10,
     },
 });
 

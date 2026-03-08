@@ -1,28 +1,14 @@
-/**
- * FORGEBORN — CREED SCREEN
- * 
- * The first thing the user sees.
- * Not onboarding. Not welcome.
- * THE CREED.
- * 
- * This is a contract with yourself.
- * Once accepted, it never shows again.
- */
-
 import React, { useState, useEffect, useRef } from 'react';
 import {
     View,
-    Text,
-    TouchableOpacity,
     StyleSheet,
     Animated,
     Dimensions,
     StatusBar,
     Vibration,
 } from 'react-native';
-import { colors } from '../theme/colors';
-import { textStyles } from '../theme/typography';
-import { spacing, screen } from '../theme/spacing';
+import { colors, spacing, radius } from '../theme';
+import { Typography, Button } from '../components';
 
 const { width, height } = Dimensions.get('window');
 
@@ -30,10 +16,10 @@ const { width, height } = Dimensions.get('window');
 const CREED_LINES = [
     'THERE IS NO TOMORROW.',
     'I DO NOT LOSE.',
-    'I EXECUTE.',
+    'I BREAK WEAKNESS.',
     'THIS IS MY JOB.',
     'THIS IS WHAT I DO.',
-    'I BUILT THIS.',
+    'I COMMIT.',
 ];
 
 const CreedScreen = ({ onCommit }) => {
@@ -65,7 +51,7 @@ const CreedScreen = ({ onCommit }) => {
     const animateCreed = () => {
         // Animate each line with delay
         CREED_LINES.forEach((_, index) => {
-            const delay = index * 800; // 800ms between each line
+            const delay = index * 1000; // 1s between each line
 
             setTimeout(() => {
                 setCurrentLine(index);
@@ -76,18 +62,18 @@ const CreedScreen = ({ onCommit }) => {
                 Animated.parallel([
                     Animated.timing(lineAnimations[index].opacity, {
                         toValue: 1,
-                        duration: 400,
+                        duration: 600,
                         useNativeDriver: true,
                     }),
                     Animated.timing(lineAnimations[index].translateY, {
                         toValue: 0,
-                        duration: 400,
+                        duration: 600,
                         useNativeDriver: true,
                     }),
                     Animated.spring(lineAnimations[index].scale, {
                         toValue: 1,
-                        friction: 4,
-                        tension: 50,
+                        friction: 5,
+                        tension: 40,
                         useNativeDriver: true,
                     }),
                 ]).start();
@@ -102,7 +88,7 @@ const CreedScreen = ({ onCommit }) => {
             Animated.parallel([
                 Animated.timing(buttonOpacity, {
                     toValue: 1,
-                    duration: 500,
+                    duration: 800,
                     useNativeDriver: true,
                 }),
                 Animated.spring(buttonScale, {
@@ -115,7 +101,7 @@ const CreedScreen = ({ onCommit }) => {
                 // Start pulse animation
                 startPulse();
             });
-        }, CREED_LINES.length * 800 + 500);
+        }, CREED_LINES.length * 1000 + 500);
     };
 
     const startPulse = () => {
@@ -123,12 +109,12 @@ const CreedScreen = ({ onCommit }) => {
             Animated.sequence([
                 Animated.timing(pulseAnim, {
                     toValue: 1.05,
-                    duration: 1000,
+                    duration: 1200,
                     useNativeDriver: true,
                 }),
                 Animated.timing(pulseAnim, {
                     toValue: 1,
-                    duration: 1000,
+                    duration: 1200,
                     useNativeDriver: true,
                 }),
             ])
@@ -139,20 +125,18 @@ const CreedScreen = ({ onCommit }) => {
         if (isCommitting) return;
 
         setIsCommitting(true);
-        Vibration.vibrate([0, 50, 100, 50, 100, 50, 200]); // Escalating vibration
+        Vibration.vibrate([0, 50, 100, 50, 100, 50, 300]); // Escalating vibration
 
-        // Flash the screen red
-        // Then trigger commit
         setTimeout(() => {
             onCommit && onCommit();
-        }, 300);
+        }, 600);
     };
 
     return (
         <View style={styles.container}>
-            <StatusBar barStyle="light-content" backgroundColor={colors.background} />
+            <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
 
-            {/* Background glow effect */}
+            {/* Background glow effect (Subtle for light theme) */}
             <View style={styles.glowContainer}>
                 <View style={[styles.glow, isCommitting && styles.glowActive]} />
             </View>
@@ -192,22 +176,17 @@ const CreedScreen = ({ onCommit }) => {
                         },
                     ]}
                 >
-                    <TouchableOpacity
-                        style={[
-                            styles.commitButton,
-                            isCommitting && styles.commitButtonActive,
-                        ]}
+                    <Button
+                        title={isCommitting ? 'SEALING...' : 'I COMMIT'}
                         onPress={handleCommit}
-                        activeOpacity={0.8}
-                    >
-                        <Text style={styles.commitButtonText}>
-                            {isCommitting ? 'SEALING...' : 'I COMMIT'}
-                        </Text>
-                    </TouchableOpacity>
+                        variant="primary"
+                        style={[styles.commitButton, isCommitting && styles.commitButtonActive]}
+                        textStyle={{ fontSize: 24, letterSpacing: 4, fontWeight: '900', color: colors.textInverse }}
+                    />
 
-                    <Text style={styles.warningText}>
+                    <Typography variant="caption" color={colors.danger} style={styles.warningText}>
                         THIS CANNOT BE UNDONE
-                    </Text>
+                    </Typography>
                 </Animated.View>
             )}
         </View>
@@ -220,74 +199,80 @@ const styles = StyleSheet.create({
         backgroundColor: colors.background,
         justifyContent: 'center',
         alignItems: 'center',
-        paddingHorizontal: screen.paddingHorizontal,
+        paddingHorizontal: spacing[6],
     },
 
     glowContainer: {
         ...StyleSheet.absoluteFillObject,
         justifyContent: 'center',
         alignItems: 'center',
+        zIndex: -1,
     },
 
     glow: {
-        width: width * 0.8,
-        height: width * 0.8,
-        borderRadius: width * 0.4,
-        backgroundColor: colors.primaryMuted,
-        opacity: 0.3,
+        width: width * 1.2,
+        height: width * 1.2,
+        borderRadius: width * 0.6,
+        backgroundColor: colors.surface,
+        opacity: 0.5,
     },
 
     glowActive: {
-        backgroundColor: colors.primary,
-        opacity: 0.5,
+        backgroundColor: colors.primaryLight,
+        opacity: 0.8,
     },
 
     creedContainer: {
         alignItems: 'center',
         justifyContent: 'center',
-        paddingBottom: 100,
+        paddingBottom: 120, // Make room for button
     },
 
     creedLine: {
-        ...textStyles.creed,
-        color: colors.textDim,
+        fontSize: 28,
+        fontWeight: '900',
+        letterSpacing: 2,
+        textTransform: 'uppercase',
+        color: colors.textDim, // Dim unless active
         textAlign: 'center',
-        marginVertical: spacing[2],
+        marginVertical: spacing[3],
+        fontFamily: 'System', // Use default very bold system font
     },
 
     creedLineActive: {
-        color: colors.text,
+        color: colors.textUrl || colors.primary, // Pop when it's the current line
+        fontSize: 32, // Slightly larger when active
     },
 
     buttonContainer: {
         position: 'absolute',
         bottom: 80,
         alignItems: 'center',
+        width: '100%',
+        paddingHorizontal: spacing[6],
     },
 
     commitButton: {
-        backgroundColor: colors.primary,
-        paddingVertical: spacing[4],
-        paddingHorizontal: spacing[10],
-        borderWidth: 2,
-        borderColor: colors.primary,
+        width: '100%',
+        paddingVertical: spacing[6],
+        borderRadius: radius.full,
+        backgroundColor: colors.text, // Black button in light theme for extreme contrast
+        shadowColor: colors.text,
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 0.3,
+        shadowRadius: 20,
+        elevation: 10,
     },
 
     commitButtonActive: {
-        backgroundColor: colors.primaryDark,
-    },
-
-    commitButtonText: {
-        ...textStyles.button,
-        color: colors.text,
-        fontSize: 20,
+        backgroundColor: colors.primary, // Turns primary color on click
     },
 
     warningText: {
-        ...textStyles.caption,
-        color: colors.danger,
-        marginTop: spacing[3],
-        opacity: 0.7,
+        marginTop: spacing[4],
+        opacity: 0.8,
+        letterSpacing: 3,
+        fontWeight: 'bold',
     },
 });
 

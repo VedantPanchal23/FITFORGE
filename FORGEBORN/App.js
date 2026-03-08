@@ -106,6 +106,11 @@ function DisciplineStackScreen() {
 }
 
 // ─── Tab Navigator ────────────────────────────────────────────────────────────
+import { BlurView } from 'expo-blur';
+import { StyleSheet } from 'react-native';
+
+import * as Haptics from 'expo-haptics';
+
 function MainTabs() {
   return (
     <Tab.Navigator
@@ -113,31 +118,59 @@ function MainTabs() {
         headerShown: false,
         tabBarActiveTintColor: getTabColor(route.name),
         tabBarInactiveTintColor: colors.textDim,
+        tabBarShowLabel: false, // Cleaner look without text
         tabBarStyle: {
-          backgroundColor: colors.background,
-          borderTopColor: colors.border,
-          borderTopWidth: 1,
-          height: 60,
-          paddingBottom: 8,
-          paddingTop: 4,
+          position: 'absolute',
+          bottom: 24,
+          left: 24,
+          right: 24,
+          height: 64,
+          borderRadius: 32,
+          backgroundColor: 'rgba(255, 255, 255, 0.75)',
+          borderTopWidth: 0, // Remove default border
+          elevation: 0, // Remove Android shadow to use custom shadow
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: 12,
+          },
+          shadowOpacity: 0.15,
+          shadowRadius: 24,
         },
-        tabBarLabelStyle: {
-          fontSize: 9,
-          fontWeight: '700',
-          letterSpacing: 1,
-          textTransform: 'uppercase',
-        },
-        tabBarIcon: ({ color, size }) => {
+        tabBarBackground: () => (
+          <View style={{ flex: 1, borderRadius: 32, overflow: 'hidden' }}>
+            <BlurView
+              tint="light"
+              intensity={80}
+              style={StyleSheet.absoluteFillObject}
+            />
+          </View>
+        ),
+        tabBarIcon: ({ color, focused }) => {
           const icons = {
-            Dashboard: 'grid',
-            Workout: 'barbell',
-            Nutrition: 'nutrition',
-            Discipline: 'flash',
-            Profile: 'person',
+            Dashboard: focused ? 'grid' : 'grid-outline',
+            Workout: focused ? 'barbell' : 'barbell-outline',
+            Nutrition: focused ? 'nutrition' : 'nutrition-outline',
+            Discipline: focused ? 'flash' : 'flash-outline',
+            Profile: focused ? 'person' : 'person-outline',
           };
-          return <Ionicons name={icons[route.name]} size={22} color={color} />;
+          return (
+            <View style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              top: 4, // Adjust for removed labels
+              transform: [{ scale: focused ? 1.15 : 1 }] // Slight scale leap
+            }}>
+              <Ionicons name={icons[route.name]} size={24} color={color} />
+            </View>
+          );
         },
       })}
+      screenListeners={{
+        tabPress: (e) => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        },
+      }}
     >
       <Tab.Screen name="Dashboard" component={DashboardScreen} />
       <Tab.Screen name="Workout" component={WorkoutStackScreen} />

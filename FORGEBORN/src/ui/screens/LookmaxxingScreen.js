@@ -1,14 +1,6 @@
-/**
- * FORGEBORN — LOOKMAXXING SCREEN
- * 
- * AM/PM skincare routines, grooming schedule, sleep tracking, mewing timer.
- * Inspired by: BasicBeauty, SkinCare routine apps
- */
-
 import React, { useState } from 'react';
 import {
     View,
-    Text,
     StyleSheet,
     ScrollView,
     StatusBar,
@@ -17,9 +9,8 @@ import {
     TextInput,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../theme/colors';
-import { textStyles } from '../theme/typography';
-import { spacing, screen } from '../theme/spacing';
+import { colors, spacing, radius } from '../theme';
+import { Card, Typography, Button, ProgressBar } from '../components';
 import useLookmaxxStore from '../../store/lookmaxxStore';
 
 const LookmaxxingScreen = ({ navigation }) => {
@@ -64,7 +55,7 @@ const LookmaxxingScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <StatusBar barStyle="light-content" backgroundColor={colors.background} />
+            <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
             <ScrollView
                 style={styles.scrollView}
                 contentContainerStyle={styles.scrollContent}
@@ -72,151 +63,184 @@ const LookmaxxingScreen = ({ navigation }) => {
             >
                 {/* Header */}
                 <View style={styles.header}>
-                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <TouchableOpacity onPress={() => navigation.goBack()} style={{ paddingRight: spacing[4], paddingTop: spacing[2], paddingBottom: spacing[2] }}>
                         <Ionicons name="arrow-back" size={24} color={colors.text} />
                     </TouchableOpacity>
-                    <Text style={styles.title}>LOOKMAXXING</Text>
+                    <View>
+                        <Typography variant="largeTitle">Lookmaxxing</Typography>
+                        <Typography variant="subheadline" color={colors.textSecondary} style={{ marginTop: 2 }}>Sharpen the blade. Refine the weapon.</Typography>
+                    </View>
                 </View>
-                <Text style={styles.subtitle}>SHARPEN THE BLADE. REFINE THE WEAPON.</Text>
 
                 {/* Progress cards */}
                 <View style={styles.progressRow}>
-                    <View style={[styles.progressCard, status.isAMDone && styles.progressCardDone]}>
-                        <Ionicons name="sunny-outline" size={22} color={colors.primary} />
-                        <Text style={styles.progressNum}>{status.amCompleted}/{status.amTotal}</Text>
-                        <Text style={styles.progressLabel}>AM ROUTINE</Text>
-                        <View style={styles.miniBarBg}>
-                            <View style={[styles.miniBarFill, { width: `${status.amProgress * 100}%` }]} />
+                    <Card style={[styles.progressCard, status.isAMDone && styles.progressCardDone]}>
+                        <View style={styles.progressHeader}>
+                            <View style={[styles.iconBox, { backgroundColor: 'rgba(245, 158, 11, 0.1)' }]}>
+                                <Ionicons name="sunny" size={20} color="#F59E0B" />
+                            </View>
+                            <Typography variant="title2">{status.amCompleted}/{status.amTotal}</Typography>
                         </View>
-                    </View>
-                    <View style={[styles.progressCard, status.isPMDone && styles.progressCardDone]}>
-                        <Ionicons name="moon-outline" size={22} color={colors.primary} />
-                        <Text style={styles.progressNum}>{status.pmCompleted}/{status.pmTotal}</Text>
-                        <Text style={styles.progressLabel}>PM ROUTINE</Text>
-                        <View style={styles.miniBarBg}>
-                            <View style={[styles.miniBarFill, { width: `${status.pmProgress * 100}%` }]} />
+                        <Typography variant="caption" color={colors.textDim} style={{ marginBottom: spacing[3] }}>Morning Routine</Typography>
+                        <ProgressBar progress={status.amProgress} color="#F59E0B" />
+                    </Card>
+                    <Card style={[styles.progressCard, status.isPMDone && styles.progressCardDone]}>
+                        <View style={styles.progressHeader}>
+                            <View style={[styles.iconBox, { backgroundColor: 'rgba(99, 102, 241, 0.1)' }]}>
+                                <Ionicons name="moon" size={20} color="#6366F1" />
+                            </View>
+                            <Typography variant="title2">{status.pmCompleted}/{status.pmTotal}</Typography>
                         </View>
-                    </View>
+                        <Typography variant="caption" color={colors.textDim} style={{ marginBottom: spacing[3] }}>Evening Routine</Typography>
+                        <ProgressBar progress={status.pmProgress} color="#6366F1" />
+                    </Card>
                 </View>
 
                 {/* AM Routine */}
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                    <Ionicons name="sunny-outline" size={14} color={colors.textDim} />
-                    <Text style={styles.sectionLabel}>MORNING PROTOCOL</Text>
+                <View style={styles.sectionHeader}>
+                    <Ionicons name="sunny-outline" size={16} color={colors.textDim} />
+                    <Typography variant="subheadline" color={colors.textSecondary}>Morning Protocol</Typography>
                 </View>
-                {amRoutine.map((item) => {
-                    const done = isAMDone(item.id);
-                    return (
-                        <TouchableOpacity
-                            key={item.id}
-                            style={[styles.routineItem, done && styles.routineItemDone]}
-                            onPress={() => handleAMToggle(item.id)}
-                            activeOpacity={0.7}
-                        >
-                            <View style={[styles.checkbox, done && styles.checkboxDone]}>
-                                {done && <Ionicons name="checkmark" size={14} color="#000" />}
-                            </View>
-                            <Ionicons name={item.icon} size={16} color={colors.textSecondary} />
-                            <Text style={[styles.routineName, done && styles.routineNameDone]}>
-                                {item.name}
-                            </Text>
-                        </TouchableOpacity>
-                    );
-                })}
+                <Card style={styles.listCard}>
+                    {amRoutine.map((item, index) => {
+                        const done = isAMDone(item.id);
+                        const isLast = index === amRoutine.length - 1;
+                        return (
+                            <TouchableOpacity
+                                key={item.id}
+                                style={[styles.routineItem, isLast && { borderBottomWidth: 0 }]}
+                                onPress={() => handleAMToggle(item.id)}
+                                activeOpacity={0.7}
+                            >
+                                <View style={[styles.checkbox, done && styles.checkboxDone]}>
+                                    {done && <Ionicons name="checkmark" size={16} color={colors.textInverse} />}
+                                </View>
+                                <View style={styles.routineInfo}>
+                                    <Typography
+                                        variant="body"
+                                        color={done ? colors.textDim : colors.text}
+                                        style={done ? { textDecorationLine: 'line-through' } : {}}
+                                    >
+                                        {item.name}
+                                    </Typography>
+                                </View>
+                                <Ionicons name={item.icon} size={20} color={done ? colors.textDim : '#F59E0B'} />
+                            </TouchableOpacity>
+                        );
+                    })}
+                </Card>
 
                 {/* PM Routine */}
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: spacing[5] }}>
-                    <Ionicons name="moon-outline" size={14} color={colors.textDim} />
-                    <Text style={styles.sectionLabel}>EVENING PROTOCOL</Text>
+                <View style={[styles.sectionHeader, { marginTop: spacing[6] }]}>
+                    <Ionicons name="moon-outline" size={16} color={colors.textDim} />
+                    <Typography variant="subheadline" color={colors.textSecondary}>Evening Protocol</Typography>
                 </View>
-                {pmRoutine.map((item) => {
-                    const done = isPMDone(item.id);
-                    return (
-                        <TouchableOpacity
-                            key={item.id}
-                            style={[styles.routineItem, done && styles.routineItemDone]}
-                            onPress={() => handlePMToggle(item.id)}
-                            activeOpacity={0.7}
-                        >
-                            <View style={[styles.checkbox, done && styles.checkboxDone]}>
-                                {done && <Ionicons name="checkmark" size={14} color="#000" />}
-                            </View>
-                            <Ionicons name={item.icon} size={16} color={colors.textSecondary} />
-                            <Text style={[styles.routineName, done && styles.routineNameDone]}>
-                                {item.name}
-                            </Text>
-                        </TouchableOpacity>
-                    );
-                })}
+                <Card style={styles.listCard}>
+                    {pmRoutine.map((item, index) => {
+                        const done = isPMDone(item.id);
+                        const isLast = index === pmRoutine.length - 1;
+                        return (
+                            <TouchableOpacity
+                                key={item.id}
+                                style={[styles.routineItem, isLast && { borderBottomWidth: 0 }]}
+                                onPress={() => handlePMToggle(item.id)}
+                                activeOpacity={0.7}
+                            >
+                                <View style={[styles.checkbox, done && styles.checkboxDone]}>
+                                    {done && <Ionicons name="checkmark" size={16} color={colors.textInverse} />}
+                                </View>
+                                <View style={styles.routineInfo}>
+                                    <Typography
+                                        variant="body"
+                                        color={done ? colors.textDim : colors.text}
+                                        style={done ? { textDecorationLine: 'line-through' } : {}}
+                                    >
+                                        {item.name}
+                                    </Typography>
+                                </View>
+                                <Ionicons name={item.icon} size={20} color={done ? colors.textDim : '#6366F1'} />
+                            </TouchableOpacity>
+                        );
+                    })}
+                </Card>
 
                 {/* Grooming Schedule */}
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: spacing[5] }}>
-                    <Ionicons name="cut-outline" size={14} color={colors.textDim} />
-                    <Text style={styles.sectionLabel}>GROOMING SCHEDULE</Text>
+                <View style={[styles.sectionHeader, { marginTop: spacing[6] }]}>
+                    <Ionicons name="cut-outline" size={16} color={colors.textDim} />
+                    <Typography variant="subheadline" color={colors.textSecondary}>Grooming Schedule</Typography>
                 </View>
-                {grooming.map((item) => {
-                    const isDue = isGroomingDue(item);
-                    const daysSince = item.lastDone
-                        ? Math.floor((Date.now() - new Date(item.lastDone).getTime()) / (1000 * 60 * 60 * 24))
-                        : null;
+                <Card style={styles.listCard}>
+                    {grooming.map((item, index) => {
+                        const isDue = isGroomingDue(item);
+                        const daysSince = item.lastDone
+                            ? Math.floor((Date.now() - new Date(item.lastDone).getTime()) / (1000 * 60 * 60 * 24))
+                            : null;
+                        const isLast = index === grooming.length - 1;
 
-                    return (
-                        <View key={item.id} style={[styles.groomingItem, isDue && styles.groomingDue]}>
-                            <View style={styles.groomingLeft}>
-                                <Ionicons name={item.icon} size={16} color={colors.textSecondary} />
-                                <View>
-                                    <Text style={styles.groomingName}>{item.name}</Text>
-                                    <Text style={styles.groomingFreq}>{item.frequency}</Text>
+                        return (
+                            <View key={item.id} style={[styles.routineItem, isLast && { borderBottomWidth: 0 }]}>
+                                <View style={styles.routineInfo}>
+                                    <Typography variant="body" color={isDue ? colors.text : colors.textSecondary}>{item.name}</Typography>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing[2], marginTop: 2 }}>
+                                        <Typography variant="caption" color={colors.textDim}>{item.frequency}</Typography>
+                                        {daysSince !== null && (
+                                            <>
+                                                <Typography variant="caption" color={colors.textDim}>•</Typography>
+                                                <Typography variant="caption" color={isDue ? colors.warning : colors.textDim}>
+                                                    {daysSince}d ago
+                                                </Typography>
+                                            </>
+                                        )}
+                                    </View>
                                 </View>
-                            </View>
-                            <View style={styles.groomingRight}>
-                                {daysSince !== null && (
-                                    <Text style={[styles.groomingSince, isDue && { color: colors.warning }]}>
-                                        {daysSince}d ago
-                                    </Text>
-                                )}
                                 <TouchableOpacity
-                                    style={[styles.groomingBtn, !isDue && { opacity: 0.4 }]}
+                                    style={[styles.groomingBtn, isDue ? styles.groomingBtnDue : styles.groomingBtnDone]}
                                     onPress={() => {
                                         markGroomingDone(item.id);
                                         Vibration.vibrate(30);
                                         setRefreshKey(k => k + 1);
                                     }}
                                 >
-                                    <Ionicons name="checkmark" size={14} color={isDue ? '#000' : colors.textDim} />
+                                    {isDue ? (
+                                        <Typography variant="caption" color={colors.primary} style={{ fontWeight: 'bold' }}>Complete</Typography>
+                                    ) : (
+                                        <Ionicons name="checkmark" size={16} color={colors.success} />
+                                    )}
                                 </TouchableOpacity>
                             </View>
-                        </View>
-                    );
-                })}
+                        );
+                    })}
+                </Card>
 
                 {/* Sleep Tracker */}
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: spacing[5] }}>
-                    <Ionicons name="moon-outline" size={14} color={colors.textDim} />
-                    <Text style={styles.sectionLabel}>SLEEP</Text>
+                <View style={[styles.sectionHeader, { marginTop: spacing[6] }]}>
+                    <Ionicons name="moon-outline" size={16} color={colors.textDim} />
+                    <Typography variant="subheadline" color={colors.textSecondary}>Sleep Tracker</Typography>
                 </View>
-                <View style={styles.sleepCard}>
+                <Card style={styles.sleepCard}>
                     {todaysSleep ? (
                         <View style={styles.sleepLogged}>
                             <View style={styles.sleepStat}>
-                                <Text style={styles.sleepStatVal}>{todaysSleep.hours}h</Text>
-                                <Text style={styles.sleepStatLabel}>SLEPT</Text>
+                                <Typography variant="title1">{todaysSleep.hours}h</Typography>
+                                <Typography variant="caption" color={colors.textDim}>Total Sleep</Typography>
                             </View>
-                            <View style={styles.sleepStat}>
-                                <Text style={styles.sleepStatVal}>{todaysSleep.bedtime}</Text>
-                                <Text style={styles.sleepStatLabel}>BED</Text>
-                            </View>
-                            <View style={styles.sleepStat}>
-                                <Text style={styles.sleepStatVal}>{todaysSleep.wakeTime}</Text>
-                                <Text style={styles.sleepStatLabel}>WAKE</Text>
+                            <View style={styles.sleepDetails}>
+                                <View style={styles.sleepDetailRow}>
+                                    <Typography variant="caption" color={colors.textDim}>Bedtime</Typography>
+                                    <Typography variant="headline">{todaysSleep.bedtime}</Typography>
+                                </View>
+                                <View style={styles.sleepDetailRow}>
+                                    <Typography variant="caption" color={colors.textDim}>Wake Up</Typography>
+                                    <Typography variant="headline">{todaysSleep.wakeTime}</Typography>
+                                </View>
                             </View>
                             <View style={[styles.sleepBadge, {
-                                backgroundColor: todaysSleep.hours >= 7 ? colors.success : colors.danger,
+                                backgroundColor: todaysSleep.hours >= 7 ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
                             }]}>
                                 <Ionicons
                                     name={todaysSleep.hours >= 7 ? 'checkmark-circle' : 'alert-circle'}
-                                    size={18}
-                                    color={todaysSleep.hours >= 7 ? '#fff' : '#fff'}
+                                    size={24}
+                                    color={todaysSleep.hours >= 7 ? colors.success : colors.danger}
                                 />
                             </View>
                         </View>
@@ -224,7 +248,7 @@ const LookmaxxingScreen = ({ navigation }) => {
                         <View style={styles.sleepForm}>
                             <View style={styles.sleepInputRow}>
                                 <View style={styles.sleepInputGroup}>
-                                    <Text style={styles.sleepInputLabel}>BEDTIME</Text>
+                                    <Typography variant="caption" color={colors.textDim} style={{ marginBottom: spacing[2] }}>Bedtime</Typography>
                                     <TextInput
                                         style={styles.sleepInput}
                                         value={bedtime}
@@ -234,7 +258,7 @@ const LookmaxxingScreen = ({ navigation }) => {
                                     />
                                 </View>
                                 <View style={styles.sleepInputGroup}>
-                                    <Text style={styles.sleepInputLabel}>WAKE UP</Text>
+                                    <Typography variant="caption" color={colors.textDim} style={{ marginBottom: spacing[2] }}>Wake Up</Typography>
                                     <TextInput
                                         style={styles.sleepInput}
                                         value={wakeTime}
@@ -244,22 +268,20 @@ const LookmaxxingScreen = ({ navigation }) => {
                                     />
                                 </View>
                             </View>
-                            <TouchableOpacity style={styles.sleepLogBtn} onPress={handleLogSleep}>
-                                <Text style={styles.sleepLogBtnText}>LOG SLEEP</Text>
-                            </TouchableOpacity>
+                            <Button title="Log Sleep" onPress={handleLogSleep} style={{ marginTop: spacing[4] }} />
                         </View>
                     )}
-                </View>
+                </Card>
 
                 {/* Mewing Tracker */}
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: spacing[5] }}>
-                    <Ionicons name="fitness-outline" size={14} color={colors.textDim} />
-                    <Text style={styles.sectionLabel}>MEWING</Text>
+                <View style={[styles.sectionHeader, { marginTop: spacing[6] }]}>
+                    <Ionicons name="fitness-outline" size={16} color={colors.textDim} />
+                    <Typography variant="subheadline" color={colors.textSecondary}>Mewing Tracker</Typography>
                 </View>
-                <View style={styles.mewingCard}>
-                    <Text style={styles.mewingDesc}>
-                        Keep tongue on roof of mouth. Proper tongue posture builds jawline.
-                    </Text>
+                <Card style={styles.mewingCard}>
+                    <Typography variant="caption" color={colors.textSecondary} style={{ marginBottom: spacing[4], lineHeight: 20 }}>
+                        Keep entire tongue on the roof of mouth, lips sealed, teeth lightly touching. Proper posture builds defined jawline overt time.
+                    </Typography>
                     <View style={styles.mewingBtns}>
                         {[5, 10, 15, 30].map(min => (
                             <TouchableOpacity
@@ -271,273 +293,189 @@ const LookmaxxingScreen = ({ navigation }) => {
                                     setRefreshKey(k => k + 1);
                                 }}
                             >
-                                <Text style={styles.mewingBtnText}>+{min}m</Text>
+                                <Typography variant="subheadline" color={colors.primary}>+{min}m</Typography>
                             </TouchableOpacity>
                         ))}
                     </View>
-                </View>
+                </Card>
 
-                <View style={{ height: 30 }} />
+                <View style={{ height: 40 }} />
             </ScrollView>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: colors.background },
-    scrollView: { flex: 1 },
+    container: {
+        flex: 1,
+        backgroundColor: colors.background
+    },
+    scrollView: {
+        flex: 1
+    },
     scrollContent: {
-        paddingHorizontal: screen.paddingHorizontal,
+        paddingHorizontal: spacing[4],
         paddingTop: spacing[12],
-        paddingBottom: spacing[4],
+        paddingBottom: spacing[8],
     },
 
     // Header
     header: {
         flexDirection: 'row',
-        alignItems: 'center',
-        gap: spacing[3],
-    },
-    title: {
-        ...textStyles.h1,
-        color: colors.primary,
-        fontSize: 24,
-    },
-    subtitle: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        marginBottom: spacing[4],
+        alignItems: 'baseline',
+        marginBottom: spacing[6],
     },
 
-    sectionLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        marginBottom: spacing[2],
+    sectionHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: spacing[2],
+        marginBottom: spacing[3],
+        paddingLeft: spacing[1],
     },
 
     // Progress
     progressRow: {
         flexDirection: 'row',
-        gap: spacing[2],
-        marginBottom: spacing[4],
+        gap: spacing[4],
+        marginBottom: spacing[6],
     },
     progressCard: {
         flex: 1,
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        padding: spacing[3],
-        alignItems: 'center',
+        padding: spacing[4],
     },
     progressCardDone: {
         borderColor: colors.success,
+        borderWidth: 1,
     },
-    progressIcon: { fontSize: 22, marginBottom: spacing[1] },
-    progressNum: {
-        fontSize: 18,
-        fontWeight: '900',
-        color: colors.text,
+    progressHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: spacing[3],
     },
-    progressLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 9,
-        marginBottom: spacing[1],
-    },
-    miniBarBg: {
-        width: '100%',
-        height: 4,
-        backgroundColor: colors.background,
-        overflow: 'hidden',
-    },
-    miniBarFill: {
-        height: '100%',
-        backgroundColor: colors.primary,
+    iconBox: {
+        width: 36,
+        height: 36,
+        borderRadius: radius.full,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 
-    // Routine item
+    // Routine list
+    listCard: {
+        padding: 0,
+        overflow: 'hidden',
+    },
     routineItem: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        padding: spacing[3],
-        marginBottom: spacing[1],
-        gap: spacing[2],
-    },
-    routineItemDone: {
-        borderColor: colors.success,
-        opacity: 0.7,
+        paddingVertical: spacing[4],
+        paddingHorizontal: spacing[4],
+        borderBottomWidth: 1,
+        borderBottomColor: colors.borderLight,
+        gap: spacing[3],
     },
     checkbox: {
-        width: 20,
-        height: 20,
+        width: 24,
+        height: 24,
+        borderRadius: radius.sm,
         borderWidth: 2,
-        borderColor: colors.textDim,
+        borderColor: colors.border,
         justifyContent: 'center',
         alignItems: 'center',
     },
     checkboxDone: {
-        backgroundColor: colors.success,
-        borderColor: colors.success,
+        backgroundColor: colors.primary,
+        borderColor: colors.primary,
     },
-    routineIcon: { fontSize: 16 },
-    routineName: {
-        ...textStyles.label,
-        color: colors.text,
-        fontSize: 12,
-    },
-    routineNameDone: {
-        textDecorationLine: 'line-through',
-        color: colors.textDim,
+    routineInfo: {
+        flex: 1,
+        justifyContent: 'center',
     },
 
     // Grooming
-    groomingItem: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        padding: spacing[3],
-        marginBottom: spacing[1],
-    },
-    groomingDue: {
-        borderColor: colors.warning,
-    },
-    groomingLeft: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: spacing[2],
-    },
-    groomingIcon: { fontSize: 16 },
-    groomingName: {
-        ...textStyles.label,
-        color: colors.text,
-        fontSize: 12,
-    },
-    groomingFreq: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 9,
-    },
-    groomingRight: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: spacing[2],
-    },
-    groomingSince: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 10,
-    },
     groomingBtn: {
-        width: 26,
-        height: 26,
-        backgroundColor: colors.primary,
+        paddingHorizontal: spacing[3],
+        paddingVertical: spacing[2],
+        borderRadius: radius.full,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    groomingBtnDue: {
+        backgroundColor: colors.primaryMuted,
+        borderWidth: 1,
+        borderColor: 'rgba(16, 185, 129, 0.3)',
+    },
+    groomingBtnDone: {
+        backgroundColor: 'rgba(16, 185, 129, 0.1)',
     },
 
     // Sleep
     sleepCard: {
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        padding: spacing[3],
+        padding: spacing[5],
     },
     sleepLogged: {
         flexDirection: 'row',
-        justifyContent: 'space-around',
+        justifyContent: 'space-between',
         alignItems: 'center',
     },
     sleepStat: {
-        alignItems: 'center',
+        alignItems: 'flex-start',
     },
-    sleepStatVal: {
-        fontSize: 18,
-        fontWeight: '900',
-        color: colors.text,
+    sleepDetails: {
+        flex: 1,
+        paddingHorizontal: spacing[6],
+        gap: spacing[2],
     },
-    sleepStatLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 8,
+    sleepDetailRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'baseline',
     },
     sleepBadge: {
-        width: 28,
-        height: 28,
+        width: 48,
+        height: 48,
+        borderRadius: radius.full,
         justifyContent: 'center',
         alignItems: 'center',
     },
-    sleepBadgeText: { fontSize: 14 },
     sleepForm: {},
     sleepInputRow: {
         flexDirection: 'row',
-        gap: spacing[2],
-        marginBottom: spacing[2],
+        gap: spacing[4],
     },
     sleepInputGroup: {
         flex: 1,
     },
-    sleepInputLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 9,
-        marginBottom: 4,
-    },
     sleepInput: {
-        backgroundColor: colors.background,
-        borderWidth: 1,
-        borderColor: colors.border,
+        backgroundColor: colors.surfaceLight,
+        borderRadius: radius.md,
         color: colors.text,
-        fontSize: 16,
-        fontWeight: '700',
+        fontSize: 18,
+        fontWeight: 'bold',
         textAlign: 'center',
-        padding: spacing[2],
-    },
-    sleepLogBtn: {
-        backgroundColor: colors.primary,
-        padding: spacing[2],
-        alignItems: 'center',
-    },
-    sleepLogBtnText: {
-        ...textStyles.button,
-        color: '#000',
-        fontSize: 11,
+        padding: spacing[3],
+        borderWidth: 1,
+        borderColor: colors.borderLight,
     },
 
     // Mewing
     mewingCard: {
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        padding: spacing[3],
-    },
-    mewingDesc: {
-        ...textStyles.caption,
-        color: colors.textSecondary,
-        fontSize: 10,
-        marginBottom: spacing[2],
+        padding: spacing[5],
     },
     mewingBtns: {
         flexDirection: 'row',
-        gap: spacing[2],
+        gap: spacing[3],
     },
     mewingBtn: {
         flex: 1,
-        backgroundColor: colors.primaryMuted,
+        backgroundColor: colors.primaryMuted || 'rgba(16, 185, 129, 0.1)',
         borderWidth: 1,
-        borderColor: colors.primary,
-        padding: spacing[2],
+        borderColor: 'rgba(16, 185, 129, 0.2)',
+        paddingVertical: spacing[3],
+        borderRadius: radius.md,
         alignItems: 'center',
-    },
-    mewingBtnText: {
-        ...textStyles.label,
-        color: colors.primary,
-        fontSize: 11,
     },
 });
 

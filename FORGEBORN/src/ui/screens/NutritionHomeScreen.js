@@ -1,42 +1,56 @@
-/**
- * FORGEBORN — NUTRITION HOME SCREEN
- * 
- * Daily nutrition dashboard with:
- * - Calorie progress ring
- * - Macro bars (protein/carbs/fats)
- * - Meal slots (breakfast/lunch/snack/dinner)
- * - Water tracker (glass by glass)
- * - Per-meal calorie breakdown
- * 
- * Inspired by: MacroFactor (clean UI), HealthifyMe (Indian meals), MFP (macro pie)
- */
-
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import {
     View,
-    Text,
     StyleSheet,
     ScrollView,
     StatusBar,
     TouchableOpacity,
-    Vibration,
+    Animated,
+    Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../theme/colors';
-import { textStyles } from '../theme/typography';
-import { spacing, screen } from '../theme/spacing';
+import * as Haptics from 'expo-haptics';
+import { colors, spacing, radius } from '../theme';
+import { Card, Typography, Button, ProgressBar } from '../components';
 import useUserStore from '../../store/userStore';
 import useNutritionStore from '../../store/nutritionStore';
 import CalorieRing from '../components/CalorieRing';
-import MacroBar from '../components/MacroBar';
-import { radius, shadows } from '../theme/colors';
 
 const MEAL_SLOTS = [
-    { type: 'BREAKFAST', label: 'BREAKFAST', icon: 'sunny-outline', time: '8:00 AM' },
-    { type: 'LUNCH', label: 'LUNCH', icon: 'partly-sunny-outline', time: '1:00 PM' },
-    { type: 'SNACKS', label: 'SNACKS', icon: 'cafe-outline', time: '4:00 PM' },
-    { type: 'DINNER', label: 'DINNER', icon: 'moon-outline', time: '8:00 PM' },
+    { type: 'BREAKFAST', label: 'Breakfast', icon: 'sunny-outline', time: '8:00 AM' },
+    { type: 'LUNCH', label: 'Lunch', icon: 'partly-sunny-outline', time: '1:00 PM' },
+    { type: 'SNACKS', label: 'Snacks', icon: 'cafe-outline', time: '4:00 PM' },
+    { type: 'DINNER', label: 'Dinner', icon: 'moon-outline', time: '8:00 PM' },
 ];
+
+const WeekBar = ({ progress, isToday, color }) => {
+    const heightAnim = useRef(new Animated.Value(0)).current;
+
+    useEffect(() => {
+        Animated.spring(heightAnim, {
+            toValue: progress * 100, // percentage 0-100
+            useNativeDriver: false,
+            bounciness: 6,
+            speed: 10,
+            delay: 100, // slight delay for cascade effect if mapped
+        }).start();
+    }, [progress]);
+
+    return (
+        <View style={styles.weekBarBg}>
+            <Animated.View style={[
+                styles.weekBarFill,
+                {
+                    height: heightAnim.interpolate({
+                        inputRange: [0, 100],
+                        outputRange: ['0%', '100%']
+                    }),
+                    backgroundColor: color,
+                }
+            ]} />
+        </View>
+    );
+};
 
 const NutritionHomeScreen = ({ navigation }) => {
     const profile = useUserStore((s) => s.profile);
@@ -78,103 +92,155 @@ const NutritionHomeScreen = ({ navigation }) => {
     const weekSummary = getWeekSummary();
 
     // Progress calculations
-    const calProgress = Math.min(1, totals.calories / plan.targetCalories);
-    const proteinProgress = Math.min(1, totals.protein / plan.macros.protein);
-    const carbsProgress = Math.min(1, totals.carbs / plan.macros.carbs);
-    const fatsProgress = Math.min(1, totals.fats / plan.macros.fats);
-    const waterProgress = Math.min(1, totals.water / plan.waterGlasses);
+    const calProgress = Math.min(1, totals.calories / Math.max(plan.targetCalories, 1));
+    const proteinProgress = Math.min(1, totals.protein / Math.max(plan.macros.protein, 1));
+    const carbsProgress = Math.min(1, totals.carbs / Math.max(plan.macros.carbs, 1));
+    const fatsProgress = Math.min(1, totals.fats / Math.max(plan.macros.fats, 1));
+    const waterProgress = Math.min(1, totals.water / Math.max(plan.waterGlasses, 1));
     const remainingCals = plan.targetCalories - totals.calories;
 
     const handleAddWater = () => {
         addWater(1);
-        Vibration.vibrate(30);
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         setRefreshKey(k => k + 1);
+    };
+
+    const handleLongPressMeal = (mealId, mealName) => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+        Alert.alert(
+            "Delete Entry",
+            `Remove ${mealName} from today's log?`,
+            [
+                { text: "Cancel", style: "cancel" },
+                {
+                    text: "Delete",
+                    style: "destructive",
+                    onPress: () => {
+                        removeFood(mealId);
+                        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+                        setRefreshKey(k => k + 1);
+                    }
+                }
+            ]
+        );
     };
 
     return (
         <View style={styles.container}>
-            <StatusBar barStyle="light-content" backgroundColor={colors.background} />
+            <StatusBar barStyle="dark-content" backgroundColor={colors.surface} />
             <ScrollView
-                style={styles.scrollView}
-                contentContainerStyle={styles.scrollContent}
                 showsVerticalScrollIndicator={false}
+                contentContainerStyle={styles.scrollContent}
             >
                 {/* Header */}
-                <Text style={styles.title}>NUTRITION</Text>
-                <Text style={styles.subtitle}>
+                <Typography variant="largeTitle" color={colors.text}>Nutrition</Typography>
+                <Typography variant="subheadline" color={colors.textSecondary} style={{ marginBottom: spacing[6], letterSpacing: 1, fontWeight: '600' }}>
                     {plan.deficit < 0 ? `${Math.abs(plan.deficit)} CAL DEFICIT` :
                         plan.deficit > 0 ? `${plan.deficit} CAL SURPLUS` : 'MAINTENANCE'}
-                </Text>
+                </Typography>
 
                 {/* Calorie Ring Card */}
-                <View style={styles.calorieCard}>
-                    <CalorieRing
-                        consumed={totals.calories}
-                        target={plan.targetCalories}
-                        size={130}
-                        strokeWidth={8}
-                        color={colors.primary}
-                    />
+                <Card style={styles.calorieCard}>
+                    <View style={styles.ringContainer}>
+                        <CalorieRing
+                            consumed={totals.calories}
+                            target={plan.targetCalories}
+                            size={140}
+                            strokeWidth={12}
+                            color={colors.primary}
+                        />
+                    </View>
                     <View style={styles.calorieStats}>
                         <View style={styles.calStatRow}>
-                            <Text style={styles.calStatLabel}>TARGET</Text>
-                            <Text style={styles.calStatVal}>{plan.targetCalories}</Text>
+                            <Typography variant="caption" color={colors.textSecondary} style={{ fontWeight: '600' }}>TARGET</Typography>
+                            <Typography variant="headline" style={{ fontVariant: ['tabular-nums'] }}>{plan.targetCalories}</Typography>
                         </View>
                         <View style={styles.calStatRow}>
-                            <Text style={styles.calStatLabel}>CONSUMED</Text>
-                            <Text style={[styles.calStatVal, { color: colors.primary }]}>{totals.calories}</Text>
+                            <Typography variant="caption" color={colors.textSecondary} style={{ fontWeight: '600' }}>CONSUMED</Typography>
+                            <Typography variant="headline" color={colors.primary} style={{ fontVariant: ['tabular-nums'] }}>{totals.calories}</Typography>
                         </View>
                         <View style={styles.calStatRow}>
-                            <Text style={styles.calStatLabel}>REMAINING</Text>
-                            <Text style={[styles.calStatVal, {
-                                color: remainingCals < 0 ? colors.danger : colors.success
-                            }]}>{remainingCals}</Text>
+                            <Typography variant="caption" color={colors.textSecondary} style={{ fontWeight: '600' }}>REMAIN</Typography>
+                            <Typography variant="headline" color={remainingCals < 0 ? colors.danger : colors.text} style={{ fontVariant: ['tabular-nums'] }}>
+                                {remainingCals}
+                            </Typography>
                         </View>
-                        <View style={[styles.calStatRow, { marginTop: spacing[2], borderTopWidth: 1, borderTopColor: colors.border, paddingTop: spacing[2] }]}>
-                            <Text style={styles.calStatLabel}>BMR</Text>
-                            <Text style={[styles.calStatVal, { fontSize: 11 }]}>{plan.bmr}</Text>
+                        <View style={[styles.calStatRow, { marginTop: spacing[3], borderTopWidth: 1, borderTopColor: colors.borderLight, paddingTop: spacing[3] }]}>
+                            <Typography variant="caption" color={colors.textDim} style={{ fontWeight: '600' }}>BMR</Typography>
+                            <Typography variant="caption" style={{ fontVariant: ['tabular-nums'] }}>{plan.bmr}</Typography>
                         </View>
                         <View style={styles.calStatRow}>
-                            <Text style={styles.calStatLabel}>TDEE</Text>
-                            <Text style={[styles.calStatVal, { fontSize: 11 }]}>{plan.tdee}</Text>
+                            <Typography variant="caption" color={colors.textDim} style={{ fontWeight: '600' }}>TDEE</Typography>
+                            <Typography variant="caption" style={{ fontVariant: ['tabular-nums'] }}>{plan.tdee}</Typography>
                         </View>
                     </View>
-                </View>
+                </Card>
 
                 {/* Macro Bars */}
-                <Text style={styles.sectionLabel}>MACROS</Text>
-                <View style={styles.macroCard}>
-                    <MacroBar label="PROTEIN" current={totals.protein} target={plan.macros.protein} color={colors.protein} />
-                    <MacroBar label="CARBS" current={totals.carbs} target={plan.macros.carbs} color={colors.carbs} />
-                    <MacroBar label="FATS" current={totals.fats} target={plan.macros.fats} color={colors.fats} />
-                </View>
+                <Typography variant="title2" style={styles.sectionLabel}>Macros</Typography>
+                <Card style={styles.macroCard}>
+                    <View style={styles.macroRow}>
+                        <View style={styles.macroInfo}>
+                            <Typography variant="subheadline" style={{ fontWeight: '700' }}>Protein</Typography>
+                            <Typography variant="caption" color={colors.textSecondary} style={{ fontVariant: ['tabular-nums'] }}>
+                                {Math.round(totals.protein)} / {plan.macros.protein}g
+                            </Typography>
+                        </View>
+                        <ProgressBar progress={proteinProgress} color={colors.protein || '#3B82F6'} height={8} />
+                    </View>
+
+                    <View style={styles.macroRow}>
+                        <View style={styles.macroInfo}>
+                            <Typography variant="subheadline" style={{ fontWeight: '700' }}>Carbs</Typography>
+                            <Typography variant="caption" color={colors.textSecondary} style={{ fontVariant: ['tabular-nums'] }}>
+                                {Math.round(totals.carbs)} / {plan.macros.carbs}g
+                            </Typography>
+                        </View>
+                        <ProgressBar progress={carbsProgress} color={colors.carbs || '#F59E0B'} height={8} />
+                    </View>
+
+                    <View style={styles.macroRow}>
+                        <View style={styles.macroInfo}>
+                            <Typography variant="subheadline" style={{ fontWeight: '700' }}>Fats</Typography>
+                            <Typography variant="caption" color={colors.textSecondary} style={{ fontVariant: ['tabular-nums'] }}>
+                                {Math.round(totals.fats)} / {plan.macros.fats}g
+                            </Typography>
+                        </View>
+                        <ProgressBar progress={fatsProgress} color={colors.fats || '#EF4444'} height={8} />
+                    </View>
+                </Card>
 
                 {/* Meal Slots */}
-                <Text style={styles.sectionLabel}>MEALS</Text>
+                <Typography variant="title2" style={styles.sectionLabel}>Meals</Typography>
                 {MEAL_SLOTS.map((slot) => {
                     const meals = getMealsByType(slot.type);
                     const slotCals = meals.reduce((sum, m) => sum + m.calories, 0);
-                    const slotProtein = meals.reduce((sum, m) => sum + m.protein, 0);
 
                     return (
-                        <View key={slot.type} style={styles.mealSlot}>
+                        <Card key={slot.type} style={styles.mealSlot}>
                             <View style={styles.mealSlotHeader}>
                                 <View style={styles.mealSlotLeft}>
-                                    <Ionicons name={slot.icon} size={18} color={colors.textSecondary} />
+                                    <View style={styles.iconBox}>
+                                        <Ionicons name={slot.icon} size={20} color={colors.primary} />
+                                    </View>
                                     <View>
-                                        <Text style={styles.mealSlotName}>{slot.label}</Text>
-                                        <Text style={styles.mealSlotTime}>{slot.time}</Text>
+                                        <Typography variant="title2" style={{ fontSize: 18 }}>{slot.label}</Typography>
+                                        <Typography variant="caption" color={colors.textSecondary} style={{ fontWeight: '600' }}>{slot.time}</Typography>
                                     </View>
                                 </View>
                                 <View style={styles.mealSlotRight}>
                                     {slotCals > 0 && (
-                                        <Text style={styles.slotCals}>{slotCals} cal</Text>
+                                        <Typography variant="subheadline" color={colors.textSecondary} style={{ fontVariant: ['tabular-nums'] }}>{slotCals} cal</Typography>
                                     )}
                                     <TouchableOpacity
                                         style={styles.addMealBtn}
-                                        onPress={() => navigation.navigate('MealLog', { mealType: slot.type })}
+                                        onPress={() => {
+                                            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                                            navigation.navigate('MealLog', { mealType: slot.type });
+                                        }}
+                                        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                                     >
-                                        <Ionicons name="add" size={18} color={colors.primary} />
+                                        <Ionicons name="add" size={22} color={colors.primary} />
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -184,63 +250,68 @@ const NutritionHomeScreen = ({ navigation }) => {
                                 <TouchableOpacity
                                     key={meal.id}
                                     style={styles.loggedItem}
-                                    onLongPress={() => {
-                                        removeFood(meal.id);
-                                        setRefreshKey(k => k + 1);
-                                        Vibration.vibrate(30);
-                                    }}
+                                    onLongPress={() => handleLongPressMeal(meal.id, meal.name)}
+                                    activeOpacity={0.7}
                                 >
                                     <View style={styles.loggedItemLeft}>
-                                        <Text style={styles.loggedItemName}>{meal.name}</Text>
-                                        <Text style={styles.loggedItemMacro}>
+                                        <Typography variant="headline" style={{ fontSize: 16 }}>{meal.name}</Typography>
+                                        <Typography variant="caption" color={colors.textDim} style={{ marginTop: 2, fontVariant: ['tabular-nums'] }}>
                                             P:{Math.round(meal.protein)}g  C:{Math.round(meal.carbs)}g  F:{Math.round(meal.fats)}g
-                                        </Text>
+                                        </Typography>
                                     </View>
-                                    <Text style={styles.loggedItemCals}>{meal.calories}</Text>
+                                    <View style={{ alignItems: 'flex-end' }}>
+                                        <Typography variant="headline" style={{ fontVariant: ['tabular-nums'] }}>{meal.calories}</Typography>
+                                        <Typography variant="caption" color={colors.textDim} style={{ fontSize: 10, marginTop: 2 }}>cal</Typography>
+                                    </View>
                                 </TouchableOpacity>
                             ))}
 
                             {meals.length === 0 && (
                                 <TouchableOpacity
                                     style={styles.emptySlot}
-                                    onPress={() => navigation.navigate('MealLog', { mealType: slot.type })}
+                                    onPress={() => {
+                                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                                        navigation.navigate('MealLog', { mealType: slot.type });
+                                    }}
+                                    activeOpacity={0.7}
                                 >
-                                    <Ionicons name="add-circle-outline" size={16} color={colors.textDim} />
-                                    <Text style={styles.emptySlotText}>Tap to log {slot.label.toLowerCase()}</Text>
+                                    <Ionicons name="add-circle-outline" size={18} color={colors.textDim} />
+                                    <Typography variant="caption" color={colors.textSecondary} style={{ fontWeight: '600' }}>Tap to log {slot.label.toLowerCase()}</Typography>
                                 </TouchableOpacity>
                             )}
-                        </View>
+                        </Card>
                     );
                 })}
 
                 {/* Water Tracker */}
-                <Text style={styles.sectionLabel}>HYDRATION</Text>
-                <View style={styles.waterCard}>
+                <Typography variant="title2" style={styles.sectionLabel}>Hydration</Typography>
+                <Card style={styles.waterCard}>
                     <View style={styles.waterHeader}>
                         <View>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                                <Ionicons name="water-outline" size={14} color={colors.info} />
-                                <Text style={styles.waterTitle}>WATER</Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing[1] }}>
+                                <Ionicons name="water" size={18} color={colors.info || '#3B82F6'} />
+                                <Typography variant="title2">Water</Typography>
                             </View>
-                            <Text style={styles.waterCount}>
-                                {totals.water} / {plan.waterGlasses} glasses
-                            </Text>
+                            <Typography variant="caption" color={colors.textSecondary} style={{ marginTop: 2, fontWeight: '600' }}>
+                                {totals.water} / {plan.waterGlasses} GLASSES
+                            </Typography>
                         </View>
-                        <Text style={styles.waterMl}>
-                            {totals.water * 250}ml / {plan.waterGlasses * 250}ml
-                        </Text>
+                        <View style={{ alignItems: 'flex-end' }}>
+                            <Typography variant="subheadline" color={colors.textSecondary} style={{ fontVariant: ['tabular-nums'] }}>
+                                {totals.water * 250}ml
+                            </Typography>
+                            <Typography variant="caption" color={colors.textDim} style={{ fontVariant: ['tabular-nums'] }}>
+                                / {plan.waterGlasses * 250}ml
+                            </Typography>
+                        </View>
                     </View>
 
                     {/* Water progress */}
-                    <View style={styles.waterBarBg}>
-                        <View style={[styles.waterBarFill, {
-                            width: `${waterProgress * 100}%`,
-                        }]} />
-                    </View>
+                    <ProgressBar progress={waterProgress} color={colors.info || '#3B82F6'} height={8} style={{ marginBottom: spacing[5] }} />
 
                     {/* Water glasses */}
                     <View style={styles.glassRow}>
-                        {Array.from({ length: Math.min(plan.waterGlasses, 12) }, (_, i) => (
+                        {Array.from({ length: Math.min(plan.waterGlasses, 16) }, (_, i) => (
                             <View
                                 key={i}
                                 style={[styles.glass,
@@ -249,122 +320,86 @@ const NutritionHomeScreen = ({ navigation }) => {
                             >
                                 <Ionicons
                                     name={i < totals.water ? 'water' : 'water-outline'}
-                                    size={16}
-                                    color={i < totals.water ? colors.info : colors.textDim}
+                                    size={18}
+                                    color={i < totals.water ? (colors.info || '#3B82F6') : colors.textDim}
                                 />
                             </View>
                         ))}
                     </View>
 
-                    <TouchableOpacity
-                        style={styles.addWaterBtn}
+                    <Button
+                        title="Add Glass"
                         onPress={handleAddWater}
-                        activeOpacity={0.7}
-                    >
-                        <Ionicons name="add" size={18} color="#000" />
-                        <Text style={styles.addWaterText}>ADD GLASS</Text>
-                    </TouchableOpacity>
-                </View>
+                        variant="secondary"
+                        icon={<Ionicons name="add" size={18} color={colors.info || '#3B82F6'} />}
+                        textStyle={{ color: colors.info || '#3B82F6' }}
+                        hapticFeedback={false} // Handled custom above
+                    />
+                </Card>
 
                 {/* Week Overview */}
-                <Text style={styles.sectionLabel}>THIS WEEK</Text>
-                <View style={styles.weekCard}>
+                <Typography variant="title2" style={styles.sectionLabel}>This Week</Typography>
+                <Card style={styles.weekCard}>
                     {weekSummary.map((day, i) => {
                         const dayProgress = day.calories > 0
-                            ? Math.min(1, day.calories / plan.targetCalories)
+                            ? Math.min(1, day.calories / Math.max(plan.targetCalories, 1))
                             : 0;
                         const isToday = i === 6;
 
+                        let barColor = colors.textDim;
+                        if (isToday) barColor = colors.primary;
+                        else if (dayProgress >= 0.8) barColor = colors.success;
+
                         return (
-                            <View key={day.date} style={[styles.weekDay, isToday && styles.weekDayActive]}>
-                                <Text style={[styles.weekDayLabel, isToday && { color: colors.primary }]}>
+                            <View key={day.date} style={styles.weekDay}>
+                                <Typography variant={isToday ? "bold" : "caption"} color={isToday ? colors.primary : colors.textSecondary} style={{ fontSize: 10, marginBottom: spacing[2], fontWeight: '700' }}>
                                     {day.day}
-                                </Text>
-                                <View style={styles.weekBarBg}>
-                                    <View style={[styles.weekBarFill, {
-                                        height: `${dayProgress * 100}%`,
-                                        backgroundColor: isToday ? colors.primary :
-                                            dayProgress >= 0.8 ? colors.success : colors.textDim,
-                                    }]} />
-                                </View>
-                                <Text style={styles.weekDayCals}>
+                                </Typography>
+                                <WeekBar progress={dayProgress} isToday={isToday} color={barColor} />
+                                <Typography variant="caption" color={colors.textDim} style={{ fontSize: 10, marginTop: spacing[2], fontVariant: ['tabular-nums'] }}>
                                     {day.calories > 0 ? day.calories : '–'}
-                                </Text>
+                                </Typography>
                             </View>
                         );
                     })}
-                </View>
+                </Card>
 
-                <View style={{ height: 30 }} />
+                <View style={{ height: 40 }} />
             </ScrollView>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: colors.background },
-    scrollView: { flex: 1 },
+    container: {
+        flex: 1,
+        backgroundColor: colors.surface
+    },
     scrollContent: {
-        paddingHorizontal: screen.paddingHorizontal,
+        paddingHorizontal: spacing[4],
         paddingTop: spacing[12],
-        paddingBottom: spacing[4],
+        paddingBottom: spacing[8],
     },
-
-    // Header
-    title: {
-        ...textStyles.h1,
-        color: colors.primary,
-        fontSize: 28,
-    },
-    subtitle: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        marginBottom: spacing[4],
-    },
-
     sectionLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        marginTop: spacing[5],
-        marginBottom: spacing[2],
+        marginTop: spacing[8],
+        marginBottom: spacing[4],
     },
 
     // Calorie Card
     calorieCard: {
         flexDirection: 'row',
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.primary,
-        borderRadius: radius.lg,
-        padding: spacing[4],
-        gap: spacing[4],
-        ...shadows.md,
+        padding: spacing[6],
+        gap: spacing[6],
+        alignItems: 'center',
     },
-    calorieRing: {
+    ringContainer: {
         alignItems: 'center',
         justifyContent: 'center',
-    },
-    ringOuter: {
-        width: 110,
-        height: 110,
-        borderRadius: 55,
-        borderWidth: 6,
-        borderColor: colors.primary,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    ringInner: {
-        alignItems: 'center',
-    },
-    calorieNum: {
-        fontSize: 26,
-        fontWeight: '900',
-        color: colors.text,
-    },
-    calorieLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 8,
+        shadowColor: colors.primary,
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.15,
+        shadowRadius: 16,
+        elevation: 8,
     },
     calorieStats: {
         flex: 1,
@@ -373,97 +408,59 @@ const styles = StyleSheet.create({
     calStatRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom: 4,
-    },
-    calStatLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 10,
-    },
-    calStatVal: {
-        fontSize: 13,
-        fontWeight: '900',
-        color: colors.text,
+        marginBottom: spacing[1],
+        alignItems: 'center',
     },
 
     // Macros
     macroCard: {
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        borderRadius: radius.md,
-        padding: spacing[4],
+        padding: spacing[5],
+        paddingVertical: spacing[6],
+        gap: spacing[6],
     },
     macroRow: {},
     macroInfo: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom: spacing[1],
-    },
-    macroName: {
-        ...textStyles.label,
-        fontSize: 11,
-    },
-    macroGrams: {
-        ...textStyles.caption,
-        color: colors.textSecondary,
-        fontSize: 10,
-    },
-    macroBarBg: {
-        height: 8,
-        backgroundColor: colors.background,
-        overflow: 'hidden',
-    },
-    macroBarFill: {
-        height: '100%',
+        marginBottom: spacing[2],
+        alignItems: 'flex-end',
     },
 
     // Meals
     mealSlot: {
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        borderRadius: radius.md,
-        marginBottom: spacing[2],
+        padding: 0,
+        marginBottom: spacing[5],
         overflow: 'hidden',
     },
     mealSlotHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: spacing[3],
+        padding: spacing[5],
     },
     mealSlotLeft: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: spacing[2],
+        gap: spacing[4],
     },
-    mealSlotIcon: { fontSize: 20 },
-    mealSlotName: {
-        ...textStyles.label,
-        color: colors.text,
-        fontSize: 12,
-    },
-    mealSlotTime: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 9,
+    iconBox: {
+        width: 44,
+        height: 44,
+        borderRadius: radius.full,
+        backgroundColor: colors.surfaceLight,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     mealSlotRight: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: spacing[2],
-    },
-    slotCals: {
-        ...textStyles.label,
-        color: colors.textSecondary,
-        fontSize: 12,
+        gap: spacing[3],
     },
     addMealBtn: {
-        width: 30,
-        height: 30,
-        borderWidth: 1,
-        borderColor: colors.primary,
+        width: 36,
+        height: 36,
+        borderRadius: radius.full,
+        backgroundColor: colors.surfaceLight,
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -473,152 +470,77 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingHorizontal: spacing[3],
-        paddingVertical: spacing[2],
+        paddingHorizontal: spacing[5],
+        paddingVertical: spacing[4],
         borderTopWidth: 1,
-        borderTopColor: colors.border,
+        borderTopColor: colors.borderLight + '50',
+        backgroundColor: colors.surface,
     },
     loggedItemLeft: { flex: 1 },
-    loggedItemName: {
-        ...textStyles.caption,
-        color: colors.textSecondary,
-        fontSize: 11,
-    },
-    loggedItemMacro: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 8,
-        marginTop: 1,
-    },
-    loggedItemCals: {
-        fontSize: 13,
-        fontWeight: '700',
-        color: colors.text,
-    },
 
     emptySlot: {
         flexDirection: 'row',
         alignItems: 'center',
         gap: spacing[2],
-        padding: spacing[2],
-        paddingHorizontal: spacing[3],
+        padding: spacing[4],
+        paddingHorizontal: spacing[5],
         borderTopWidth: 1,
-        borderTopColor: colors.border,
-    },
-    emptySlotText: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 10,
+        borderTopColor: colors.borderLight + '50',
+        backgroundColor: colors.surfaceLight,
     },
 
     // Water
     waterCard: {
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        borderRadius: radius.md,
-        padding: spacing[3],
+        padding: spacing[6],
     },
     waterHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
-        marginBottom: spacing[2],
-    },
-    waterTitle: {
-        ...textStyles.label,
-        color: colors.text,
-        fontSize: 13,
-    },
-    waterCount: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 10,
-    },
-    waterMl: {
-        ...textStyles.caption,
-        color: colors.textSecondary,
-        fontSize: 10,
-    },
-    waterBarBg: {
-        height: 6,
-        backgroundColor: colors.background,
-        marginBottom: spacing[2],
-        overflow: 'hidden',
-    },
-    waterBarFill: {
-        height: '100%',
-        backgroundColor: '#4FA4FF',
+        marginBottom: spacing[5],
     },
     glassRow: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        gap: spacing[1],
-        marginBottom: spacing[3],
+        gap: spacing[2],
+        marginBottom: spacing[6],
     },
     glass: {
-        width: 28,
-        height: 28,
+        width: 34,
+        height: 34,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: colors.background,
+        backgroundColor: colors.surfaceLight,
+        borderRadius: radius.sm,
     },
     glassFilled: {
-        backgroundColor: 'rgba(79, 164, 255, 0.15)',
-    },
-    glassIcon: {
-        fontSize: 14,
-    },
-    addWaterBtn: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#4FA4FF',
-        padding: spacing[2],
-        gap: spacing[1],
-    },
-    addWaterText: {
-        ...textStyles.button,
-        color: '#000',
-        fontSize: 11,
+        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        borderColor: 'rgba(59, 130, 246, 0.3)',
+        borderWidth: 1,
     },
 
     // Week
     weekCard: {
         flexDirection: 'row',
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        borderRadius: radius.md,
-        padding: spacing[3],
+        padding: spacing[5],
+        paddingVertical: spacing[6],
         justifyContent: 'space-between',
     },
     weekDay: {
         alignItems: 'center',
         flex: 1,
     },
-    weekDayActive: {},
-    weekDayLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 9,
-        marginBottom: spacing[1],
-    },
     weekBarBg: {
-        width: 12,
-        height: 50,
-        backgroundColor: colors.background,
+        width: 14,
+        height: 80,
+        backgroundColor: colors.surfaceLight,
+        borderRadius: radius.full,
         overflow: 'hidden',
         justifyContent: 'flex-end',
     },
     weekBarFill: {
         width: '100%',
-    },
-    weekDayCals: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 7,
-        marginTop: spacing[1],
+        borderRadius: radius.full,
     },
 });
 

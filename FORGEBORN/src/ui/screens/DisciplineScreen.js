@@ -1,44 +1,67 @@
-/**
- * FORGEBORN — DISCIPLINE SCREEN
- * 
- * Daily habit checklist with streaks, XP system, and week heatmap.
- * Inspired by: Streaks (visual streaks), Habitica (XP/levels)
- * 
- * Features:
- * - XP bar + level display
- * - Per-habit checkboxes with streak counters
- * - Weekly heatmap
- * - Custom habit creation
- * - Category grouping
- */
-
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import {
     View,
-    Text,
     StyleSheet,
     ScrollView,
     StatusBar,
     TouchableOpacity,
-    Vibration,
     TextInput,
     Alert,
+    Animated,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../theme/colors';
-import { textStyles } from '../theme/typography';
-import { spacing, screen } from '../theme/spacing';
+import * as Haptics from 'expo-haptics';
+import { colors, spacing, radius } from '../theme';
+import { Card, Typography, Button, ProgressBar } from '../components';
 import useHabitStore from '../../store/habitStore';
 import useCommitmentStore from '../../store/commitmentStore';
 import useObligationStore from '../../store/obligationStore';
 
 const CATEGORY_COLORS = {
-    DISCIPLINE: '#FF6B6B',
-    MIND: '#A78BFA',
-    HEALTH: '#4ECDC4',
-    FITNESS: '#FFAA33',
-    LOOKMAXX: '#FF69B4',
+    DISCIPLINE: '#EF4444', // red-500
+    MIND: '#8B5CF6',       // violet-500
+    HEALTH: '#10B981',     // emerald-500
+    FITNESS: '#F59E0B',    // amber-500
+    LOOKMAXX: '#EC4899',   // pink-500
     CUSTOM: colors.primary,
+};
+
+const HeatBox = ({ day, isToday, intensity }) => {
+    const scaleAnim = useRef(new Animated.Value(0)).current;
+
+    useEffect(() => {
+        Animated.spring(scaleAnim, {
+            toValue: 1,
+            useNativeDriver: true,
+            bounciness: 10,
+            speed: 12,
+            delay: Math.random() * 200, // random stagger effect
+        }).start();
+    }, []);
+
+    let bgColor = colors.surfaceLight;
+    if (intensity > 0) {
+        if (intensity < 0.5) bgColor = 'rgba(16, 185, 129, 0.3)';
+        else if (intensity < 1) bgColor = 'rgba(16, 185, 129, 0.7)';
+        else bgColor = colors.success;
+    }
+
+    return (
+        <View style={styles.heatDay}>
+            <Typography variant="caption" color={isToday ? colors.primary : colors.textDim} style={{ marginBottom: spacing[2], fontWeight: '700' }}>
+                {day.day}
+            </Typography>
+            <Animated.View style={[
+                styles.heatBox,
+                { backgroundColor: bgColor, transform: [{ scale: scaleAnim }] },
+                isToday && { borderColor: colors.primary, borderWidth: 2 }
+            ]}>
+                <Typography variant="caption" color={intensity >= 0.5 ? colors.textInverse : colors.textSecondary} style={{ fontWeight: '800' }}>
+                    {day.completed > 0 ? day.completed : ''}
+                </Typography>
+            </Animated.View>
+        </View>
+    );
 };
 
 const DisciplineScreen = () => {
@@ -64,26 +87,35 @@ const DisciplineScreen = () => {
     const xpProgress = getXPProgress();
 
     const handleToggle = useCallback((habitId) => {
+        const wasDone = isHabitDone(habitId);
         toggleHabit(habitId);
-        Vibration.vibrate(50);
+
+        if (wasDone) {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        } else {
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        }
         setRefreshKey(k => k + 1);
-    }, []);
+    }, [isHabitDone, toggleHabit]);
 
     const handleAddHabit = () => {
         if (newHabitName.trim().length === 0) return;
         addCustomHabit(newHabitName.trim());
         setNewHabitName('');
         setShowAddHabit(false);
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
         setRefreshKey(k => k + 1);
     };
 
     const handleRemoveHabit = (habitId) => {
-        Alert.alert('REMOVE HABIT', 'Delete this custom habit?', [
-            { text: 'KEEP', style: 'cancel' },
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+        Alert.alert('Remove Habit', 'Delete this custom habit?', [
+            { text: 'Cancel', style: 'cancel' },
             {
-                text: 'DELETE', style: 'destructive',
+                text: 'Delete', style: 'destructive',
                 onPress: () => {
                     removeCustomHabit(habitId);
+                    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
                     setRefreshKey(k => k + 1);
                 },
             },
@@ -100,366 +132,301 @@ const DisciplineScreen = () => {
 
     return (
         <View style={styles.container}>
-            <StatusBar barStyle="light-content" backgroundColor={colors.background} />
+            <StatusBar barStyle="dark-content" backgroundColor={colors.surface} />
             <ScrollView
                 style={styles.scrollView}
                 contentContainerStyle={styles.scrollContent}
                 showsVerticalScrollIndicator={false}
             >
                 {/* Header */}
-                <Text style={styles.title}>DISCIPLINE</Text>
-                <Text style={styles.subtitle}>BUILD THE MACHINE. DAILY.</Text>
+                <View style={styles.header}>
+                    <Typography variant="largeTitle" color={colors.text}>Discipline</Typography>
+                    <Typography variant="subheadline" color={colors.textSecondary} style={{ marginTop: spacing[1], letterSpacing: 0.5 }}>Build the machine. Daily.</Typography>
+                </View>
 
                 {/* XP + Level */}
-                <View style={styles.xpCard}>
-                    <View style={styles.xpHeader}>
+                <Card style={styles.statCard}>
+                    <View style={styles.statHeader}>
                         <View>
-                            <Text style={styles.levelText}>LVL {xpProgress.level}</Text>
-                            <Text style={styles.xpText}>
-                                {xpProgress.xpInCurrentLevel} / {100} XP
-                            </Text>
+                            <Typography variant="title2" color={colors.primary}>Lvl {xpProgress.level}</Typography>
+                            <Typography variant="caption" color={colors.textDim} style={{ fontVariant: ['tabular-nums'], fontWeight: '600' }}>{xpProgress.xpInCurrentLevel} / 100 XP</Typography>
                         </View>
-                        <View style={styles.xpTotal}>
-                            <Text style={styles.xpTotalNum}>{xpProgress.totalXP}</Text>
-                            <Text style={styles.xpTotalLabel}>TOTAL XP</Text>
+                        <View style={{ alignItems: 'flex-end' }}>
+                            <Typography variant="title2" style={{ fontVariant: ['tabular-nums'] }}>{xpProgress.totalXP}</Typography>
+                            <Typography variant="caption" color={colors.textDim} style={{ fontWeight: '600' }}>TOTAL XP</Typography>
                         </View>
                     </View>
-                    <View style={styles.xpBarBg}>
-                        <View style={[styles.xpBarFill, { width: `${xpProgress.progress * 100}%` }]} />
-                    </View>
-                </View>
+                    <ProgressBar progress={xpProgress.progress} color={colors.primary} height={8} />
+                </Card>
 
                 {/* Today's Progress */}
-                <View style={styles.progressCard}>
-                    <View style={styles.progressLeft}>
-                        <Text style={styles.progressNum}>
-                            {todayStatus.completed}/{todayStatus.total}
-                        </Text>
-                        <Text style={styles.progressLabel}>COMPLETED</Text>
-                    </View>
-                    <View style={styles.progressBarBg}>
-                        <View style={[styles.progressBarFill, {
-                            width: `${todayStatus.progress * 100}%`,
-                            backgroundColor: todayStatus.isPerfect ? colors.success : colors.primary,
-                        }]} />
-                    </View>
-                    {todayStatus.isPerfect && (
-                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-                            <Ionicons name="star" size={14} color={colors.success} />
-                            <Text style={styles.perfectBadge}>PERFECT DAY</Text>
+                <Card style={styles.statCard}>
+                    <View style={styles.statHeader}>
+                        <View>
+                            <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: spacing[2] }}>
+                                <Typography variant="largeTitle" style={{ fontSize: 32 }}>{todayStatus.completed}</Typography>
+                                <Typography variant="title2" color={colors.textDim}>/ {todayStatus.total}</Typography>
+                            </View>
+                            <Typography variant="caption" color={colors.textDim} style={{ fontWeight: '600', letterSpacing: 0.5 }}>HABITS COMPLETED</Typography>
                         </View>
-                    )}
-                </View>
+                        {todayStatus.isPerfect && (
+                            <View style={styles.perfectBadge}>
+                                <Ionicons name="star" size={14} color={colors.warning} />
+                                <Typography variant="caption" color={colors.warning} style={{ fontWeight: '700' }}>PERFECT</Typography>
+                            </View>
+                        )}
+                    </View>
+                    <ProgressBar
+                        progress={todayStatus.progress}
+                        color={todayStatus.isPerfect ? colors.success : colors.primary}
+                        height={8}
+                    />
+                </Card>
 
                 {/* Week Heatmap */}
-                <Text style={styles.sectionLabel}>THIS WEEK</Text>
-                <View style={styles.heatmapCard}>
-                    {weekHeatmap.map((day, i) => {
-                        const isToday = i === 6;
-                        const intensity = day.progress;
-                        return (
-                            <View key={day.date} style={styles.heatDay}>
-                                <Text style={[styles.heatDayLabel, isToday && { color: colors.primary }]}>
-                                    {day.day}
-                                </Text>
-                                <View style={[styles.heatBox, {
-                                    backgroundColor: intensity === 0 ? colors.surface :
-                                        intensity < 0.5 ? 'rgba(230, 169, 38, 0.3)' :
-                                            intensity < 1 ? 'rgba(230, 169, 38, 0.6)' :
-                                                colors.success,
-                                    borderColor: isToday ? colors.primary : colors.border,
-                                }]}>
-                                    <Text style={styles.heatNum}>
-                                        {day.completed}
-                                    </Text>
-                                </View>
-                            </View>
-                        );
-                    })}
-                </View>
+                <Typography variant="subheadline" color={colors.textSecondary} style={styles.sectionTitle}>This Week</Typography>
+                <Card style={styles.heatmapCard}>
+                    {weekHeatmap.map((day, i) => (
+                        <HeatBox key={day.date} day={day} isToday={i === 6} intensity={day.progress} />
+                    ))}
+                </Card>
 
                 {/* Habit Categories */}
-                {Object.entries(categories).map(([category, categoryHabits]) => (
-                    <View key={category}>
-                        <View style={styles.categoryHeader}>
-                            <View style={[styles.categoryDot, {
-                                backgroundColor: CATEGORY_COLORS[category] || colors.textDim,
-                            }]} />
-                            <Text style={styles.categoryName}>{category}</Text>
-                            <Text style={styles.categoryCount}>
-                                {categoryHabits.filter(h => isHabitDone(h.id)).length}/{categoryHabits.length}
-                            </Text>
-                        </View>
+                {Object.entries(categories).map(([category, categoryHabits]) => {
+                    const sortedHabits = [...categoryHabits].sort((a, b) => {
+                        const aDone = isHabitDone(a.id);
+                        const bDone = isHabitDone(b.id);
+                        if (aDone === bDone) return 0;
+                        return aDone ? 1 : -1; // completed move to bottom
+                    });
 
-                        {categoryHabits.map((habit) => {
-                            const done = isHabitDone(habit.id);
-                            const streak = getHabitStreak(habit.id);
+                    return (
+                        <View key={category} style={{ marginBottom: spacing[6] }}>
+                            <View style={styles.categoryHeader}>
+                                <View style={[styles.categoryDot, { backgroundColor: CATEGORY_COLORS[category] || colors.textDim }]} />
+                                <Typography variant="title3" color={colors.textSecondary} style={{ flex: 1, textTransform: 'capitalize', letterSpacing: 0.5 }}>
+                                    {category.toLowerCase()}
+                                </Typography>
+                                <Typography variant="caption" color={colors.textDim} style={{ fontWeight: '700', fontVariant: ['tabular-nums'] }}>
+                                    {categoryHabits.filter(h => isHabitDone(h.id)).length}/{categoryHabits.length}
+                                </Typography>
+                            </View>
 
-                            return (
-                                <TouchableOpacity
-                                    key={habit.id}
-                                    style={[styles.habitRow, done && styles.habitRowDone]}
-                                    onPress={() => handleToggle(habit.id)}
-                                    onLongPress={() => habit.isCustom && handleRemoveHabit(habit.id)}
-                                    activeOpacity={0.7}
-                                >
-                                    <View style={styles.habitLeft}>
-                                        <View style={[styles.checkbox, done && styles.checkboxDone]}>
-                                            {done && <Ionicons name="checkmark" size={14} color="#000" />}
-                                        </View>
-                                        <Ionicons name={habit.icon} size={16} color={colors.textSecondary} />
-                                        <View style={styles.habitInfo}>
-                                            <Text style={[styles.habitName, done && styles.habitNameDone]}>
-                                                {habit.name}
-                                            </Text>
-                                            <Text style={styles.habitXP}>+{habit.xpReward} XP</Text>
-                                        </View>
-                                    </View>
-                                    <View style={styles.habitRight}>
-                                        {streak.current > 0 && (
-                                            <View style={styles.streakBadge}>
-                                                <Ionicons name="flame" size={12} color="#FF6B6B" />
-                                                <Text style={styles.streakText}>
-                                                    {streak.current}
-                                                </Text>
+                            <Card style={styles.categoryCard}>
+                                {sortedHabits.map((habit, index) => {
+                                    const done = isHabitDone(habit.id);
+                                    const streak = getHabitStreak(habit.id);
+                                    const isLast = index === sortedHabits.length - 1;
+
+                                    return (
+                                        <TouchableOpacity
+                                            key={habit.id}
+                                            style={[styles.habitRow, isLast && { borderBottomWidth: 0 }]}
+                                            onPress={() => handleToggle(habit.id)}
+                                            onLongPress={() => habit.isCustom && handleRemoveHabit(habit.id)}
+                                            activeOpacity={0.7}
+                                        >
+                                            <View style={styles.habitLeft}>
+                                                <View style={[styles.checkbox, done && styles.checkboxDone]}>
+                                                    {done && <Ionicons name="checkmark" size={16} color={colors.textInverse} />}
+                                                </View>
+                                                <View style={styles.iconBox}>
+                                                    <Ionicons name={habit.icon} size={22} color={done ? colors.textDim : CATEGORY_COLORS[category] || colors.primary} />
+                                                </View>
+                                                <View style={styles.habitInfo}>
+                                                    <Typography
+                                                        variant="headline"
+                                                        style={[
+                                                            { fontSize: 16 },
+                                                            done ? { textDecorationLine: 'line-through', color: colors.textDim } : { color: colors.text }
+                                                        ]}
+                                                    >
+                                                        {habit.name}
+                                                    </Typography>
+                                                    <Typography variant="caption" color={colors.primary} style={{ marginTop: 2, fontWeight: '700' }}>
+                                                        +{habit.xpReward} XP
+                                                    </Typography>
+                                                </View>
                                             </View>
-                                        )}
-                                    </View>
-                                </TouchableOpacity>
-                            );
-                        })}
-                    </View>
-                ))}
+                                            <View style={styles.habitRight}>
+                                                {streak.current > 0 && (
+                                                    <View style={styles.streakBadge}>
+                                                        <Ionicons name="flame" size={14} color="#EF4444" />
+                                                        <Typography variant="caption" color="#EF4444" style={{ fontWeight: '800' }}>
+                                                            {streak.current}
+                                                        </Typography>
+                                                    </View>
+                                                )}
+                                            </View>
+                                        </TouchableOpacity>
+                                    );
+                                })}
+                            </Card>
+                        </View>
+                    );
+                })}
 
                 {/* Add Custom Habit */}
                 {showAddHabit ? (
-                    <View style={styles.addHabitForm}>
+                    <Card style={styles.addHabitForm}>
                         <TextInput
                             style={styles.addHabitInput}
-                            placeholder="HABIT NAME"
+                            placeholder="Habit Name"
                             placeholderTextColor={colors.textDim}
                             value={newHabitName}
                             onChangeText={setNewHabitName}
                             autoFocus
                         />
                         <View style={styles.addHabitBtns}>
-                            <TouchableOpacity
-                                style={styles.addHabitCancel}
-                                onPress={() => { setShowAddHabit(false); setNewHabitName(''); }}
-                            >
-                                <Text style={styles.addHabitCancelText}>CANCEL</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.addHabitSave}
-                                onPress={handleAddHabit}
-                            >
-                                <Text style={styles.addHabitSaveText}>ADD</Text>
-                            </TouchableOpacity>
+                            <View style={{ flex: 1, paddingRight: spacing[2] }}>
+                                <Button
+                                    title="Cancel"
+                                    variant="outline"
+                                    onPress={() => {
+                                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                                        setShowAddHabit(false);
+                                        setNewHabitName('');
+                                    }}
+                                    hapticFeedback={false}
+                                />
+                            </View>
+                            <View style={{ flex: 1, paddingLeft: spacing[2] }}>
+                                <Button title="Add" onPress={handleAddHabit} hapticFeedback={false} />
+                            </View>
                         </View>
-                    </View>
+                    </Card>
                 ) : (
                     <TouchableOpacity
-                        style={styles.addHabitBtn}
-                        onPress={() => setShowAddHabit(true)}
+                        style={styles.addCustomBtn}
+                        onPress={() => {
+                            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                            setShowAddHabit(true);
+                        }}
+                        activeOpacity={0.7}
                     >
-                        <Ionicons name="add" size={18} color={colors.primary} />
-                        <Text style={styles.addHabitBtnText}>ADD CUSTOM HABIT</Text>
+                        <Ionicons name="add" size={22} color={colors.primary} />
+                        <Typography variant="title3" color={colors.primary}>Add Custom Habit</Typography>
                     </TouchableOpacity>
                 )}
 
                 {/* Obligations */}
                 {obligations.length > 0 && (
                     <>
-                        <Text style={[styles.sectionLabel, { marginTop: spacing[5] }]}>
+                        <Typography variant="subheadline" color={colors.textSecondary} style={[styles.sectionTitle, { marginTop: spacing[8], letterSpacing: 0.5 }]}>
                             ACTIVE OBLIGATIONS
-                        </Text>
+                        </Typography>
                         {obligations.filter(o => o.status === 'ACTIVE').map((ob) => (
-                            <View key={ob.id} style={styles.obligationCard}>
+                            <Card key={ob.id} style={styles.obligationCard}>
                                 <View style={styles.obligationLeft}>
-                                    <Ionicons name="flash" size={16} color={colors.warning} />
+                                    <View style={[styles.iconBox, { backgroundColor: 'rgba(245, 158, 11, 0.1)' }]}>
+                                        <Ionicons name="flash" size={20} color={colors.warning} />
+                                    </View>
                                     <View>
-                                        <Text style={styles.obligationTitle}>{ob.title}</Text>
-                                        <Text style={styles.obligationDue}>
-                                            Due: {new Date(ob.deadline).toLocaleDateString()}
-                                        </Text>
+                                        <Typography variant="headline">{ob.title}</Typography>
+                                        <Typography variant="caption" color={colors.textDim} style={{ marginTop: 2, fontWeight: '600' }}>
+                                            DUE: {new Date(ob.deadline).toLocaleDateString()}
+                                        </Typography>
                                     </View>
                                 </View>
                                 <View style={[styles.statusBadge, {
-                                    borderColor: ob.status === 'ACTIVE' ? colors.warning : colors.success,
+                                    backgroundColor: ob.status === 'ACTIVE' ? 'rgba(245, 158, 11, 0.1)' : 'rgba(16, 185, 129, 0.1)',
                                 }]}>
-                                    <Text style={[styles.statusText, {
-                                        color: ob.status === 'ACTIVE' ? colors.warning : colors.success,
-                                    }]}>{ob.status}</Text>
+                                    <Typography variant="caption" color={ob.status === 'ACTIVE' ? colors.warning : colors.success} style={{ fontWeight: '800', textTransform: 'uppercase' }}>
+                                        {ob.status}
+                                    </Typography>
                                 </View>
-                            </View>
+                            </Card>
                         ))}
                     </>
                 )}
 
                 {/* Debt Warning */}
                 {debtUnits > 0 && (
-                    <View style={styles.debtCard}>
-                        <Ionicons name="warning" size={20} color={colors.danger} />
-                        <View style={styles.debtInfo}>
-                            <Text style={styles.debtTitle}>DEBT UNITS: {debtUnits}</Text>
-                            <Text style={styles.debtDesc}>
-                                Complete your obligations to clear debt.
-                            </Text>
+                    <Card style={styles.debtCard}>
+                        <View style={styles.debtLeft}>
+                            <View style={[styles.iconBox, { backgroundColor: 'rgba(239, 68, 68, 0.1)' }]}>
+                                <Ionicons name="warning" size={24} color={colors.danger} />
+                            </View>
+                            <View style={styles.debtInfo}>
+                                <Typography variant="headline" color={colors.danger}>Debt Units: {debtUnits}</Typography>
+                                <Typography variant="caption" color={colors.danger} style={{ opacity: 0.8, marginTop: 2, fontWeight: '600' }}>
+                                    Complete obligations to clear debt.
+                                </Typography>
+                            </View>
                         </View>
-                    </View>
+                    </Card>
                 )}
 
-                <View style={{ height: 30 }} />
+                <View style={{ height: 40 }} />
             </ScrollView>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: colors.background },
-    scrollView: { flex: 1 },
+    container: {
+        flex: 1,
+        backgroundColor: colors.surface
+    },
+    scrollView: {
+        flex: 1
+    },
     scrollContent: {
-        paddingHorizontal: screen.paddingHorizontal,
+        paddingHorizontal: spacing[4],
         paddingTop: spacing[12],
-        paddingBottom: spacing[4],
+        paddingBottom: spacing[8],
     },
-
-    // Header
-    title: {
-        ...textStyles.h1,
-        color: colors.primary,
-        fontSize: 28,
+    header: {
+        marginBottom: spacing[6],
     },
-    subtitle: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        marginBottom: spacing[4],
-    },
-
-    sectionLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        marginBottom: spacing[2],
-    },
-
-    // XP Card
-    xpCard: {
-        backgroundColor: colors.surface,
-        borderWidth: 2,
-        borderColor: colors.primary,
-        padding: spacing[3],
+    sectionTitle: {
         marginBottom: spacing[3],
+        marginLeft: spacing[1],
+        marginTop: spacing[2],
+        fontWeight: '700'
     },
-    xpHeader: {
+
+    // Stat Cards (XP, Progress)
+    statCard: {
+        marginBottom: spacing[5],
+        padding: spacing[6],
+    },
+    statHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: spacing[2],
-    },
-    levelText: {
-        fontSize: 22,
-        fontWeight: '900',
-        color: colors.primary,
-    },
-    xpText: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 10,
-    },
-    xpTotal: {
-        alignItems: 'center',
-    },
-    xpTotalNum: {
-        fontSize: 18,
-        fontWeight: '900',
-        color: colors.text,
-    },
-    xpTotalLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 8,
-    },
-    xpBarBg: {
-        height: 8,
-        backgroundColor: colors.background,
-        overflow: 'hidden',
-    },
-    xpBarFill: {
-        height: '100%',
-        backgroundColor: colors.primary,
-    },
-
-    // Progress
-    progressCard: {
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        padding: spacing[3],
-        marginBottom: spacing[4],
-    },
-    progressLeft: {
-        flexDirection: 'row',
-        alignItems: 'baseline',
-        gap: spacing[2],
-        marginBottom: spacing[2],
-    },
-    progressNum: {
-        fontSize: 24,
-        fontWeight: '900',
-        color: colors.text,
-    },
-    progressLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 10,
-    },
-    progressBarBg: {
-        height: 6,
-        backgroundColor: colors.background,
-        overflow: 'hidden',
-    },
-    progressBarFill: {
-        height: '100%',
+        alignItems: 'flex-start',
+        marginBottom: spacing[5],
     },
     perfectBadge: {
-        ...textStyles.label,
-        color: colors.success,
-        textAlign: 'center',
-        marginTop: spacing[2],
-        fontSize: 12,
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: spacing[1],
+        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+        paddingHorizontal: spacing[3],
+        paddingVertical: spacing[1],
+        borderRadius: radius.full,
     },
 
     // Heatmap
     heatmapCard: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        padding: spacing[3],
-        marginBottom: spacing[4],
+        padding: spacing[5],
+        paddingVertical: spacing[6],
+        marginBottom: spacing[6],
     },
     heatDay: {
         alignItems: 'center',
         flex: 1,
     },
-    heatDayLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 9,
-        marginBottom: spacing[1],
-    },
     heatBox: {
-        width: 32,
-        height: 32,
+        width: 36,
+        height: 36,
+        borderRadius: radius.sm,
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 1,
-    },
-    heatNum: {
-        fontSize: 11,
-        fontWeight: '700',
-        color: colors.text,
+        borderColor: 'transparent',
     },
 
     // Categories
@@ -467,146 +434,106 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         gap: spacing[2],
-        marginTop: spacing[3],
-        marginBottom: spacing[2],
+        marginBottom: spacing[3],
+        paddingHorizontal: spacing[1],
     },
     categoryDot: {
-        width: 8,
-        height: 8,
-        borderRadius: 4,
+        width: 12,
+        height: 12,
+        borderRadius: radius.full,
     },
-    categoryName: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        flex: 1,
-    },
-    categoryCount: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 10,
+    categoryCard: {
+        padding: 0, // remove padding from card to allow rows to span full width
+        overflow: 'hidden',
     },
 
-    // Habit row
+    // Habit Row
     habitRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        paddingVertical: spacing[5],
+        paddingHorizontal: spacing[5],
+        borderBottomWidth: 1,
+        borderBottomColor: colors.borderLight + '50',
         backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        padding: spacing[3],
-        marginBottom: spacing[1],
-    },
-    habitRowDone: {
-        borderColor: colors.success,
-        opacity: 0.8,
     },
     habitLeft: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: spacing[2],
+        gap: spacing[4],
         flex: 1,
     },
     checkbox: {
-        width: 22,
-        height: 22,
+        width: 26,
+        height: 26,
+        borderRadius: radius.sm,
         borderWidth: 2,
-        borderColor: colors.textDim,
+        borderColor: colors.border,
         justifyContent: 'center',
         alignItems: 'center',
     },
     checkboxDone: {
-        backgroundColor: colors.success,
-        borderColor: colors.success,
+        backgroundColor: colors.primary,
+        borderColor: colors.primary,
     },
-    habitIcon: {
-        fontSize: 18,
+    iconBox: {
+        width: 44,
+        height: 44,
+        borderRadius: radius.md,
+        backgroundColor: colors.surfaceLight,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
-    habitInfo: { flex: 1 },
-    habitName: {
-        ...textStyles.label,
-        color: colors.text,
-        fontSize: 12,
+    habitInfo: {
+        flex: 1,
+        justifyContent: 'center',
     },
-    habitNameDone: {
-        textDecorationLine: 'line-through',
-        color: colors.textDim,
+    habitRight: {
+        paddingLeft: spacing[2],
     },
-    habitXP: {
-        ...textStyles.caption,
-        color: colors.textMuted,
-        fontSize: 9,
-    },
-    habitRight: {},
     streakBadge: {
-        backgroundColor: 'rgba(255, 107, 107, 0.15)',
-        paddingVertical: 2,
-        paddingHorizontal: spacing[2],
-    },
-    streakText: {
-        fontSize: 11,
-        fontWeight: '700',
-        color: '#FF6B6B',
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 4,
+        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+        paddingVertical: spacing[1],
+        paddingHorizontal: spacing[3],
+        borderRadius: radius.full,
     },
 
-    // Add habit
-    addHabitBtn: {
+    // Add Custom
+    addCustomBtn: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        borderWidth: 1,
-        borderColor: colors.primary,
-        borderStyle: 'dashed',
-        padding: spacing[3],
-        marginTop: spacing[3],
         gap: spacing[2],
-    },
-    addHabitBtnText: {
-        ...textStyles.caption,
-        color: colors.primary,
-        fontSize: 10,
+        paddingVertical: spacing[4],
+        borderWidth: 2,
+        borderColor: colors.primary + '40', // light primary
+        borderStyle: 'dashed',
+        borderRadius: radius.lg,
+        marginTop: spacing[2],
+        marginBottom: spacing[6],
     },
     addHabitForm: {
-        backgroundColor: colors.surface,
-        borderWidth: 1,
+        padding: spacing[5],
+        marginTop: spacing[2],
+        marginBottom: spacing[6],
         borderColor: colors.primary,
-        padding: spacing[3],
-        marginTop: spacing[3],
+        borderWidth: 1,
     },
     addHabitInput: {
-        backgroundColor: colors.background,
-        borderWidth: 1,
-        borderColor: colors.border,
+        backgroundColor: colors.surfaceLight,
+        borderRadius: radius.md,
         color: colors.text,
-        fontSize: 13,
-        padding: spacing[2],
-        marginBottom: spacing[2],
+        fontSize: 18,
+        padding: spacing[4],
+        marginBottom: spacing[4],
+        fontWeight: '500'
     },
     addHabitBtns: {
         flexDirection: 'row',
-        gap: spacing[2],
-    },
-    addHabitCancel: {
-        flex: 1,
-        padding: spacing[2],
-        borderWidth: 1,
-        borderColor: colors.border,
-        alignItems: 'center',
-    },
-    addHabitCancelText: {
-        ...textStyles.caption,
-        color: colors.textDim,
-    },
-    addHabitSave: {
-        flex: 1,
-        padding: spacing[2],
-        backgroundColor: colors.primary,
-        alignItems: 'center',
-    },
-    addHabitSaveText: {
-        ...textStyles.button,
-        color: '#000',
-        fontSize: 11,
     },
 
     // Obligations
@@ -614,59 +541,36 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        padding: spacing[3],
-        marginBottom: spacing[1],
+        padding: spacing[5],
+        marginBottom: spacing[4],
     },
     obligationLeft: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: spacing[2],
+        gap: spacing[4],
         flex: 1,
     },
-    obligationTitle: {
-        ...textStyles.label,
-        color: colors.text,
-        fontSize: 12,
-    },
-    obligationDue: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 9,
-    },
     statusBadge: {
-        borderWidth: 1,
-        paddingVertical: 2,
-        paddingHorizontal: spacing[2],
-    },
-    statusText: {
-        ...textStyles.caption,
-        fontSize: 8,
+        paddingVertical: spacing[1],
+        paddingHorizontal: spacing[3],
+        borderRadius: radius.full,
     },
 
     // Debt
     debtCard: {
+        backgroundColor: 'rgba(239, 68, 68, 0.05)',
+        borderColor: 'rgba(239, 68, 68, 0.2)',
+        borderWidth: 1,
+        marginTop: spacing[6],
+        padding: spacing[5],
+    },
+    debtLeft: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: 'rgba(255, 69, 69, 0.1)',
-        borderWidth: 1,
-        borderColor: colors.danger,
-        padding: spacing[3],
-        marginTop: spacing[4],
-        gap: spacing[3],
+        gap: spacing[4],
     },
-    debtInfo: { flex: 1 },
-    debtTitle: {
-        ...textStyles.label,
-        color: colors.danger,
-        fontSize: 12,
-    },
-    debtDesc: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 9,
+    debtInfo: {
+        flex: 1,
     },
 });
 

@@ -1,34 +1,25 @@
-/**
- * FORGEBORN — WORKOUT LOG SCREEN
- * 
- * Workout history with calendar heatmap, volume stats, and personal records.
- * Inspired by: Hevy (calendar heatmap), Strong (PR tracking)
- */
-
 import React, { useState, useMemo } from 'react';
 import {
     View,
-    Text,
     StyleSheet,
     ScrollView,
     StatusBar,
     TouchableOpacity,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../theme/colors';
-import { textStyles } from '../theme/typography';
-import { spacing, screen } from '../theme/spacing';
+import { colors, spacing, radius } from '../theme';
+import { Card, Typography } from '../components';
 import useWorkoutStore from '../../store/workoutStore';
 
 const WorkoutLogScreen = ({ navigation }) => {
     const workoutHistory = useWorkoutStore((s) => s.workoutHistory);
     const personalRecords = useWorkoutStore((s) => s.personalRecords);
-    const totalWorkoutsCompleted = useWorkoutStore((s) => s.totalWorkoutsCompleted);
-    const currentStreak = useWorkoutStore((s) => s.currentStreak);
-    const longestStreak = useWorkoutStore((s) => s.longestStreak);
+    const totalWorkoutsCompleted = useWorkoutStore((s) => s.totalWorkoutsCompleted || 0);
+    const currentStreak = useWorkoutStore((s) => s.currentStreak || 0);
+    const longestStreak = useWorkoutStore((s) => s.longestStreak || 0);
 
     const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
-    const [selectedYear] = useState(new Date().getFullYear());
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
     // Build calendar heatmap data for selected month
     const calendarData = useMemo(() => {
@@ -92,60 +83,77 @@ const WorkoutLogScreen = ({ navigation }) => {
     const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
     const weekDays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
+    const handleMonthChange = (direction) => {
+        if (direction === -1) {
+            if (selectedMonth === 0) {
+                setSelectedMonth(11);
+                setSelectedYear(y => y - 1);
+            } else {
+                setSelectedMonth(m => m - 1);
+            }
+        } else {
+            if (selectedMonth === 11) {
+                setSelectedMonth(0);
+                setSelectedYear(y => y + 1);
+            } else {
+                setSelectedMonth(m => m + 1);
+            }
+        }
+    }
+
     return (
         <View style={styles.container}>
-            <StatusBar barStyle="light-content" backgroundColor={colors.background} />
+            <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
             <ScrollView
-                style={styles.scrollView}
-                contentContainerStyle={styles.scrollContent}
                 showsVerticalScrollIndicator={false}
+                contentContainerStyle={styles.scrollContent}
             >
                 {/* Header */}
                 <View style={styles.header}>
-                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <TouchableOpacity onPress={() => navigation.goBack()} style={{ paddingRight: spacing[4] }}>
                         <Ionicons name="arrow-back" size={24} color={colors.text} />
                     </TouchableOpacity>
-                    <Text style={styles.title}>WORKOUT LOG</Text>
+                    <Typography variant="largeTitle">Workout Log</Typography>
                 </View>
 
                 {/* All-Time Stats */}
-                <View style={styles.statsRow}>
+                <View style={styles.statsGrid}>
                     <View style={styles.statBox}>
-                        <Text style={styles.statVal}>{totalWorkoutsCompleted}</Text>
-                        <Text style={styles.statLabel}>TOTAL</Text>
+                        <Typography variant="caption" color={colors.textSecondary}>Total</Typography>
+                        <Typography variant="title1" style={{ marginTop: spacing[1] }}>{totalWorkoutsCompleted}</Typography>
                     </View>
-                    <View style={styles.statBox}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-                            <Ionicons name="flame" size={16} color={colors.primary} />
-                            <Text style={styles.statVal}>{currentStreak}</Text>
+                    <View style={[styles.statBox, styles.statBoxCenter]}>
+                        <Typography variant="caption" color={colors.textSecondary}>Streak</Typography>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: spacing[1] }}>
+                            <Ionicons name="flame" size={18} color={colors.primary} style={{ marginRight: 4 }} />
+                            <Typography variant="title1">{currentStreak}</Typography>
                         </View>
-                        <Text style={styles.statLabel}>STREAK</Text>
                     </View>
                     <View style={styles.statBox}>
-                        <Text style={styles.statVal}>{longestStreak}</Text>
-                        <Text style={styles.statLabel}>BEST</Text>
+                        <Typography variant="caption" color={colors.textSecondary}>Best</Typography>
+                        <Typography variant="title1" style={{ marginTop: spacing[1] }}>{longestStreak}</Typography>
                     </View>
                 </View>
 
                 {/* Month Selector */}
                 <View style={styles.monthSelector}>
-                    <TouchableOpacity onPress={() => setSelectedMonth(m => Math.max(0, m - 1))}>
-                        <Ionicons name="chevron-back" size={20} color={colors.text} />
+                    <TouchableOpacity onPress={() => handleMonthChange(-1)} style={{ padding: spacing[2] }}>
+                        <Ionicons name="chevron-back" size={20} color={colors.textSecondary} />
                     </TouchableOpacity>
-                    <Text style={styles.monthText}>
+                    <Typography variant="title2">
                         {months[selectedMonth]} {selectedYear}
-                    </Text>
-                    <TouchableOpacity onPress={() => setSelectedMonth(m => Math.min(11, m + 1))}>
-                        <Ionicons name="chevron-forward" size={20} color={colors.text} />
+                    </Typography>
+                    <TouchableOpacity onPress={() => handleMonthChange(1)} style={{ padding: spacing[2] }}>
+                        <Ionicons name="chevron-forward" size={20} color={colors.textSecondary} />
                     </TouchableOpacity>
                 </View>
 
                 {/* Calendar Heatmap */}
-                <View style={styles.calendarCard}>
+                <Card style={styles.calendarCard}>
                     {/* Weekday headers */}
                     <View style={styles.weekRow}>
                         {weekDays.map((d, i) => (
-                            <Text key={i} style={styles.weekDay}>{d}</Text>
+                            <Typography key={i} variant="caption" color={colors.textDim} style={styles.weekDay}>{d}</Typography>
                         ))}
                     </View>
 
@@ -157,59 +165,66 @@ const WorkoutLogScreen = ({ navigation }) => {
                                 style={[
                                     styles.calCell,
                                     item.day === null && styles.calCellEmpty,
-                                    item.hasWorkout && styles.calCellActive,
-                                    item.isToday && styles.calCellToday,
                                 ]}
                             >
                                 {item.day !== null && (
-                                    <Text style={[
-                                        styles.calDay,
-                                        item.hasWorkout && styles.calDayActive,
-                                        item.isToday && styles.calDayToday,
+                                    <View style={[
+                                        styles.calDayBox,
+                                        item.hasWorkout && styles.calDayBoxActive,
+                                        item.isToday && styles.calDayBoxToday,
                                     ]}>
-                                        {item.day}
-                                    </Text>
+                                        <Typography
+                                            variant="caption"
+                                            color={
+                                                item.hasWorkout ? colors.textInverse :
+                                                    item.isToday ? colors.primary : colors.textSecondary
+                                            }
+                                            weight={item.hasWorkout || item.isToday ? "bold" : "regular"}
+                                        >
+                                            {item.day}
+                                        </Typography>
+                                    </View>
                                 )}
                             </View>
                         ))}
                     </View>
-                </View>
+                </Card>
 
                 {/* Monthly Volume Stats */}
-                <Text style={styles.sectionLabel}>
-                    {months[selectedMonth]} STATS
-                </Text>
+                <Typography variant="title2" style={styles.sectionLabel}>
+                    {months[selectedMonth]} Stats
+                </Typography>
                 <View style={styles.volumeRow}>
-                    <View style={styles.volumeCard}>
-                        <Text style={styles.volumeVal}>{monthStats.workouts}</Text>
-                        <Text style={styles.volumeLabel}>WORKOUTS</Text>
-                    </View>
-                    <View style={styles.volumeCard}>
-                        <Text style={styles.volumeVal}>{monthStats.sets}</Text>
-                        <Text style={styles.volumeLabel}>TOTAL SETS</Text>
-                    </View>
-                    <View style={styles.volumeCard}>
-                        <Text style={styles.volumeVal}>
-                            {monthStats.volume > 1000
-                                ? `${(monthStats.volume / 1000).toFixed(1)}k`
-                                : monthStats.volume}
-                        </Text>
-                        <Text style={styles.volumeLabel}>VOLUME (KG)</Text>
-                    </View>
-                    <View style={styles.volumeCard}>
-                        <Text style={styles.volumeVal}>{monthStats.avgDuration}</Text>
-                        <Text style={styles.volumeLabel}>AVG MIN</Text>
-                    </View>
+                    <Card style={styles.volumeCard}>
+                        <Typography variant="caption" color={colors.textSecondary} style={{ marginBottom: spacing[1] }}>Workouts</Typography>
+                        <Typography variant="headline">{monthStats.workouts}</Typography>
+                    </Card>
+                    <Card style={styles.volumeCard}>
+                        <Typography variant="caption" color={colors.textSecondary} style={{ marginBottom: spacing[1] }}>Sets</Typography>
+                        <Typography variant="headline">{monthStats.sets}</Typography>
+                    </Card>
+                    <Card style={styles.volumeCard}>
+                        <Typography variant="caption" color={colors.textSecondary} style={{ marginBottom: spacing[1] }}>Volume (kg)</Typography>
+                        <Typography variant="headline">
+                            {monthStats.volume > 1000 ? `${(monthStats.volume / 1000).toFixed(1)}k` : monthStats.volume}
+                        </Typography>
+                    </Card>
+                    <Card style={styles.volumeCard}>
+                        <Typography variant="caption" color={colors.textSecondary} style={{ marginBottom: spacing[1] }}>Avg. Min</Typography>
+                        <Typography variant="headline">{monthStats.avgDuration}</Typography>
+                    </Card>
                 </View>
 
                 {/* Recent Workouts */}
-                <Text style={styles.sectionLabel}>RECENT WORKOUTS</Text>
+                <Typography variant="title2" style={styles.sectionLabel}>Recent Workouts</Typography>
                 {workoutHistory.length === 0 ? (
-                    <View style={styles.emptyCard}>
-                        <Ionicons name="barbell-outline" size={28} color={colors.textDim} />
-                        <Text style={styles.emptyText}>No workouts logged yet.</Text>
-                        <Text style={styles.emptySubtext}>Complete your first workout to see history.</Text>
-                    </View>
+                    <Card style={styles.emptyCard}>
+                        <Ionicons name="barbell-outline" size={32} color={colors.textDim} />
+                        <Typography variant="headline" style={{ marginTop: spacing[3] }}>No workouts logged yet.</Typography>
+                        <Typography variant="caption" color={colors.textSecondary} style={{ marginTop: spacing[1] }}>
+                            Complete your first workout to see history.
+                        </Typography>
+                    </Card>
                 ) : (
                     workoutHistory.slice(0, 10).map((workout, i) => {
                         const exerciseCount = workout.exercises?.length || 0;
@@ -218,147 +233,120 @@ const WorkoutLogScreen = ({ navigation }) => {
                         const durationMin = Math.round((workout.duration || 0) / 60);
 
                         return (
-                            <View key={i} style={styles.historyCard}>
+                            <Card key={i} style={styles.historyCard}>
                                 <View style={styles.historyHeader}>
                                     <View>
-                                        <Text style={styles.historyName}>
+                                        <Typography variant="headline">
                                             {workout.planName || 'Workout'}
-                                        </Text>
-                                        <Text style={styles.historyDate}>{workout.date}</Text>
+                                        </Typography>
+                                        <Typography variant="caption" color={colors.textDim} style={{ marginTop: 2 }}>
+                                            {workout.date}
+                                        </Typography>
                                     </View>
-                                    <Text style={styles.historyDuration}>{durationMin} min</Text>
+                                    <Typography variant="subheadline" color={colors.primary}>{durationMin} min</Typography>
                                 </View>
                                 <View style={styles.historyStats}>
-                                    <Text style={styles.historyStatItem}>
-                                        {exerciseCount} exercises
-                                    </Text>
-                                    <Text style={styles.historyStatDot}>•</Text>
-                                    <Text style={styles.historyStatItem}>
-                                        {setCount} sets
-                                    </Text>
+                                    <Typography variant="caption" color={colors.textSecondary}>
+                                        {exerciseCount} exercises • {setCount} sets
+                                    </Typography>
                                 </View>
-                            </View>
+                            </Card>
                         );
                     })
                 )}
 
                 {/* Personal Records */}
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                    <Ionicons name="trophy-outline" size={14} color={colors.textDim} />
-                    <Text style={styles.sectionLabel}>PERSONAL RECORDS</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing[2], marginTop: spacing[6], marginBottom: spacing[4] }}>
+                    <Ionicons name="trophy-outline" size={20} color={colors.text} />
+                    <Typography variant="title2">Personal Records</Typography>
                 </View>
+
                 {prList.length === 0 ? (
-                    <View style={styles.emptyCard}>
-                        <Ionicons name="trophy-outline" size={28} color={colors.textDim} />
-                        <Text style={styles.emptyText}>No PRs yet.</Text>
-                        <Text style={styles.emptySubtext}>Hit new maxes to see them here.</Text>
-                    </View>
+                    <Card style={styles.emptyCard}>
+                        <Ionicons name="trophy-outline" size={32} color={colors.textDim} />
+                        <Typography variant="headline" style={{ marginTop: spacing[3] }}>No PRs yet.</Typography>
+                        <Typography variant="caption" color={colors.textSecondary} style={{ marginTop: spacing[1] }}>
+                            Hit new maxes to see them here.
+                        </Typography>
+                    </Card>
                 ) : (
                     prList.map((pr, i) => (
-                        <View key={i} style={styles.prCard}>
+                        <Card key={i} style={styles.prCard}>
                             <View style={styles.prLeft}>
-                                <Text style={styles.prExercise}>{pr.exercise}</Text>
-                                <Text style={styles.prDate}>{pr.date || 'Unknown'}</Text>
+                                <Typography variant="headline">{pr.exercise}</Typography>
+                                <Typography variant="caption" color={colors.textDim} style={{ marginTop: 2 }}>
+                                    {pr.date || 'Unknown'}
+                                </Typography>
                             </View>
                             <View style={styles.prRight}>
-                                <Text style={styles.prWeight}>{pr.weight || 0} kg</Text>
-                                <Text style={styles.prReps}>× {pr.reps || 0}</Text>
+                                <Typography variant="title2" color={colors.primary}>{pr.weight || 0} kg</Typography>
+                                <Typography variant="subheadline" color={colors.textDim} style={{ marginLeft: spacing[1] }}>× {pr.reps || 0}</Typography>
                             </View>
-                        </View>
+                        </Card>
                     ))
                 )}
 
-                <View style={{ height: 30 }} />
+                <View style={{ height: 40 }} />
             </ScrollView>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: colors.background },
-    scrollView: { flex: 1 },
-    scrollContent: {
-        paddingHorizontal: screen.paddingHorizontal,
-        paddingTop: spacing[12],
-        paddingBottom: spacing[4],
+    container: {
+        flex: 1,
+        backgroundColor: colors.background
     },
-
-    // Header
+    scrollContent: {
+        paddingHorizontal: spacing[4],
+        paddingTop: spacing[12],
+        paddingBottom: spacing[8],
+    },
     header: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: spacing[3],
-        marginBottom: spacing[4],
+        marginBottom: spacing[6],
     },
-    title: {
-        ...textStyles.h1,
-        color: colors.primary,
-        fontSize: 24,
-    },
-
     sectionLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        marginTop: spacing[5],
-        marginBottom: spacing[2],
-    },
-
-    // Stats row
-    statsRow: {
-        flexDirection: 'row',
-        gap: spacing[2],
+        marginTop: spacing[8],
         marginBottom: spacing[4],
+    },
+    statsGrid: {
+        flexDirection: 'row',
+        backgroundColor: colors.surface,
+        borderRadius: radius.lg,
+        padding: spacing[4],
+        marginBottom: spacing[6],
+        borderWidth: 1,
+        borderColor: colors.borderLight,
+        ...colors.shadows?.sm,
     },
     statBox: {
         flex: 1,
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        padding: spacing[3],
         alignItems: 'center',
     },
-    statVal: {
-        fontSize: 20,
-        fontWeight: '900',
-        color: colors.text,
+    statBoxCenter: {
+        borderLeftWidth: 1,
+        borderRightWidth: 1,
+        borderColor: colors.borderLight,
+        paddingHorizontal: spacing[2],
     },
-    statLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 8,
-        marginTop: 2,
-    },
-
-    // Month selector
     monthSelector: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: spacing[2],
+        marginBottom: spacing[4],
     },
-    monthText: {
-        ...textStyles.h3,
-        color: colors.text,
-        fontSize: 16,
-    },
-
-    // Calendar
     calendarCard: {
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        padding: spacing[3],
+        padding: spacing[4],
     },
     weekRow: {
         flexDirection: 'row',
-        marginBottom: spacing[1],
+        marginBottom: spacing[2],
     },
     weekDay: {
         flex: 1,
         textAlign: 'center',
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 10,
     },
     calGrid: {
         flexDirection: 'row',
@@ -369,29 +357,24 @@ const styles = StyleSheet.create({
         aspectRatio: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        padding: 2,
     },
     calCellEmpty: {},
-    calCellActive: {
-        backgroundColor: 'rgba(230, 169, 38, 0.2)',
+    calDayBox: {
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: radius.sm,
     },
-    calCellToday: {
+    calDayBoxActive: {
+        backgroundColor: colors.primary,
+        ...colors.shadows?.sm,
+    },
+    calDayBoxToday: {
         borderWidth: 1,
         borderColor: colors.primary,
     },
-    calDay: {
-        fontSize: 12,
-        color: colors.textDim,
-    },
-    calDayActive: {
-        color: colors.primary,
-        fontWeight: '900',
-    },
-    calDayToday: {
-        color: colors.text,
-        fontWeight: '700',
-    },
-
-    // Volume
     volumeRow: {
         flexDirection: 'row',
         flexWrap: 'wrap',
@@ -399,123 +382,38 @@ const styles = StyleSheet.create({
     },
     volumeCard: {
         width: '48%',
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        padding: spacing[3],
         alignItems: 'center',
+        padding: spacing[4],
     },
-    volumeVal: {
-        fontSize: 20,
-        fontWeight: '900',
-        color: colors.text,
-    },
-    volumeLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 8,
-        marginTop: 2,
-    },
-
-    // History
     historyCard: {
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        padding: spacing[3],
-        marginBottom: spacing[1],
+        marginBottom: spacing[3],
+        padding: spacing[4],
     },
     historyHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
     },
-    historyName: {
-        ...textStyles.label,
-        color: colors.text,
-        fontSize: 12,
-    },
-    historyDate: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 9,
-    },
-    historyDuration: {
-        ...textStyles.label,
-        color: colors.primary,
-        fontSize: 12,
-    },
     historyStats: {
         flexDirection: 'row',
-        marginTop: spacing[1],
-        gap: spacing[1],
+        marginTop: spacing[3],
     },
-    historyStatItem: {
-        ...textStyles.caption,
-        color: colors.textSecondary,
-        fontSize: 10,
-    },
-    historyStatDot: {
-        color: colors.textDim,
-    },
-
-    // Empty state
     emptyCard: {
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        padding: spacing[5],
         alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: spacing[8],
     },
-    emptyIcon: { fontSize: 28, marginBottom: spacing[2] },
-    emptyText: {
-        ...textStyles.label,
-        color: colors.textDim,
-        fontSize: 13,
-    },
-    emptySubtext: {
-        ...textStyles.caption,
-        color: colors.textMuted,
-        fontSize: 10,
-        marginTop: 4,
-    },
-
-    // PRs
     prCard: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        padding: spacing[3],
-        marginBottom: spacing[1],
+        marginBottom: spacing[3],
+        padding: spacing[4],
     },
     prLeft: { flex: 1 },
-    prExercise: {
-        ...textStyles.label,
-        color: colors.text,
-        fontSize: 12,
-    },
-    prDate: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 9,
-    },
     prRight: {
         flexDirection: 'row',
         alignItems: 'baseline',
-        gap: spacing[1],
-    },
-    prWeight: {
-        fontSize: 18,
-        fontWeight: '900',
-        color: colors.primary,
-    },
-    prReps: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 11,
     },
 });
 

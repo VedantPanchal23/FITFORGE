@@ -1,14 +1,6 @@
-/**
- * FORGEBORN — CREATE OBLIGATION SCREEN
- * 
- * Schedule your execution.
- * Once scheduled, you WILL be held accountable.
- */
-
 import React, { useState } from 'react';
 import {
     View,
-    Text,
     TextInput,
     TouchableOpacity,
     StyleSheet,
@@ -16,9 +8,8 @@ import {
     Vibration,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../theme/colors';
-import { textStyles } from '../theme/typography';
-import { spacing, screen } from '../theme/spacing';
+import { colors, spacing, radius } from '../theme';
+import { Typography, Button, Card } from '../components';
 import useObligationStore, { ObligationType } from '../../store/obligationStore';
 
 const PRESET_OBLIGATIONS = [
@@ -86,10 +77,10 @@ const CreateObligationScreen = ({ navigation }) => {
         <View style={styles.container}>
             {/* Header */}
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.cancelButton}>
-                    <Text style={styles.cancelText}>✕</Text>
+                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.cancelButton} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+                    <Ionicons name="close" size={28} color={colors.textSecondary} />
                 </TouchableOpacity>
-                <Text style={styles.title}>NEW OBLIGATION</Text>
+                <Typography variant="h3" style={styles.title}>New Obligation</Typography>
                 <View style={styles.placeholder} />
             </View>
 
@@ -97,13 +88,17 @@ const CreateObligationScreen = ({ navigation }) => {
                 {/* Warning */}
                 <View style={styles.warningBox}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
-                        <Ionicons name="alert-circle-outline" size={14} color={colors.warning} />
-                        <Text style={styles.warningText}>ONCE SCHEDULED, YOU WILL BE HELD ACCOUNTABLE</Text>
+                        <Ionicons name="alert-circle" size={16} color={colors.primary} />
+                        <Typography variant="caption" style={{ color: colors.primaryDark, fontWeight: '700' }}>
+                            ONCE SCHEDULED, YOU WILL BE HELD ACCOUNTABLE
+                        </Typography>
                     </View>
                 </View>
 
                 {/* Presets */}
-                <Text style={styles.sectionLabel}>QUICK SELECT</Text>
+                <Typography variant="label" color={colors.textSecondary} style={styles.sectionLabel}>
+                    QUICK SELECT
+                </Typography>
                 <View style={styles.presetsGrid}>
                     {PRESET_OBLIGATIONS.map((preset, index) => (
                         <TouchableOpacity
@@ -113,20 +108,35 @@ const CreateObligationScreen = ({ navigation }) => {
                                 selectedPreset?.name === preset.name && styles.presetButtonActive,
                             ]}
                             onPress={() => handlePresetSelect(preset)}
+                            activeOpacity={0.7}
                         >
-                            <Text style={[
-                                styles.presetText,
-                                selectedPreset?.name === preset.name && styles.presetTextActive,
-                            ]}>
+                            <Typography
+                                variant="caption"
+                                style={[
+                                    { fontWeight: '700' },
+                                    selectedPreset?.name === preset.name ? { color: colors.primaryDark } : { color: colors.textSecondary }
+                                ]}
+                                numberOfLines={1}
+                            >
                                 {preset.name}
-                            </Text>
-                            <Text style={styles.presetUnits}>{preset.units} UNITS</Text>
+                            </Typography>
+                            <Typography
+                                variant="caption"
+                                style={[
+                                    { marginTop: 2, fontSize: 10 },
+                                    selectedPreset?.name === preset.name ? { color: colors.primary } : { color: colors.textDim }
+                                ]}
+                            >
+                                {preset.units} UNITS
+                            </Typography>
                         </TouchableOpacity>
                     ))}
                 </View>
 
                 {/* Custom input */}
-                <Text style={styles.sectionLabel}>OR CUSTOMIZE</Text>
+                <Typography variant="label" color={colors.textSecondary} style={styles.sectionLabel}>
+                    OR CUSTOMIZE
+                </Typography>
                 <View style={styles.inputRow}>
                     <TextInput
                         style={styles.input}
@@ -147,13 +157,15 @@ const CreateObligationScreen = ({ navigation }) => {
                         onChangeText={setCustomUnits}
                         keyboardType="number-pad"
                     />
-                    <Text style={styles.unitsHint}>
+                    <Typography variant="caption" color={colors.textDim} style={styles.unitsHint}>
                         Each tap = +1 unit during execution
-                    </Text>
+                    </Typography>
                 </View>
 
                 {/* Time selection */}
-                <Text style={styles.sectionLabel}>SCHEDULE FOR</Text>
+                <Typography variant="label" color={colors.textSecondary} style={styles.sectionLabel}>
+                    SCHEDULE FOR
+                </Typography>
                 <View style={styles.timeGrid}>
                     {TIME_PRESETS.map((preset, index) => (
                         <TouchableOpacity
@@ -161,37 +173,46 @@ const CreateObligationScreen = ({ navigation }) => {
                             style={[
                                 styles.timeButton,
                                 selectedTime?.label === preset.label && styles.timeButtonActive,
-                                preset.label === 'NOW' && styles.timeButtonNow,
+                                preset.label === 'NOW' && selectedTime?.label === preset.label && styles.timeButtonNowActive,
+                                preset.label === 'NOW' && selectedTime?.label !== preset.label && styles.timeButtonNow,
                             ]}
                             onPress={() => handleTimeSelect(preset)}
+                            activeOpacity={0.7}
                         >
-                            <Text style={[
-                                styles.timeText,
-                                selectedTime?.label === preset.label && styles.timeTextActive,
-                            ]}>
+                            <Typography
+                                variant="caption"
+                                style={[
+                                    { fontWeight: '700' },
+                                    selectedTime?.label === preset.label ? { color: colors.primaryDark } : { color: colors.textSecondary },
+                                    preset.label === 'NOW' && selectedTime?.label === preset.label && { color: colors.dangerDark },
+                                    preset.label === 'NOW' && selectedTime?.label !== preset.label && { color: colors.danger },
+                                ]}
+                            >
                                 {preset.label}
-                            </Text>
+                            </Typography>
                         </TouchableOpacity>
                     ))}
                 </View>
 
                 {/* Create button */}
-                <TouchableOpacity
-                    style={[styles.createButton, !canCreate && styles.createButtonDisabled]}
-                    onPress={handleCreate}
-                    disabled={!canCreate}
-                >
-                    <Text style={styles.createText}>
-                        {selectedTime?.label === 'NOW' ? 'CREATE & LOCK NOW' : 'CREATE OBLIGATION'}
-                    </Text>
-                </TouchableOpacity>
+                <View style={{ marginTop: spacing[8], marginBottom: spacing[8] }}>
+                    <Button
+                        title={selectedTime?.label === 'NOW' ? 'CREATE & LOCK NOW' : 'CREATE OBLIGATION'}
+                        onPress={handleCreate}
+                        disabled={!canCreate}
+                        variant={selectedTime?.label === 'NOW' ? 'danger' : 'primary'}
+                        style={!canCreate && styles.createButtonDisabled}
+                    />
 
-                {selectedTime?.label === 'NOW' && (
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, marginTop: spacing[2] }}>
-                        <Ionicons name="flash" size={14} color={colors.primary} />
-                        <Text style={styles.nowWarning}>SYSTEM WILL LOCK IMMEDIATELY</Text>
-                    </View>
-                )}
+                    {selectedTime?.label === 'NOW' && (
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, marginTop: spacing[4] }}>
+                            <Ionicons name="flash" size={14} color={colors.danger} />
+                            <Typography variant="caption" style={{ color: colors.danger, fontWeight: '700' }}>
+                                SYSTEM WILL LOCK IMMEDIATELY
+                            </Typography>
+                        </View>
+                    )}
+                </View>
 
             </ScrollView>
         </View>
@@ -201,32 +222,27 @@ const CreateObligationScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.background,
+        backgroundColor: colors.background, // Light background
     },
 
     header: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingTop: screen.paddingTop,
-        paddingHorizontal: screen.paddingHorizontal,
+        paddingTop: spacing[14], // Safe area + padding
+        paddingHorizontal: spacing[6],
         paddingBottom: spacing[4],
         borderBottomWidth: 1,
-        borderBottomColor: colors.border,
+        borderBottomColor: colors.borderLight,
+        backgroundColor: colors.surface,
     },
 
     cancelButton: {
-        padding: spacing[2],
-    },
-
-    cancelText: {
-        color: colors.textDim,
-        fontSize: 24,
+        padding: spacing[1],
     },
 
     title: {
-        ...textStyles.h2,
-        color: colors.primary,
+        color: colors.text,
     },
 
     placeholder: {
@@ -235,28 +251,23 @@ const styles = StyleSheet.create({
 
     content: {
         flex: 1,
-        paddingHorizontal: screen.paddingHorizontal,
+        paddingHorizontal: spacing[6],
     },
 
     warningBox: {
-        backgroundColor: colors.primaryMuted,
+        backgroundColor: colors.primaryLight, // Soft primary background
         padding: spacing[4],
         marginTop: spacing[4],
+        borderRadius: radius.md,
         borderWidth: 1,
-        borderColor: colors.primary,
-    },
-
-    warningText: {
-        ...textStyles.label,
-        color: colors.primary,
-        textAlign: 'center',
+        borderColor: colors.primary + '30', // Very subtle border
     },
 
     sectionLabel: {
-        ...textStyles.label,
-        color: colors.textDim,
-        marginTop: spacing[6],
+        marginTop: spacing[8],
         marginBottom: spacing[3],
+        fontWeight: 'bold',
+        letterSpacing: 1,
     },
 
     presetsGrid: {
@@ -268,32 +279,17 @@ const styles = StyleSheet.create({
     presetButton: {
         width: '48%',
         backgroundColor: colors.surface,
-        padding: spacing[3],
+        padding: spacing[4],
         marginHorizontal: '1%',
         marginBottom: spacing[2],
         borderWidth: 1,
         borderColor: colors.border,
+        borderRadius: radius.md,
     },
 
     presetButtonActive: {
         borderColor: colors.primary,
-        backgroundColor: colors.primaryMuted,
-    },
-
-    presetText: {
-        ...textStyles.label,
-        color: colors.textSecondary,
-        fontSize: 12,
-    },
-
-    presetTextActive: {
-        color: colors.text,
-    },
-
-    presetUnits: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        marginTop: spacing[1],
+        backgroundColor: colors.primaryLight,
     },
 
     inputRow: {
@@ -304,10 +300,11 @@ const styles = StyleSheet.create({
         backgroundColor: colors.surface,
         borderWidth: 1,
         borderColor: colors.border,
+        borderRadius: radius.md,
         padding: spacing[4],
         color: colors.text,
-        ...textStyles.body,
         fontSize: 16,
+        fontWeight: '600',
     },
 
     unitsInput: {
@@ -315,9 +312,8 @@ const styles = StyleSheet.create({
     },
 
     unitsHint: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        marginTop: spacing[1],
+        marginTop: spacing[2],
+        fontStyle: 'italic',
     },
 
     timeGrid: {
@@ -328,56 +324,32 @@ const styles = StyleSheet.create({
 
     timeButton: {
         paddingVertical: spacing[3],
-        paddingHorizontal: spacing[4],
+        paddingHorizontal: spacing[5],
         backgroundColor: colors.surface,
         borderWidth: 1,
         borderColor: colors.border,
+        borderRadius: radius.full,
         marginHorizontal: spacing[1],
         marginBottom: spacing[2],
     },
 
     timeButtonActive: {
         borderColor: colors.primary,
-        backgroundColor: colors.primaryMuted,
+        backgroundColor: colors.primaryLight,
     },
 
     timeButtonNow: {
-        borderColor: colors.warning,
+        borderColor: colors.danger + '50',
     },
 
-    timeText: {
-        ...textStyles.label,
-        color: colors.textSecondary,
-    },
-
-    timeTextActive: {
-        color: colors.text,
-    },
-
-    createButton: {
-        backgroundColor: colors.primary,
-        padding: spacing[5],
-        marginTop: spacing[6],
-        marginBottom: spacing[2],
-        alignItems: 'center',
+    timeButtonNowActive: {
+        borderColor: colors.danger,
+        backgroundColor: colors.dangerLight, // Need a light danger color, if not defined, 'rgba(239, 68, 68, 0.1)'
     },
 
     createButtonDisabled: {
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-    },
-
-    createText: {
-        ...textStyles.button,
-        color: colors.text,
-    },
-
-    nowWarning: {
-        ...textStyles.caption,
-        color: colors.warning,
-        textAlign: 'center',
-        marginBottom: spacing[8],
+        backgroundColor: colors.border,
+        opacity: 0.5,
     },
 });
 

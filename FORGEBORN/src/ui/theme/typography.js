@@ -1,14 +1,15 @@
 /**
  * FORGEBORN THEME — TYPOGRAPHY
  * 
- * Bold. Condensed. Commanding.
- * Headlines scream. Body obeys.
- * Critical messages: ALL CAPS.
+ * Clean, incredibly readable, and rigorously structured.
+ * Follows Apple Human Interface Guidelines for sizing and hierarchy.
+ * Drops the "gamer" aesthetic for pure instrument-level professionalism.
  */
 
 import { Platform } from 'react-native';
+import colors from './colors';
 
-// Font families
+// Font families (Inter is excellent, we just need to use its lighter weights)
 export const fontFamily = {
     regular: Platform.select({
         ios: 'Inter-Regular',
@@ -30,154 +31,105 @@ export const fontFamily = {
         android: 'Inter-Bold',
         default: 'Inter',
     }),
-    black: Platform.select({
-        ios: 'Inter-Black',
-        android: 'Inter-Black',
-        default: 'Inter',
-    }),
 };
 
-// Font sizes
+// Standardized sizing (iOS scale)
 export const fontSize = {
-    xs: 10,
-    sm: 12,
-    base: 14,
-    md: 16,
-    lg: 18,
-    xl: 20,
-    '2xl': 24,
-    '3xl': 30,
-    '4xl': 36,
-    '5xl': 48,
-    '6xl': 60,
-    '7xl': 72,
-    massive: 96,
+    xs: 12,       // Caption 2
+    sm: 13,       // Footnote / Caption 1
+    base: 15,     // Subheadline
+    md: 17,       // Body / Headline (Standard iOS body text)
+    lg: 20,       // Title 3
+    xl: 22,       // Title 2
+    '2xl': 28,    // Title 1
+    '3xl': 34,    // Large Title
+    massive: 64,  // Data display (timer, rep counter)
 };
 
-// Line heights
-export const lineHeight = {
-    tight: 1.1,
-    normal: 1.4,
-    relaxed: 1.6,
-};
-
-// Letter spacing
+// Highly controlled, professional letter spacing
 export const letterSpacing = {
     tight: -0.5,
     normal: 0,
-    wide: 1,
-    wider: 2,
-    widest: 4,
-    extreme: 8,
+    wide: 0.5, // Reduced drastically from previous iteration to avoid spread-out looks
 };
 
-// Pre-built text styles
+export const lineHeight = {
+    tight: 1.1,
+    normal: 1.3,
+    relaxed: 1.5,
+};
+
+// Pre-built, standard text styles
 export const textStyles = {
-    // THE CREED - massive, commanding
-    creed: {
-        fontSize: fontSize['4xl'],
-        fontWeight: '900',
-        letterSpacing: letterSpacing.widest,
-        textTransform: 'uppercase',
-        lineHeight: fontSize['4xl'] * lineHeight.tight,
-    },
 
-    // Headlines
-    h1: {
+    // Page Header (massive, crisp)
+    largeTitle: {
+        fontFamily: fontFamily.bold,
         fontSize: fontSize['3xl'],
-        fontWeight: '800',
-        letterSpacing: letterSpacing.wider,
-        textTransform: 'uppercase',
-        lineHeight: fontSize['3xl'] * lineHeight.tight,
+        letterSpacing: letterSpacing.tight,
+        color: colors.text,
     },
 
-    h2: {
+    // Section Header
+    title1: {
+        fontFamily: fontFamily.bold,
         fontSize: fontSize['2xl'],
-        fontWeight: '700',
-        letterSpacing: letterSpacing.wide,
-        textTransform: 'uppercase',
-        lineHeight: fontSize['2xl'] * lineHeight.tight,
+        letterSpacing: letterSpacing.tight,
+        color: colors.text,
     },
 
-    h3: {
+    // Card Header
+    title2: {
+        fontFamily: fontFamily.semiBold,
         fontSize: fontSize.xl,
-        fontWeight: '700',
-        letterSpacing: letterSpacing.wide,
-        lineHeight: fontSize.xl * lineHeight.tight,
+        letterSpacing: letterSpacing.normal,
+        color: colors.text,
     },
 
-    // Body text
+    // Strong Body / List Header
+    headline: {
+        fontFamily: fontFamily.semiBold,
+        fontSize: fontSize.md,
+        color: colors.text,
+    },
+
+    // Standard readable text
     body: {
+        fontFamily: fontFamily.regular,
+        fontSize: fontSize.md,
+        lineHeight: Math.round(fontSize.md * lineHeight.relaxed),
+        color: colors.textSecondary,
+    },
+
+    // Secondary information
+    subheadline: {
+        fontFamily: fontFamily.regular,
         fontSize: fontSize.base,
-        fontWeight: '400',
-        letterSpacing: letterSpacing.normal,
-        lineHeight: fontSize.base * lineHeight.normal,
+        color: colors.textSecondary,
     },
 
-    bodyLarge: {
+    // Buttons and Actions
+    buttonText: {
+        fontFamily: fontFamily.semiBold,
         fontSize: fontSize.md,
-        fontWeight: '400',
-        letterSpacing: letterSpacing.normal,
-        lineHeight: fontSize.md * lineHeight.normal,
+        color: colors.textInverse, // Assume black button, white text
+        textAlign: 'center',
     },
 
-    // Labels
-    label: {
-        fontSize: fontSize.sm,
-        fontWeight: '600',
-        letterSpacing: letterSpacing.wide,
-        textTransform: 'uppercase',
-        lineHeight: fontSize.sm * lineHeight.tight,
-    },
-
-    // Captions
+    // Tiny labels
     caption: {
-        fontSize: fontSize.xs,
-        fontWeight: '500',
-        letterSpacing: letterSpacing.wide,
-        textTransform: 'uppercase',
-        lineHeight: fontSize.xs * lineHeight.tight,
-    },
-
-    // Numbers (countdown, stats)
-    number: {
-        fontSize: fontSize['5xl'],
-        fontWeight: '900',
-        letterSpacing: letterSpacing.tight,
-        lineHeight: fontSize['5xl'] * lineHeight.tight,
-    },
-
-    numberMassive: {
-        fontSize: fontSize.massive,
-        fontWeight: '900',
-        letterSpacing: letterSpacing.tight,
-        lineHeight: fontSize.massive * lineHeight.tight,
-    },
-
-    // Button text
-    button: {
-        fontSize: fontSize.md,
-        fontWeight: '800',
-        letterSpacing: letterSpacing.wider,
-        textTransform: 'uppercase',
-        lineHeight: fontSize.md * lineHeight.tight,
-    },
-
-    buttonSmall: {
+        fontFamily: fontFamily.medium,
         fontSize: fontSize.sm,
-        fontWeight: '700',
-        letterSpacing: letterSpacing.wide,
-        textTransform: 'uppercase',
-        lineHeight: fontSize.sm * lineHeight.tight,
+        color: colors.textDim,
     },
 
-    // Critical/Warning messages
-    critical: {
-        fontSize: fontSize.lg,
-        fontWeight: '900',
-        letterSpacing: letterSpacing.widest,
-        textTransform: 'uppercase',
-        lineHeight: fontSize.lg * lineHeight.tight,
+    // Data Focus (Massive numbers, e.g., Timer or Rep count)
+    dataDisplay: {
+        fontFamily: fontFamily.bold,
+        fontSize: fontSize.massive,
+        letterSpacing: letterSpacing.tight,
+        color: colors.text,
+        lineHeight: fontSize.massive * lineHeight.tight,
     },
 };
 

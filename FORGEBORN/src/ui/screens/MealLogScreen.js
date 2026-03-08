@@ -1,14 +1,6 @@
-/**
- * FORGEBORN — MEAL LOG SCREEN
- * 
- * Search food database, log meals, track portions.
- * Inspired by: HealthifyMe (Indian food search), MyFitnessPal (quick add)
- */
-
 import React, { useState, useMemo } from 'react';
 import {
     View,
-    Text,
     StyleSheet,
     ScrollView,
     StatusBar,
@@ -17,10 +9,9 @@ import {
     FlatList,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../theme/colors';
-import { textStyles } from '../theme/typography';
-import { spacing, screen } from '../theme/spacing';
-import { foodDatabase, getAllCategories, searchFoods, getFoodsByCategory, FoodCategory } from '../../data/foodDB';
+import { colors, spacing, radius } from '../theme';
+import { Card, Typography, Button } from '../components';
+import { foodDatabase, getAllCategories, searchFoods, getFoodsByCategory } from '../../data/foodDB';
 import useNutritionStore from '../../store/nutritionStore';
 
 const MealLogScreen = ({ navigation, route }) => {
@@ -76,132 +67,140 @@ const MealLogScreen = ({ navigation, route }) => {
 
         return (
             <TouchableOpacity
-                style={[styles.foodCard, isSelected && styles.foodCardSelected]}
                 onPress={() => setSelectedFood(isSelected ? null : food)}
                 activeOpacity={0.7}
             >
-                <View style={styles.foodInfo}>
-                    <Text style={styles.foodName}>{food.name}</Text>
-                    <Text style={styles.foodServing}>{food.servingSize}</Text>
-                </View>
-                <View style={styles.foodNutrition}>
-                    <Text style={styles.calorieText}>{food.calories}</Text>
-                    <Text style={styles.calorieLabel}>CAL</Text>
-                </View>
-
-                {isSelected && (
-                    <View style={styles.expandedInfo}>
-                        <View style={styles.macroRow}>
-                            <View style={styles.macroItem}>
-                                <Text style={[styles.macroVal, { color: colors.primary }]}>{food.protein}g</Text>
-                                <Text style={styles.macroLabel}>P</Text>
-                            </View>
-                            <View style={styles.macroItem}>
-                                <Text style={[styles.macroVal, { color: colors.warning }]}>{food.carbs}g</Text>
-                                <Text style={styles.macroLabel}>C</Text>
-                            </View>
-                            <View style={styles.macroItem}>
-                                <Text style={[styles.macroVal, { color: colors.success }]}>{food.fats}g</Text>
-                                <Text style={styles.macroLabel}>F</Text>
-                            </View>
+                <Card style={[styles.foodCard, isSelected && styles.foodCardSelected]}>
+                    <View style={styles.foodHeader}>
+                        <View style={styles.foodInfo}>
+                            <Typography variant="headline">{food.name}</Typography>
+                            <Typography variant="caption" color={colors.textDim} style={{ marginTop: 2 }}>{food.servingSize}</Typography>
                         </View>
-
-                        <View style={styles.qtyRow}>
-                            <TouchableOpacity
-                                style={styles.qtyBtn}
-                                onPress={() => setQuantity(String(Math.max(0.5, (parseFloat(quantity) || 1) - 0.5)))}
-                            >
-                                <Ionicons name="remove" size={18} color={colors.text} />
-                            </TouchableOpacity>
-                            <TextInput
-                                style={styles.qtyInput}
-                                value={quantity}
-                                onChangeText={setQuantity}
-                                keyboardType="numeric"
-                            />
-                            <TouchableOpacity
-                                style={styles.qtyBtn}
-                                onPress={() => setQuantity(String((parseFloat(quantity) || 1) + 0.5))}
-                            >
-                                <Ionicons name="add" size={18} color={colors.text} />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.addBtn}
-                                onPress={() => handleLog(food)}
-                            >
-                                <Ionicons name="add-circle" size={18} color="#000" />
-                                <Text style={styles.addBtnText}>ADD</Text>
-                            </TouchableOpacity>
+                        <View style={styles.foodNutrition}>
+                            <Typography variant="title2">{food.calories}</Typography>
+                            <Typography variant="caption" color={colors.textDim}>Cal</Typography>
                         </View>
                     </View>
-                )}
+
+                    {isSelected && (
+                        <View style={styles.expandedInfo}>
+                            <View style={styles.macroRow}>
+                                <View style={styles.macroItem}>
+                                    <Typography variant="subheadline" color={colors.protein || colors.primary}>{food.protein}g</Typography>
+                                    <Typography variant="caption" color={colors.textDim}>Protein</Typography>
+                                </View>
+                                <View style={styles.macroItem}>
+                                    <Typography variant="subheadline" color={colors.carbs || colors.warning}>{food.carbs}g</Typography>
+                                    <Typography variant="caption" color={colors.textDim}>Carbs</Typography>
+                                </View>
+                                <View style={styles.macroItem}>
+                                    <Typography variant="subheadline" color={colors.fats || colors.danger}>{food.fats}g</Typography>
+                                    <Typography variant="caption" color={colors.textDim}>Fats</Typography>
+                                </View>
+                            </View>
+
+                            <View style={styles.qtyRow}>
+                                <View style={styles.qtyControls}>
+                                    <TouchableOpacity
+                                        style={styles.qtyBtn}
+                                        onPress={() => setQuantity(String(Math.max(0.5, (parseFloat(quantity) || 1) - 0.5)))}
+                                    >
+                                        <Ionicons name="remove" size={18} color={colors.textSecondary} />
+                                    </TouchableOpacity>
+                                    <TextInput
+                                        style={styles.qtyInput}
+                                        value={quantity}
+                                        onChangeText={setQuantity}
+                                        keyboardType="numeric"
+                                    />
+                                    <TouchableOpacity
+                                        style={styles.qtyBtn}
+                                        onPress={() => setQuantity(String((parseFloat(quantity) || 1) + 0.5))}
+                                    >
+                                        <Ionicons name="add" size={18} color={colors.textSecondary} />
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={{ flex: 1, marginLeft: spacing[4] }}>
+                                    <Button
+                                        title="Add"
+                                        onPress={() => handleLog(food)}
+                                        icon={<Ionicons name="add-circle" size={18} color={colors.textInverse} />}
+                                    />
+                                </View>
+                            </View>
+                        </View>
+                    )}
+                </Card>
             </TouchableOpacity>
         );
     };
 
     return (
         <View style={styles.container}>
-            <StatusBar barStyle="light-content" backgroundColor="#000" />
+            <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
 
             {/* Header */}
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
+                <TouchableOpacity onPress={() => navigation.goBack()} style={{ paddingRight: spacing[4] }}>
                     <Ionicons name="arrow-back" size={24} color={colors.text} />
                 </TouchableOpacity>
-                <Text style={styles.headerTitle}>ADD {mealType}</Text>
-                <View style={{ width: 24 }} />
+                <Typography variant="largeTitle">Add {mealType}</Typography>
             </View>
 
             {/* Search */}
-            <View style={styles.searchBox}>
-                <Ionicons name="search" size={18} color={colors.textDim} />
-                <TextInput
-                    style={styles.searchInput}
-                    placeholder="Search food (roti, chicken, dal...)"
-                    placeholderTextColor={colors.textDim}
-                    value={search}
-                    onChangeText={(t) => { setSearch(t); setSelectedCategory(null); }}
-                    autoFocus
-                />
-                {search.length > 0 && (
-                    <TouchableOpacity onPress={() => setSearch('')}>
-                        <Ionicons name="close-circle" size={18} color={colors.textDim} />
-                    </TouchableOpacity>
-                )}
+            <View style={styles.searchContainer}>
+                <View style={styles.searchBox}>
+                    <Ionicons name="search" size={20} color={colors.textSecondary} />
+                    <TextInput
+                        style={styles.searchInput}
+                        placeholder="Search food (roti, chicken, dal...)"
+                        placeholderTextColor={colors.textDim}
+                        value={search}
+                        onChangeText={(t) => { setSearch(t); setSelectedCategory(null); }}
+                        autoFocus
+                    />
+                    {search.length > 0 && (
+                        <TouchableOpacity onPress={() => setSearch('')}>
+                            <Ionicons name="close-circle" size={20} color={colors.textSecondary} />
+                        </TouchableOpacity>
+                    )}
+                </View>
             </View>
 
             {/* Category chips */}
-            <ScrollView
-                horizontal
-                style={styles.categoryScroll}
-                contentContainerStyle={styles.categoryContent}
-                showsHorizontalScrollIndicator={false}
-            >
-                <TouchableOpacity
-                    style={[styles.categoryChip, !selectedCategory && styles.categoryChipActive]}
-                    onPress={() => { setSelectedCategory(null); setSearch(''); }}
+            <View>
+                <ScrollView
+                    horizontal
+                    style={styles.categoryScroll}
+                    contentContainerStyle={styles.categoryContent}
+                    showsHorizontalScrollIndicator={false}
                 >
-                    <Text style={[styles.categoryText, !selectedCategory && styles.categoryTextActive]}>ALL</Text>
-                </TouchableOpacity>
-                {categories.map((cat) => (
                     <TouchableOpacity
-                        key={cat}
-                        style={[styles.categoryChip, selectedCategory === cat && styles.categoryChipActive]}
-                        onPress={() => { setSelectedCategory(cat); setSearch(''); }}
+                        style={[styles.categoryChip, !selectedCategory && styles.categoryChipActive]}
+                        onPress={() => { setSelectedCategory(null); setSearch(''); }}
                     >
-                        <Text style={[styles.categoryText, selectedCategory === cat && styles.categoryTextActive]}>
-                            {cat}
-                        </Text>
+                        <Typography variant="caption" color={!selectedCategory ? colors.textInverse : colors.textSecondary}>All</Typography>
                     </TouchableOpacity>
-                ))}
-            </ScrollView>
+                    {categories.map((cat) => (
+                        <TouchableOpacity
+                            key={cat}
+                            style={[styles.categoryChip, selectedCategory === cat && styles.categoryChipActive]}
+                            onPress={() => { setSelectedCategory(cat); setSearch(''); }}
+                        >
+                            <Typography variant="caption" color={selectedCategory === cat ? colors.textInverse : colors.textSecondary}>
+                                {cat}
+                            </Typography>
+                        </TouchableOpacity>
+                    ))}
+                </ScrollView>
+            </View>
 
             {/* Recent foods quick-add */}
             {recentFoods.length > 0 && search.length === 0 && !selectedCategory && (
                 <View style={styles.recentSection}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-                        <Ionicons name="flash" size={14} color={colors.primary} />
-                        <Text style={styles.recentLabel}>QUICK ADD</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing[1], marginBottom: spacing[2] }}>
+                        <Ionicons name="flash" size={16} color={colors.primary} />
+                        <Typography variant="subheadline" color={colors.textSecondary}>Quick Add</Typography>
                     </View>
                     <ScrollView
                         horizontal
@@ -215,8 +214,8 @@ const MealLogScreen = ({ navigation, route }) => {
                                 onPress={() => { logFood(food, mealType, 1); navigation.goBack(); }}
                                 activeOpacity={0.7}
                             >
-                                <Text style={styles.recentName} numberOfLines={1}>{food.name}</Text>
-                                <Text style={styles.recentCal}>{food.calories} cal</Text>
+                                <Typography variant="caption" color={colors.primary} numberOfLines={1} style={{ maxWidth: 100 }}>{food.name}</Typography>
+                                <Typography variant="caption" color={colors.primary} style={{ opacity: 0.7, marginLeft: 4 }}>{food.calories} cal</Typography>
                             </TouchableOpacity>
                         ))}
                     </ScrollView>
@@ -224,7 +223,9 @@ const MealLogScreen = ({ navigation, route }) => {
             )}
 
             {/* Results count */}
-            <Text style={styles.resultCount}>{filteredFoods.length} items</Text>
+            <Typography variant="caption" color={colors.textDim} style={styles.resultCount}>
+                {filteredFoods.length} items found
+            </Typography>
 
             {/* Food list */}
             <FlatList
@@ -239,217 +240,160 @@ const MealLogScreen = ({ navigation, route }) => {
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: colors.background },
+    container: {
+        flex: 1,
+        backgroundColor: colors.background
+    },
 
     // Header
     header: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
         alignItems: 'center',
-        paddingHorizontal: screen.paddingHorizontal,
+        paddingHorizontal: spacing[4],
         paddingTop: spacing[10],
-        paddingBottom: spacing[2],
-    },
-    headerTitle: {
-        ...textStyles.h3,
-        color: colors.primary,
+        paddingBottom: spacing[4],
     },
 
     // Search
+    searchContainer: {
+        paddingHorizontal: spacing[4],
+        marginBottom: spacing[4],
+    },
     searchBox: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        marginHorizontal: screen.paddingHorizontal,
+        backgroundColor: colors.surfaceLight,
+        borderRadius: radius.md,
         paddingHorizontal: spacing[3],
-        paddingVertical: spacing[2],
+        paddingVertical: spacing[3],
         gap: spacing[2],
     },
     searchInput: {
         flex: 1,
         color: colors.text,
-        fontSize: 14,
+        fontSize: 16,
     },
 
     // Categories
-    categoryScroll: { maxHeight: 42, marginTop: spacing[2] },
+    categoryScroll: {
+        maxHeight: 48,
+        marginBottom: spacing[2]
+    },
     categoryContent: {
-        paddingHorizontal: screen.paddingHorizontal,
-        gap: spacing[1],
+        paddingHorizontal: spacing[4],
+        gap: spacing[2],
     },
     categoryChip: {
-        paddingVertical: spacing[1],
-        paddingHorizontal: spacing[2],
+        paddingVertical: spacing[2],
+        paddingHorizontal: spacing[4],
+        borderRadius: radius.full,
+        backgroundColor: colors.surfaceLight,
         borderWidth: 1,
-        borderColor: colors.border,
-        backgroundColor: colors.surface,
+        borderColor: colors.borderLight,
+        justifyContent: 'center',
     },
     categoryChipActive: {
+        backgroundColor: colors.primary,
         borderColor: colors.primary,
-        backgroundColor: colors.primaryMuted,
-    },
-    categoryText: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 9,
-    },
-    categoryTextActive: {
-        color: colors.primary,
     },
 
     // Result count
     resultCount: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        paddingHorizontal: screen.paddingHorizontal,
-        marginTop: spacing[2],
-        marginBottom: spacing[1],
+        paddingHorizontal: spacing[4],
+        marginBottom: spacing[2],
     },
 
     // Recent foods
     recentSection: {
-        paddingHorizontal: screen.paddingHorizontal,
+        paddingHorizontal: spacing[4],
         marginTop: spacing[2],
-    },
-    recentLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 9,
-        marginBottom: spacing[1],
+        marginBottom: spacing[4],
     },
     recentScroll: {
-        gap: spacing[1],
+        gap: spacing[2],
     },
     recentChip: {
-        backgroundColor: colors.primaryMuted,
-        borderWidth: 1,
-        borderColor: colors.primary,
+        flexDirection: 'row',
+        backgroundColor: colors.primaryMuted || 'rgba(16, 185, 129, 0.1)',
+        borderRadius: radius.full,
         paddingVertical: spacing[2],
-        paddingHorizontal: spacing[3],
+        paddingHorizontal: spacing[4],
         alignItems: 'center',
-    },
-    recentName: {
-        ...textStyles.label,
-        color: colors.primary,
-        fontSize: 10,
-        maxWidth: 90,
-    },
-    recentCal: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 8,
+        borderWidth: 1,
+        borderColor: 'rgba(16, 185, 129, 0.2)',
     },
 
     // Food list
     listContent: {
-        paddingHorizontal: screen.paddingHorizontal,
+        paddingHorizontal: spacing[4],
         paddingBottom: spacing[10],
     },
     foodCard: {
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        padding: spacing[3],
-        marginBottom: spacing[1],
+        marginBottom: spacing[3],
+        padding: spacing[4],
     },
     foodCardSelected: {
         borderColor: colors.primary,
+        borderWidth: 1.5,
     },
-    foodInfo: { flex: 1 },
-    foodName: {
-        ...textStyles.label,
-        color: colors.text,
-        fontSize: 12,
+    foodHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
     },
-    foodServing: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 9,
-        marginTop: 2,
-    },
+    foodInfo: { flex: 1, paddingRight: spacing[2] },
     foodNutrition: {
-        position: 'absolute',
-        right: spacing[3],
-        top: spacing[3],
-        alignItems: 'center',
-    },
-    calorieText: {
-        fontSize: 16,
-        fontWeight: '900',
-        color: colors.text,
-    },
-    calorieLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 7,
+        alignItems: 'flex-end',
     },
 
     // Expanded
     expandedInfo: {
-        marginTop: spacing[3],
+        marginTop: spacing[4],
         borderTopWidth: 1,
-        borderTopColor: colors.border,
-        paddingTop: spacing[2],
+        borderTopColor: colors.borderLight,
+        paddingTop: spacing[4],
     },
     macroRow: {
         flexDirection: 'row',
-        gap: spacing[4],
-        marginBottom: spacing[3],
+        gap: spacing[6],
+        marginBottom: spacing[5],
     },
     macroItem: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: spacing[1],
-    },
-    macroVal: {
-        fontSize: 14,
-        fontWeight: '700',
-    },
-    macroLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 9,
+        alignItems: 'flex-start',
     },
 
     // Quantity
     qtyRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: spacing[2],
+    },
+    qtyControls: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: colors.surfaceLight,
+        borderRadius: radius.md,
+        overflow: 'hidden',
+        borderWidth: 1,
+        borderColor: colors.borderLight,
     },
     qtyBtn: {
-        width: 32,
-        height: 32,
-        backgroundColor: colors.surfaceLight,
+        width: 40,
+        height: 40,
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: colors.surfaceLight,
     },
     qtyInput: {
         width: 48,
-        backgroundColor: colors.background,
-        borderWidth: 1,
-        borderColor: colors.primary,
+        height: 40,
+        backgroundColor: colors.surfaceLight,
         color: colors.text,
-        fontSize: 14,
-        fontWeight: '700',
+        fontSize: 16,
+        fontWeight: 'bold',
         textAlign: 'center',
-        paddingVertical: spacing[1],
-    },
-    addBtn: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: colors.primary,
-        padding: spacing[2],
-        gap: spacing[1],
-    },
-    addBtnText: {
-        ...textStyles.button,
-        color: '#000',
-        fontSize: 12,
+        borderLeftWidth: 1,
+        borderRightWidth: 1,
+        borderColor: colors.borderLight,
     },
 });
 

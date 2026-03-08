@@ -1,671 +1,421 @@
-/**
- * FORGEBORN — DASHBOARD SCREEN
- * 
- * The warrior's command center.
- * Everything you need for today — at a glance.
- * Connected to ALL real stores: workout, nutrition, habits, lookmaxx.
- */
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
     View,
-    Text,
-    TouchableOpacity,
     StyleSheet,
     ScrollView,
     StatusBar,
-    Alert,
+    TouchableOpacity,
+    Animated,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../theme/colors';
-import { textStyles } from '../theme/typography';
-import { spacing, screen } from '../theme/spacing';
-import { radius, shadows } from '../theme/colors';
-import useCommitmentStore from '../../store/commitmentStore';
+import * as Haptics from 'expo-haptics';
+import Svg, { Circle } from 'react-native-svg';
+import { colors, spacing, radius } from '../theme';
+import { Typography } from '../components';
+
 import useUserStore from '../../store/userStore';
-import useObligationStore, { ObligationStatus } from '../../store/obligationStore';
+import useCommitmentStore from '../../store/commitmentStore';
 import useWorkoutStore from '../../store/workoutStore';
 import useNutritionStore from '../../store/nutritionStore';
 import useHabitStore from '../../store/habitStore';
 import useLookmaxxStore from '../../store/lookmaxxStore';
-import useBadgeStore from '../../store/badgeStore';
 
-const DashboardScreen = ({ navigation }) => {
-    const [greeting, setGreeting] = useState('');
+const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
-    // User data
-    const profile = useUserStore((s) => s.profile);
-    const userName = profile?.name || 'WARRIOR';
+// --- Premium SVG Ring Component ---
+const ProgressRing = ({ progress, color, size = 60, strokeWidth = 6 }) => {
+    const radius = (size - strokeWidth) / 2;
+    const circumference = radius * 2 * Math.PI;
 
-    // Commitment
-    const getDaysSinceCommitment = useCommitmentStore((s) => s.getDaysSinceCommitment);
-    const days = getDaysSinceCommitment();
-
-    // Obligations
-    const obligations = useObligationStore((s) => s.obligations);
-    const debtUnits = useObligationStore((s) => s.debtUnits);
-    const failureCount = useObligationStore((s) => s.failureCount);
-    const getNextObligation = useObligationStore((s) => s.getNextObligation);
-    const tick = useObligationStore((s) => s.tick);
-    const nextObligation = getNextObligation();
-
-    // Workout data
-    const totalWorkouts = useWorkoutStore((s) => s.totalWorkoutsCompleted);
-    const workoutStreak = useWorkoutStore((s) => s.currentStreak);
-    const currentPlan = useWorkoutStore((s) => s.currentPlan);
-    const activeWorkout = useWorkoutStore((s) => s.activeWorkout);
-
-    // Nutrition data
-    const nutritionPlan = useNutritionStore((s) => s.nutritionPlan);
-    const getTodaysTotals = useNutritionStore((s) => s.getTodaysTotals);
-    const nutritionTotals = getTodaysTotals();
-
-    // Habit data
-    const getTodaysStatus = useHabitStore((s) => s.getTodaysStatus);
-    const habitLevel = useHabitStore((s) => s.level);
-    const habitStatus = getTodaysStatus();
-
-    // Lookmaxx data
-    const getTodaysRoutineStatus = useLookmaxxStore((s) => s.getTodaysRoutineStatus);
-    const routineStatus = getTodaysRoutineStatus();
+    const animatedProgress = React.useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
-        const hour = new Date().getHours();
-        if (hour < 5) setGreeting('STILL GRINDING');
-        else if (hour < 12) setGreeting('GOOD MORNING');
-        else if (hour < 17) setGreeting('KEEP PUSHING');
-        else if (hour < 21) setGreeting('EVENING PROTOCOL');
-        else setGreeting('NIGHT OPS');
+        Animated.spring(animatedProgress, {
+            toValue: Math.min(progress, 1),
+            useNativeDriver: false, // SVG animations don't support native driver easily
+            bounciness: 4,
+            speed: 8,
+            delay: 150, // Stagger effect
+        }).start();
+    }, [progress]);
 
-        tick();
-        const interval = setInterval(tick, 60000);
+    const strokeDashoffset = animatedProgress.interpolate({
+        inputRange: [0, 1],
+        outputRange: [circumference, 0]
+    });
 
-        // ── Badge checker ──
-        const checkBadges = useBadgeStore.getState().checkBadges;
-        const workoutState = useWorkoutStore.getState();
-        const habitState = useHabitStore.getState();
-        const nutritionState = useNutritionStore.getState();
-        const commitmentState = useCommitmentStore.getState();
-        const lookmaxxState = useLookmaxxStore.getState();
+    return (
+        <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
+            <Svg width={size} height={size} style={{ transform: [{ rotate: '-90deg' }] }}>
+                {/* Background Track */}
+                <Circle
+                    stroke={color + '20'} // 20% opacity
+                    cx={size / 2}
+                    cy={size / 2}
+                    r={radius}
+                    strokeWidth={strokeWidth}
+                    fill="none"
+                />
+                {/* Foreground Progress */}
+                <AnimatedCircle
+                    stroke={color}
+                    cx={size / 2}
+                    cy={size / 2}
+                    r={radius}
+                    strokeWidth={strokeWidth}
+                    strokeDasharray={`${circumference} ${circumference}`}
+                    strokeDashoffset={strokeDashoffset}
+                    strokeLinecap="round"
+                    fill="none"
+                />
+            </Svg>
+            <View style={{ position: 'absolute' }}>
+                <Typography variant="caption" style={{ fontSize: 10, fontWeight: '800', color: color }}>
+                    {Math.round(progress * 100)}%
+                </Typography>
+            </View>
+        </View>
+    );
+};
 
-        // Calculate total volume from history
-        let totalVol = 0;
-        (workoutState.workoutHistory || []).forEach(w => { totalVol += w.totalVolume || 0; });
+// --- Premium Pressable Card ---
+const ActionCard = ({ title, subtitle, icon, color, progress, onPress, targetValueStr = '' }) => {
+    const animatedScale = React.useRef(new Animated.Value(1)).current;
 
-        // Count total meals logged
-        let totalMeals = 0;
-        let maxWater = 0;
-        const logs = nutritionState.dailyLogs || {};
-        Object.values(logs).forEach(day => {
-            const meals = day?.meals || {};
-            Object.values(meals).forEach(arr => { totalMeals += (arr || []).length; });
-            maxWater = Math.max(maxWater, day?.water || 0);
-        });
+    const handlePressIn = () => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        Animated.spring(animatedScale, {
+            toValue: 0.96,
+            useNativeDriver: true,
+            speed: 20,
+            bounciness: 10,
+        }).start();
+    };
 
-        // Skincare completed count
-        const routineStatus = lookmaxxState.getTodaysRoutineStatus?.() || {};
-        const skincareCompleted = (routineStatus.amCompleted === routineStatus.amTotal && routineStatus.pmCompleted === routineStatus.pmTotal) ? 1 : 0;
+    const handlePressOut = () => {
+        Animated.spring(animatedScale, {
+            toValue: 1,
+            useNativeDriver: true,
+            speed: 20,
+            bounciness: 10,
+        }).start();
+    };
 
-        checkBadges({
-            totalWorkouts: workoutState.totalWorkoutsCompleted || 0,
-            totalVolume: totalVol,
-            longestStreak: workoutState.longestStreak || 0,
-            totalHabitsCompleted: habitState.totalHabitsCompleted || 0,
-            perfectDays: habitState.perfectDays || 0,
-            habitLevel: habitState.level || 0,
-            totalMealsLogged: totalMeals,
-            maxWaterGlasses: maxWater,
-            daysSinceCommitment: commitmentState.getDaysSinceCommitment?.() || 0,
-            skincareCompleted,
-        });
+    const handlePress = () => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+        onPress();
+    };
 
-        // Streak milestone celebrations
-        const streak = workoutState.currentStreak || 0;
-        const milestones = [
-            { days: 100, title: 'LEGENDARY STATUS', msg: '100-day streak! You are truly UNBREAKABLE.' },
-            { days: 30, title: 'MACHINE MODE', msg: '30-day streak! Nothing can stop you.' },
-            { days: 7, title: 'MOMENTUM BUILT', msg: '7-day streak! You\'re building a habit.' },
-        ];
-        const milestone = milestones.find(m => streak === m.days);
-        if (milestone) {
-            setTimeout(() => {
-                Alert.alert(
-                    milestone.title,
-                    milestone.msg,
-                    [{ text: 'KEEP GOING', style: 'default' }]
-                );
-            }, 1500);
+    return (
+        <TouchableOpacity
+            onPressIn={handlePressIn}
+            onPressOut={handlePressOut}
+            onPress={handlePress}
+            activeOpacity={0.9}
+        >
+            <Animated.View style={[styles.card, { transform: [{ scale: animatedScale }] }]}>
+                <View style={styles.cardContent}>
+                    <View style={styles.cardHeaderRow}>
+                        <View style={[styles.iconBox, { backgroundColor: color + '15' }]}>
+                            <Ionicons name={icon} size={24} color={color} />
+                        </View>
+                        <View style={styles.cardHeaderText}>
+                            <Typography variant="headline" style={{ fontWeight: '700' }}>{title}</Typography>
+                            <Typography variant="caption" color={colors.textDim} numberOfLines={1}>{subtitle}</Typography>
+                        </View>
+                    </View>
+
+                    {/* Ring replaces simple progress bar */}
+                    <View style={styles.cardRight}>
+                        <ProgressRing progress={progress} color={color} size={54} strokeWidth={5} />
+                    </View>
+                </View>
+            </Animated.View>
+        </TouchableOpacity>
+    );
+};
+
+
+const DashboardScreen = ({ navigation }) => {
+    // Stores
+    const profile = useUserStore((s) => s.profile);
+    const userName = profile?.name || 'Warrior';
+
+    // Dates/Greeting
+    const hour = new Date().getHours();
+    let greeting = 'Good evening';
+    if (hour < 5) greeting = 'Early start';
+    else if (hour < 12) greeting = 'Good morning';
+    else if (hour < 17) greeting = 'Good afternoon';
+
+    const getDaysSinceCommitment = useCommitmentStore((s) => s.getDaysSinceCommitment);
+    const dayCount = getDaysSinceCommitment() || 0;
+
+    // Workout
+    const totalWorkouts = useWorkoutStore((s) => s.totalWorkoutsCompleted || 0);
+    const activeWorkout = useWorkoutStore((s) => s.activeWorkout);
+    const currentPlan = useWorkoutStore((s) => s.currentPlan);
+    const todayPlanName = currentPlan?.schedule?.[new Date().getDay()]?.name || 'Rest Day / Unscheduled';
+    const workoutDone = activeWorkout === null && totalWorkouts > 0; // Simple approx
+
+    // Nutrition
+    const nutritionPlan = useNutritionStore((s) => s.nutritionPlan);
+    const getTodaysTotals = useNutritionStore((s) => s.getTodaysTotals);
+    const nutritionTotals = getTodaysTotals() || { calories: 0, protein: 0, carbs: 0, fats: 0, water: 0, mealsLogged: 0 };
+    const calTarget = nutritionPlan?.targetCalories || 2000;
+    const calProgress = Math.min(nutritionTotals.calories / Math.max(calTarget, 1), 1);
+
+    // Habits
+    const getTodaysStatus = useHabitStore((s) => s.getTodaysStatus);
+    const habitStatus = getTodaysStatus() || { completed: 0, total: 1, progress: 0 }; // default total 1 to avoid NaN
+
+    // Lookmaxx
+    const getTodaysRoutineStatus = useLookmaxxStore((s) => s.getTodaysRoutineStatus);
+    const routineStatus = getTodaysRoutineStatus() || { amCompleted: 0, amTotal: 0, pmCompleted: 0, pmTotal: 0 };
+
+    // Haptic Scroll
+    const handleScroll = (e) => {
+        const y = e.nativeEvent.contentOffset.y;
+        if (y < -30) {
+            // Pull down refresh feel
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         }
-
-        return () => clearInterval(interval);
-    }, []);
-
-    const formatTime = (timestamp) => {
-        const now = Date.now();
-        const diff = timestamp - now;
-        if (diff <= 0) return 'NOW';
-        const hours = Math.floor(diff / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        if (hours > 0) return `${hours}h ${minutes}m`;
-        return `${minutes}m`;
     };
-
-    const getStatusInfo = () => {
-        if (debtUnits > 5) return { text: 'CRITICAL', color: colors.danger, icon: 'warning' };
-        if (debtUnits > 0) return { text: 'IN DEBT', color: colors.warning, icon: 'alert-circle' };
-        return { text: 'OPERATIONAL', color: colors.success, icon: 'shield-checkmark' };
-    };
-
-    const status = getStatusInfo();
-
-    // Calculate real progress
-    const calTarget = nutritionPlan?.targetCalories || 2200;
-    const calProgress = Math.min(1, nutritionTotals.calories / calTarget);
-    const habitProgress = habitStatus.progress;
-
-    // Today's workout info
-    const todayPlanName = currentPlan?.schedule?.[new Date().getDay()]?.name;
-    const workoutDone = activeWorkout === null && totalWorkouts > 0;
 
     return (
         <View style={styles.container}>
-            <StatusBar barStyle="light-content" backgroundColor={colors.background} />
+            <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
             <ScrollView
-                style={styles.scrollView}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.scrollContent}
+                onScroll={handleScroll}
+                scrollEventThrottle={16}
+                overScrollMode="always"
             >
-                {/* Header */}
+                {/* Premium Header */}
                 <View style={styles.header}>
                     <View>
-                        <Text style={styles.greeting}>{greeting}</Text>
-                        <Text style={styles.userName}>{userName}</Text>
+                        <Typography variant="subheadline" color={colors.textSecondary} style={{ fontWeight: '600' }}>
+                            {greeting},
+                        </Typography>
+                        <Typography variant="largeTitle" style={{ marginTop: -2, letterSpacing: -1 }}>
+                            {userName}
+                        </Typography>
                     </View>
-                    <View style={styles.dayBadge}>
-                        <Text style={styles.dayNumber}>{days}</Text>
-                        <Text style={styles.dayLabel}>DAYS</Text>
+                    <TouchableOpacity
+                        style={styles.dayBadge}
+                        onPress={() => {
+                            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+                            navigation.navigate('Profile');
+                        }}
+                        activeOpacity={0.8}
+                    >
+                        <Typography variant="caption" color={colors.surface} style={{ fontWeight: '800' }}>DAY</Typography>
+                        <Typography variant="title2" color={colors.surface} style={{ marginTop: -4 }}>
+                            {dayCount}
+                        </Typography>
+                    </TouchableOpacity>
+                </View>
+
+                {/* Glassmorphic Stats Grid */}
+                <View style={styles.statsGrid}>
+                    <View style={styles.statBox}>
+                        <Ionicons name="barbell" size={16} color={colors.primary} style={{ marginBottom: 4 }} />
+                        <Typography variant="title1" style={{ fontSize: 28 }}>{totalWorkouts}</Typography>
+                        <Typography variant="caption" color={colors.textDim} style={{ marginTop: 2 }}>Workouts</Typography>
+                    </View>
+                    <View style={[styles.statBox, styles.statBoxCenter]}>
+                        <Ionicons name="water" size={16} color={colors.info} style={{ marginBottom: 4 }} />
+                        <Typography variant="title1" color={colors.info} style={{ fontSize: 28 }}>{nutritionTotals.water}</Typography>
+                        <Typography variant="caption" color={colors.textDim} style={{ marginTop: 2 }}>Glasses</Typography>
+                    </View>
+                    <View style={styles.statBox}>
+                        <Ionicons name="checkmark-done" size={16} color={colors.warning} style={{ marginBottom: 4 }} />
+                        <Typography variant="title1" style={{ fontSize: 28 }}>{habitStatus.completed}</Typography>
+                        <Typography variant="caption" color={colors.textDim} style={{ marginTop: 2 }}>Habits</Typography>
                     </View>
                 </View>
 
-                {/* Status Card */}
-                <View style={[styles.statusCard, { borderColor: status.color }]}>
-                    <View style={styles.statusRow}>
-                        <Ionicons name={status.icon} size={20} color={status.color} />
-                        <Text style={[styles.statusText, { color: status.color }]}>
-                            {status.text}
-                        </Text>
-                        <View style={{ flex: 1 }} />
-                        <Text style={styles.levelBadge}>LVL {habitLevel}</Text>
-                    </View>
-                    {debtUnits > 0 && (
-                        <Text style={styles.debtText}>
-                            {debtUnits} DEBT UNITS • {failureCount} FAILURES
-                        </Text>
-                    )}
+                {/* Main Action Items */}
+                <View style={styles.sectionHeader}>
+                    <Typography variant="title2" style={{ fontWeight: '700', letterSpacing: -0.5 }}>
+                        Today's Progress
+                    </Typography>
                 </View>
 
-                {/* Quick Stats Row */}
-                <View style={styles.statsRow}>
-                    <View style={styles.statCard}>
-                        <Ionicons name="barbell" size={20} color={colors.primary} />
-                        <Text style={styles.statNumber}>{totalWorkouts}</Text>
-                        <Text style={styles.statLabel}>WORKOUTS</Text>
-                    </View>
-                    <View style={styles.statCard}>
-                        <Ionicons name="flame" size={20} color="#FF6B6B" />
-                        <Text style={styles.statNumber}>{workoutStreak}</Text>
-                        <Text style={styles.statLabel}>STREAK</Text>
-                    </View>
-                    <View style={styles.statCard}>
-                        <Ionicons name="flash" size={20} color={colors.warning} />
-                        <Text style={styles.statNumber}>
-                            {habitStatus.completed}/{habitStatus.total}
-                        </Text>
-                        <Text style={styles.statLabel}>HABITS</Text>
-                    </View>
-                    <View style={styles.statCard}>
-                        <Ionicons name="water" size={20} color="#4FA4FF" />
-                        <Text style={styles.statNumber}>{nutritionTotals.water}</Text>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-                            <Ionicons name="water-outline" size={12} color={colors.info} />
-                            <Text style={styles.statLabel}>WATER</Text>
-                        </View>
-                    </View>
-                </View>
+                <ActionCard
+                    title="Training"
+                    subtitle={todayPlanName}
+                    icon="barbell"
+                    color={colors.primary}
+                    progress={workoutDone ? 1 : (activeWorkout ? 0.5 : 0)}
+                    onPress={() => navigation.navigate('Workout')}
+                />
 
-                {/* Today's Mission */}
-                <Text style={styles.sectionTitle}>TODAY'S MISSION</Text>
+                <ActionCard
+                    title="Nutrition"
+                    subtitle={`${Math.round(nutritionTotals.calories)} / ${calTarget} kcal`}
+                    icon="restaurant"
+                    color={colors.success}
+                    progress={calProgress}
+                    onPress={() => navigation.navigate('Nutrition')}
+                />
 
-                {/* Workout Card */}
-                <TouchableOpacity style={styles.missionCard} onPress={() => navigation.navigate('Workout')} activeOpacity={0.7}>
-                    <View style={styles.missionHeader}>
-                        <View style={styles.missionIconBox}>
-                            <Ionicons name="barbell" size={24} color={colors.primary} />
-                        </View>
-                        <View style={styles.missionInfo}>
-                            <Text style={styles.missionTitle}>WORKOUT</Text>
-                            <Text style={styles.missionSub}>
-                                {todayPlanName || profile?.fitnessGoal?.join(' • ') || 'Generate a plan'}
-                            </Text>
-                        </View>
-                        <Ionicons name="chevron-forward" size={20} color={colors.textDim} />
-                    </View>
-                    <View style={styles.missionProgress}>
-                        <View style={styles.progressBar}>
-                            <View style={[styles.progressFill, {
-                                width: activeWorkout ? '50%' : workoutDone ? '100%' : '0%',
-                                backgroundColor: workoutDone ? colors.success : colors.primary,
-                            }]} />
-                        </View>
-                        <Text style={styles.progressText}>
-                            {activeWorkout ? 'IN PROGRESS' : workoutDone ? 'COMPLETE' : 'Not started'}
-                        </Text>
-                    </View>
-                </TouchableOpacity>
-
-                {/* Nutrition Card */}
-                <TouchableOpacity style={styles.missionCard} onPress={() => navigation.navigate('Nutrition')} activeOpacity={0.7}>
-                    <View style={styles.missionHeader}>
-                        <View style={[styles.missionIconBox, { borderColor: colors.success }]}>
-                            <Ionicons name="nutrition" size={24} color={colors.success} />
-                        </View>
-                        <View style={styles.missionInfo}>
-                            <Text style={styles.missionTitle}>NUTRITION</Text>
-                            <Text style={styles.missionSub}>
-                                {nutritionTotals.calories} / {calTarget} cal
-                            </Text>
-                        </View>
-                        <Ionicons name="chevron-forward" size={20} color={colors.textDim} />
-                    </View>
-                    <View style={styles.missionProgress}>
-                        <View style={styles.progressBar}>
-                            <View style={[styles.progressFill, {
-                                width: `${calProgress * 100}%`,
-                                backgroundColor: calProgress >= 0.9 ? colors.success : '#4ECDC4',
-                            }]} />
-                        </View>
-                        <Text style={styles.progressText}>
-                            {nutritionTotals.mealsLogged} meals logged
-                        </Text>
-                    </View>
-                    {/* Macro mini */}
-                    <View style={styles.macroMini}>
-                        <Text style={[styles.macroMiniText, { color: '#FF6B6B' }]}>
-                            P: {nutritionTotals.protein}g
-                        </Text>
-                        <Text style={[styles.macroMiniText, { color: '#FFAA33' }]}>
-                            C: {nutritionTotals.carbs}g
-                        </Text>
-                        <Text style={[styles.macroMiniText, { color: '#4ECDC4' }]}>
-                            F: {nutritionTotals.fats}g
-                        </Text>
-                    </View>
-                </TouchableOpacity>
-
-                {/* Habits Card */}
-                <TouchableOpacity style={styles.missionCard} onPress={() => navigation.navigate('Discipline')} activeOpacity={0.7}>
-                    <View style={styles.missionHeader}>
-                        <View style={[styles.missionIconBox, { borderColor: colors.warning }]}>
-                            <Ionicons name="flash" size={24} color={colors.warning} />
-                        </View>
-                        <View style={styles.missionInfo}>
-                            <Text style={styles.missionTitle}>DISCIPLINE</Text>
-                            <Text style={styles.missionSub}>
-                                {habitStatus.completed} / {habitStatus.total} habits
-                                {habitStatus.isPerfect ? ' PERFECT' : ''}
-                            </Text>
-                        </View>
-                        <Ionicons name="chevron-forward" size={20} color={colors.textDim} />
-                    </View>
-                    <View style={styles.missionProgress}>
-                        <View style={styles.progressBar}>
-                            <View style={[styles.progressFill, {
-                                width: `${habitProgress * 100}%`,
-                                backgroundColor: habitStatus.isPerfect ? colors.success : colors.warning,
-                            }]} />
-                        </View>
-                        <Text style={styles.progressText}>
-                            {Math.round(habitProgress * 100)}%
-                        </Text>
-                    </View>
-                </TouchableOpacity>
+                <ActionCard
+                    title="Discipline"
+                    subtitle={`${habitStatus.completed} of ${habitStatus.total} habits done`}
+                    icon="flash"
+                    color={colors.warning}
+                    progress={habitStatus.total > 0 ? (habitStatus.completed / habitStatus.total) : 0}
+                    onPress={() => navigation.navigate('Discipline')}
+                />
 
                 {/* Lookmaxx Mini Card */}
-                <TouchableOpacity style={styles.lookmaxxMini} onPress={() => navigation.navigate('Profile')} activeOpacity={0.7}>
-                    <View style={styles.lookmaxxLeft}>
-                        <Ionicons name="sparkles-outline" size={18} color={colors.accent} />
-                        <Text style={styles.lookmaxxLabel}>LOOKMAXX</Text>
-                    </View>
-                    <View style={styles.lookmaxxRight}>
-                        <Text style={styles.lookmaxxStat}>
-                            AM: {routineStatus.amCompleted}/{routineStatus.amTotal}
-                        </Text>
-                        <Text style={styles.lookmaxxStat}>
-                            PM: {routineStatus.pmCompleted}/{routineStatus.pmTotal}
-                        </Text>
+                <TouchableOpacity
+                    onPress={() => {
+                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                        navigation.navigate('Profile');
+                    }}
+                    activeOpacity={0.8}
+                    style={{ marginTop: spacing[2], marginBottom: spacing[24] }} // Extra padding for blur tab bar
+                >
+                    <View style={styles.lookmaxxCard}>
+                        <View style={styles.lookmaxxLeft}>
+                            <View style={[styles.iconBox, { backgroundColor: colors.textSecondary + '10', width: 36, height: 36 }]}>
+                                <Ionicons name="sparkles" size={16} color={colors.textSecondary} />
+                            </View>
+                            <View style={{ marginLeft: spacing[3] }}>
+                                <Typography variant="headline" style={{ fontSize: 15 }}>Self-Care Routine</Typography>
+                                <Typography variant="caption" color={colors.textDim}>
+                                    AM: {routineStatus.amCompleted}/{routineStatus.amTotal} • PM: {routineStatus.pmCompleted}/{routineStatus.pmTotal}
+                                </Typography>
+                            </View>
+                        </View>
+                        <Ionicons name="chevron-forward" size={16} color={colors.borderLight} />
                     </View>
                 </TouchableOpacity>
 
-                {/* Next Obligation */}
-                {nextObligation && (
-                    <>
-                        <Text style={styles.sectionTitle}>NEXT OBLIGATION</Text>
-                        <View style={[styles.obligationCard,
-                        nextObligation.status === ObligationStatus.BINDING && styles.obligationBinding
-                        ]}>
-                            <View style={styles.obligationHeader}>
-                                <Text style={styles.obligationName}>{nextObligation.name}</Text>
-                                <View style={[styles.statusBadge,
-                                { borderColor: nextObligation.status === ObligationStatus.BINDING ? colors.warning : colors.textDim }
-                                ]}>
-                                    <Text style={[styles.statusBadgeText,
-                                    { color: nextObligation.status === ObligationStatus.BINDING ? colors.warning : colors.textDim }
-                                    ]}>
-                                        {nextObligation.status}
-                                    </Text>
-                                </View>
-                            </View>
-                            <View style={styles.obligationMeta}>
-                                <View style={styles.metaItem}>
-                                    <Text style={styles.metaLabel}>UNITS</Text>
-                                    <Text style={styles.metaValue}>{nextObligation.unitsRequired}</Text>
-                                </View>
-                                <View style={styles.metaItem}>
-                                    <Text style={styles.metaLabel}>DUE IN</Text>
-                                    <Text style={styles.metaValue}>{formatTime(nextObligation.scheduledAt)}</Text>
-                                </View>
-                            </View>
-                        </View>
-                    </>
-                )}
-
-                {/* Creed */}
-                <View style={styles.creedBox}>
-                    <Text style={styles.creedText}>THERE IS NO TOMORROW.</Text>
-                    <Text style={styles.creedText}>I DO NOT LOSE. I EXECUTE.</Text>
-                </View>
-
-                <View style={{ height: 30 }} />
             </ScrollView>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: colors.background },
-    scrollView: { flex: 1 },
-    scrollContent: {
-        paddingHorizontal: screen.paddingHorizontal,
-        paddingTop: spacing[12],
-        paddingBottom: spacing[4],
+    container: {
+        flex: 1,
+        backgroundColor: colors.background,
     },
-
-    // Header
+    scrollContent: {
+        paddingHorizontal: spacing[6],
+        paddingTop: spacing[16], // Generous top padding
+        paddingBottom: spacing[12],
+    },
     header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: spacing[5],
-    },
-    greeting: {
-        ...textStyles.caption,
-        color: colors.textDim,
-    },
-    userName: {
-        ...textStyles.h1,
-        color: colors.text,
-        fontSize: 28,
+        marginBottom: spacing[8],
     },
     dayBadge: {
-        alignItems: 'center',
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.primary,
+        backgroundColor: colors.text, // Dark badge for contrast in light mode
+        paddingHorizontal: spacing[4],
         paddingVertical: spacing[2],
-        paddingHorizontal: spacing[3],
-    },
-    dayNumber: {
-        fontSize: 28,
-        fontWeight: '900',
-        color: colors.primary,
-    },
-    dayLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 8,
-    },
-
-    // Status
-    statusCard: {
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderRadius: radius.md,
-        padding: spacing[3],
-        marginBottom: spacing[4],
-    },
-    statusRow: {
-        flexDirection: 'row',
+        borderRadius: radius.xl,
         alignItems: 'center',
-        gap: spacing[2],
+        justifyContent: 'center',
+        shadowColor: colors.text,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+        elevation: 4,
     },
-    statusText: {
-        ...textStyles.h3,
-    },
-    levelBadge: {
-        ...textStyles.label,
-        color: colors.primary,
-        fontSize: 11,
+    statsGrid: {
+        flexDirection: 'row',
+        backgroundColor: colors.surface,
+        borderRadius: radius.xl,
+        padding: spacing[5],
+        marginBottom: spacing[10],
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.04,
+        shadowRadius: 24,
+        elevation: 2,
         borderWidth: 1,
-        borderColor: colors.primary,
-        paddingVertical: 2,
+        borderColor: colors.borderLight + '50',
+    },
+    statBox: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    statBoxCenter: {
+        borderLeftWidth: 1,
+        borderRightWidth: 1,
+        borderColor: colors.borderLight + '60',
         paddingHorizontal: spacing[2],
     },
-    debtText: {
-        ...textStyles.caption,
-        color: colors.danger,
-        marginTop: spacing[1],
+    sectionHeader: {
+        marginBottom: spacing[4],
+        paddingLeft: spacing[1],
     },
 
-    // Stats Row
-    statsRow: {
-        flexDirection: 'row',
-        gap: spacing[2],
-        marginBottom: spacing[5],
-    },
-    statCard: {
-        flex: 1,
+    // Abstracted Card Styles
+    card: {
         backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        borderRadius: radius.sm,
-        padding: spacing[2],
-        alignItems: 'center',
-        gap: 2,
-    },
-    statNumber: {
-        fontSize: 16,
-        fontWeight: '900',
-        color: colors.text,
-    },
-    statLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 7,
-    },
-
-    // Section
-    sectionTitle: {
-        ...textStyles.label,
-        color: colors.textDim,
-        marginBottom: spacing[3],
-    },
-
-    // Mission Cards
-    missionCard: {
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        borderRadius: radius.md,
+        borderRadius: radius.xl,
         padding: spacing[4],
-        marginBottom: spacing[3],
+        marginBottom: spacing[4],
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.03,
+        shadowRadius: 16,
+        elevation: 2,
+        borderWidth: 1,
+        borderColor: colors.borderLight + '30',
     },
-    missionHeader: {
+    cardContent: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: spacing[3],
+        justifyContent: 'space-between',
     },
-    missionIconBox: {
-        width: 44,
-        height: 44,
-        borderWidth: 1,
-        borderColor: colors.primary,
-        borderRadius: radius.sm,
+    cardHeaderRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        flex: 1,
+    },
+    iconBox: {
+        width: 48,
+        height: 48,
+        borderRadius: radius.lg,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginRight: spacing[4],
+    },
+    cardHeaderText: {
+        flex: 1,
+        paddingRight: spacing[4],
+    },
+    cardRight: {
         justifyContent: 'center',
         alignItems: 'center',
-        marginRight: spacing[3],
-    },
-    missionInfo: { flex: 1 },
-    missionTitle: {
-        ...textStyles.h3,
-        color: colors.text,
-        fontSize: 16,
-    },
-    missionSub: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        marginTop: 2,
-    },
-    missionProgress: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: spacing[2],
-    },
-    progressBar: {
-        flex: 1,
-        height: 4,
-        backgroundColor: colors.surfaceLight,
-        borderRadius: 2,
-        overflow: 'hidden',
-    },
-    progressFill: {
-        height: '100%',
-        backgroundColor: colors.primary,
-        borderRadius: 2,
-    },
-    progressText: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 9,
-        minWidth: 70,
-        textAlign: 'right',
     },
 
-    // Macro mini row
-    macroMini: {
-        flexDirection: 'row',
-        gap: spacing[3],
-        marginTop: spacing[2],
-        paddingTop: spacing[2],
-        borderTopWidth: 1,
-        borderTopColor: colors.border,
-    },
-    macroMiniText: {
-        ...textStyles.caption,
-        fontSize: 10,
-        fontWeight: '700',
-    },
-
-    // Lookmaxx mini
-    lookmaxxMini: {
+    lookmaxxCard: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
+        borderRadius: radius.lg,
         padding: spacing[3],
-        marginBottom: spacing[5],
+        paddingRight: spacing[4],
+        borderWidth: 1,
+        borderColor: colors.borderLight + '50',
     },
     lookmaxxLeft: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: spacing[2],
-    },
-    lookmaxxIcon: { fontSize: 18 },
-    lookmaxxLabel: {
-        ...textStyles.label,
-        color: colors.text,
-        fontSize: 12,
-    },
-    lookmaxxRight: {
-        flexDirection: 'row',
-        gap: spacing[3],
-    },
-    lookmaxxStat: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 10,
-    },
-
-    // Obligation
-    obligationCard: {
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        borderRadius: radius.md,
-        padding: spacing[4],
-        marginBottom: spacing[4],
-    },
-    obligationBinding: { borderColor: colors.warning },
-    obligationHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: spacing[3],
-    },
-    obligationName: {
-        ...textStyles.h3,
-        color: colors.text,
-        flex: 1,
-    },
-    statusBadge: {
-        borderWidth: 1,
-        paddingVertical: spacing[1],
-        paddingHorizontal: spacing[2],
-    },
-    statusBadgeText: {
-        ...textStyles.caption,
-        fontSize: 9,
-    },
-    obligationMeta: {
-        flexDirection: 'row',
-        gap: spacing[6],
-    },
-    metaItem: {},
-    metaLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-    },
-    metaValue: {
-        ...textStyles.h3,
-        color: colors.text,
-        marginTop: 2,
-    },
-
-    // Creed
-    creedBox: {
-        alignItems: 'center',
-        paddingVertical: spacing[6],
-        borderTopWidth: 1,
-        borderTopColor: colors.border,
-        marginTop: spacing[2],
-    },
-    creedText: {
-        ...textStyles.caption,
-        color: colors.primaryMuted,
-        fontSize: 10,
-        marginVertical: 2,
     },
 });
 
 export default DashboardScreen;
+

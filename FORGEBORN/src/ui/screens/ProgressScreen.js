@@ -1,14 +1,6 @@
-/**
- * FORGEBORN — PROGRESS SCREEN
- * 
- * Weight graph, body measurements, and progress tracking.
- * Inspired by: Happy Scale (weight trends), MyFitnessPal (measurement log)
- */
-
 import React, { useState } from 'react';
 import {
     View,
-    Text,
     StyleSheet,
     ScrollView,
     StatusBar,
@@ -18,21 +10,19 @@ import {
     Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../theme/colors';
-import { textStyles } from '../theme/typography';
-import { spacing, screen } from '../theme/spacing';
+import { colors, spacing, radius, shadows } from '../theme';
+import { Card, Typography, Button } from '../components';
 import useProgressStore from '../../store/progressStore';
 import WeightChart from '../components/WeightChart';
-import { radius, shadows } from '../theme/colors';
 
 const MEASUREMENT_FIELDS = [
-    { key: 'chest', label: 'CHEST', icon: 'resize-outline' },
-    { key: 'waist', label: 'WAIST', icon: 'analytics-outline' },
-    { key: 'hips', label: 'HIPS', icon: 'resize-outline' },
-    { key: 'arms', label: 'ARMS', icon: 'fitness-outline' },
-    { key: 'thighs', label: 'THIGHS', icon: 'footsteps-outline' },
-    { key: 'shoulders', label: 'SHOULDERS', icon: 'barbell-outline' },
-    { key: 'neck', label: 'NECK', icon: 'resize-outline' },
+    { key: 'chest', label: 'Chest', icon: 'resize-outline' },
+    { key: 'waist', label: 'Waist', icon: 'analytics-outline' },
+    { key: 'hips', label: 'Hips', icon: 'resize-outline' },
+    { key: 'arms', label: 'Arms', icon: 'fitness-outline' },
+    { key: 'thighs', label: 'Thighs', icon: 'footsteps-outline' },
+    { key: 'shoulders', label: 'Shoulders', icon: 'barbell-outline' },
+    { key: 'neck', label: 'Neck', icon: 'resize-outline' },
 ];
 
 const ProgressScreen = ({ navigation }) => {
@@ -74,7 +64,7 @@ const ProgressScreen = ({ navigation }) => {
         });
 
         if (Object.keys(parsed).length === 0) {
-            Alert.alert('ERROR', 'Enter at least one measurement.');
+            Alert.alert('Error', 'Enter at least one measurement.');
             return;
         }
 
@@ -87,7 +77,7 @@ const ProgressScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <StatusBar barStyle="light-content" backgroundColor={colors.background} />
+            <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
             <ScrollView
                 style={styles.scrollView}
                 contentContainerStyle={styles.scrollContent}
@@ -95,43 +85,49 @@ const ProgressScreen = ({ navigation }) => {
             >
                 {/* Header */}
                 <View style={styles.header}>
-                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <TouchableOpacity onPress={() => navigation.goBack()} style={{ paddingRight: spacing[4], paddingTop: spacing[2], paddingBottom: spacing[2] }}>
                         <Ionicons name="arrow-back" size={24} color={colors.text} />
                     </TouchableOpacity>
-                    <Text style={styles.title}>PROGRESS</Text>
+                    <View>
+                        <Typography variant="largeTitle">Progress</Typography>
+                        <Typography variant="subheadline" color={colors.textSecondary} style={{ marginTop: 2 }}>Track. Measure. Evolve.</Typography>
+                    </View>
                 </View>
-                <Text style={styles.subtitle}>TRACK. MEASURE. EVOLVE.</Text>
 
                 {/* Weight Trend Card */}
-                <View style={styles.trendCard}>
+                <Card style={[styles.trendCard, { padding: spacing[6] }]}>
                     <View style={styles.trendHeader}>
                         <View>
-                            <Text style={styles.trendLabel}>CURRENT</Text>
-                            <Text style={styles.trendWeight}>
-                                {trend.currentWeight || '–'} kg
-                            </Text>
+                            <Typography variant="caption" color={colors.textDim} style={{ marginBottom: spacing[1] }}>Current Weight</Typography>
+                            <Typography variant="largeTitle" style={{ fontSize: 40, lineHeight: 48 }}>
+                                {trend.currentWeight || '–'}<Typography variant="title2" color={colors.textSecondary}> kg</Typography>
+                            </Typography>
                         </View>
-                        <View style={styles.trendChange}>
+                        <View style={[styles.trendChangeBadge, {
+                            backgroundColor: trend.trend === 'LOSING' ? 'rgba(16, 185, 129, 0.1)' :
+                                trend.trend === 'GAINING' ? 'rgba(239, 68, 68, 0.1)' : colors.surfaceLight,
+                        }]}>
                             <Ionicons
                                 name={trend.change > 0 ? 'arrow-up' : trend.change < 0 ? 'arrow-down' : 'remove'}
                                 size={16}
                                 color={trend.trend === 'LOSING' ? colors.success :
-                                    trend.trend === 'GAINING' ? colors.warning : colors.textDim}
+                                    trend.trend === 'GAINING' ? colors.danger : colors.textDim}
                             />
-                            <Text style={[styles.trendChangeNum, {
+                            <Typography variant="subheadline" style={{
                                 color: trend.trend === 'LOSING' ? colors.success :
-                                    trend.trend === 'GAINING' ? colors.warning : colors.textDim,
-                            }]}>
+                                    trend.trend === 'GAINING' ? colors.danger : colors.textDim,
+                                marginLeft: 4,
+                                fontWeight: 'bold'
+                            }}>
                                 {Math.abs(trend.change)} kg
-                            </Text>
-                            <Text style={styles.trendStatus}>{trend.trend}</Text>
+                            </Typography>
                         </View>
                     </View>
-                </View>
+                </Card>
 
                 {/* Log Weight */}
-                <View style={styles.logCard}>
-                    <Text style={styles.logTitle}>LOG TODAY'S WEIGHT</Text>
+                <Card style={styles.logCard}>
+                    <Typography variant="subheadline" color={colors.textSecondary} style={{ marginBottom: spacing[3] }}>Log Today's Weight</Typography>
                     <View style={styles.logRow}>
                         <TextInput
                             style={styles.logInput}
@@ -141,227 +137,212 @@ const ProgressScreen = ({ navigation }) => {
                             placeholderTextColor={colors.textDim}
                             keyboardType="numeric"
                         />
-                        <Text style={styles.logUnit}>KG</Text>
+                        <Typography variant="body" color={colors.textSecondary} style={{ marginHorizontal: spacing[3] }}>kg</Typography>
                         <TouchableOpacity style={styles.logBtn} onPress={handleLogWeight}>
-                            <Ionicons name="checkmark" size={18} color="#000" />
+                            <Ionicons name="checkmark" size={20} color={colors.textInverse} />
                         </TouchableOpacity>
                     </View>
-                </View>
+                </Card>
 
                 {/* Weight Graph */}
-                <Text style={styles.sectionLabel}>WEIGHT TREND (30 DAYS)</Text>
+                <View style={[styles.sectionHeader, { marginTop: spacing[8] }]}>
+                    <Typography variant="title3">Weight Trend</Typography>
+                    <Typography variant="caption" color={colors.textDim}>30 DAYS</Typography>
+                </View>
                 {last30.length === 0 ? (
-                    <View style={styles.emptyCard}>
-                        <Ionicons name="bar-chart-outline" size={24} color={colors.textDim} />
-                        <Text style={styles.emptyText}>No weight data yet.</Text>
-                        <Text style={styles.emptySubtext}>Log your weight to see the graph.</Text>
-                    </View>
+                    <Card style={styles.emptyCard}>
+                        <View style={styles.emptyIconBox}>
+                            <Ionicons name="bar-chart-outline" size={24} color={colors.primary} />
+                        </View>
+                        <Typography variant="body" style={{ marginTop: spacing[3] }}>No weight data yet</Typography>
+                        <Typography variant="caption" color={colors.textDim} style={{ marginTop: spacing[1] }}>Log your weight to see the graph.</Typography>
+                    </Card>
                 ) : (
-                    <WeightChart
-                        data={last30}
-                        height={160}
-                        color={colors.primary}
-                    />
+                    <Card style={{ padding: spacing[4] }}>
+                        <WeightChart
+                            data={last30}
+                            height={160}
+                            color={colors.primary}
+                        />
+                    </Card>
                 )}
 
                 {/* Weight History */}
                 {weightLog.length > 0 && (
                     <>
-                        <Text style={styles.sectionLabel}>RECENT ENTRIES</Text>
-                        {weightLog.slice(-7).reverse().map((entry, i) => (
-                            <View key={entry.date} style={styles.historyRow}>
-                                <Text style={styles.historyDate}>{entry.date}</Text>
-                                <Text style={styles.historyWeight}>{entry.weight} kg</Text>
-                            </View>
-                        ))}
+                        <View style={[styles.sectionHeader, { marginTop: spacing[8] }]}>
+                            <Typography variant="title3">Recent Entries</Typography>
+                        </View>
+                        <Card style={{ padding: 0, overflow: 'hidden' }}>
+                            {weightLog.slice(-7).reverse().map((entry, i, arr) => {
+                                const isLast = i === arr.length - 1;
+                                return (
+                                    <View key={entry.date} style={[styles.historyRow, isLast && { borderBottomWidth: 0 }]}>
+                                        <Typography variant="body" color={colors.textSecondary}>{entry.date}</Typography>
+                                        <Typography variant="headline">{entry.weight} kg</Typography>
+                                    </View>
+                                );
+                            })}
+                        </Card>
                     </>
                 )}
 
                 {/* Body Measurements */}
-                <Text style={styles.sectionLabel}>BODY MEASUREMENTS</Text>
+                <View style={[styles.sectionHeader, { marginTop: spacing[8] }]}>
+                    <Typography variant="title3">Body Measurements</Typography>
+                    {latestMeasurements && (
+                        <Typography variant="caption" color={colors.textDim}>As of {latestMeasurements.date}</Typography>
+                    )}
+                </View>
+
                 {latestMeasurements ? (
-                    <View style={styles.measurementCard}>
-                        <Text style={styles.measurementDate}>
-                            Last updated: {latestMeasurements.date}
-                        </Text>
+                    <Card style={styles.measurementCard}>
                         <View style={styles.measurementGrid}>
                             {MEASUREMENT_FIELDS.map(field => {
                                 const val = latestMeasurements[field.key];
                                 if (!val) return null;
                                 return (
                                     <View key={field.key} style={styles.measurementItem}>
-                                        <Ionicons name={field.icon} size={14} color={colors.textSecondary} />
-                                        <Text style={styles.measurementVal}>{val}</Text>
-                                        <Text style={styles.measurementLabel}>{field.label}</Text>
+                                        <View style={styles.measurementIconBox}>
+                                            <Ionicons name={field.icon} size={16} color={colors.primary} />
+                                        </View>
+                                        <Typography variant="title3" style={{ marginTop: spacing[2] }}>{val} <Typography variant="caption" color={colors.textDim}>cm</Typography></Typography>
+                                        <Typography variant="caption" color={colors.textSecondary}>{field.label}</Typography>
                                     </View>
                                 );
                             })}
                         </View>
-                    </View>
+                    </Card>
                 ) : (
-                    <View style={styles.emptyCard}>
-                        <Text style={styles.emptyText}>No measurements logged yet.</Text>
-                    </View>
+                    <Card style={styles.emptyCard}>
+                        <View style={styles.emptyIconBox}>
+                            <Ionicons name="body-outline" size={24} color={colors.primary} />
+                        </View>
+                        <Typography variant="body" style={{ marginTop: spacing[3] }}>No measurements logged</Typography>
+                    </Card>
                 )}
 
                 {/* Add Measurements */}
                 {showMeasurements ? (
-                    <View style={styles.measurementForm}>
-                        <Text style={styles.measurementFormTitle}>LOG MEASUREMENTS (cm)</Text>
-                        {MEASUREMENT_FIELDS.map(field => (
-                            <View key={field.key} style={styles.measurementInputRow}>
-                                <Text style={styles.measurementInputLabel}>
-                                    {field.icon} {field.label}
-                                </Text>
-                                <TextInput
-                                    style={styles.measurementInput}
-                                    value={measurements[field.key] || ''}
-                                    onChangeText={(v) => setMeasurements(m => ({ ...m, [field.key]: v }))}
-                                    placeholder="–"
-                                    placeholderTextColor={colors.textDim}
-                                    keyboardType="numeric"
-                                />
-                            </View>
-                        ))}
+                    <Card style={styles.measurementForm}>
+                        <Typography variant="headline" style={{ marginBottom: spacing[4] }}>Log Measurements (cm)</Typography>
+                        {MEASUREMENT_FIELDS.map((field, index) => {
+                            const isLast = index === MEASUREMENT_FIELDS.length - 1;
+                            return (
+                                <View key={field.key} style={[styles.measurementInputRow, isLast && { borderBottomWidth: 0 }]}>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing[2] }}>
+                                        <Ionicons name={field.icon} size={16} color={colors.textSecondary} />
+                                        <Typography variant="body" color={colors.text}>{field.label}</Typography>
+                                    </View>
+                                    <TextInput
+                                        style={styles.measurementInput}
+                                        value={measurements[field.key] || ''}
+                                        onChangeText={(v) => setMeasurements(m => ({ ...m, [field.key]: v }))}
+                                        placeholder="–"
+                                        placeholderTextColor={colors.textDim}
+                                        keyboardType="numeric"
+                                    />
+                                </View>
+                            );
+                        })}
                         <View style={styles.measurementBtns}>
-                            <TouchableOpacity
-                                style={styles.measurementCancel}
+                            <Button
+                                title="Cancel"
+                                variant="secondary"
                                 onPress={() => { setShowMeasurements(false); setMeasurements({}); }}
-                            >
-                                <Text style={styles.cancelText}>CANCEL</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.measurementSave}
+                                style={{ flex: 1 }}
+                            />
+                            <Button
+                                title="Save Measurements"
                                 onPress={handleLogMeasurements}
-                            >
-                                <Text style={styles.saveText}>SAVE</Text>
-                            </TouchableOpacity>
+                                style={{ flex: 1 }}
+                            />
                         </View>
-                    </View>
+                    </Card>
                 ) : (
-                    <TouchableOpacity
-                        style={styles.addMeasurementBtn}
+                    <Button
+                        title="Update Measurements"
+                        variant="secondary"
                         onPress={() => setShowMeasurements(true)}
-                    >
-                        <Ionicons name="add" size={18} color={colors.primary} />
-                        <Text style={styles.addMeasurementText}>UPDATE MEASUREMENTS</Text>
-                    </TouchableOpacity>
+                        style={{ marginTop: spacing[4] }}
+                    />
                 )}
 
-                <View style={{ height: 30 }} />
+                <View style={{ height: 40 }} />
             </ScrollView>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: colors.background },
-    scrollView: { flex: 1 },
+    container: {
+        flex: 1,
+        backgroundColor: colors.background
+    },
+    scrollView: {
+        flex: 1
+    },
     scrollContent: {
-        paddingHorizontal: screen.paddingHorizontal,
+        paddingHorizontal: spacing[4],
         paddingTop: spacing[12],
-        paddingBottom: spacing[4],
+        paddingBottom: spacing[8],
     },
 
     header: {
         flexDirection: 'row',
-        alignItems: 'center',
-        gap: spacing[3],
-    },
-    title: {
-        ...textStyles.h1,
-        color: colors.primary,
-        fontSize: 24,
-    },
-    subtitle: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        marginBottom: spacing[4],
+        alignItems: 'baseline',
+        marginBottom: spacing[6],
     },
 
-    sectionLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        marginTop: spacing[5],
-        marginBottom: spacing[2],
+    sectionHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'baseline',
+        marginBottom: spacing[4],
+        paddingHorizontal: spacing[1],
     },
 
     // Trend
     trendCard: {
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.primary,
-        borderRadius: radius.lg,
-        padding: spacing[4],
-        ...shadows.md,
+        marginBottom: spacing[4],
     },
     trendHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
     },
-    trendLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 9,
-    },
-    trendWeight: {
-        fontSize: 28,
-        fontWeight: '900',
-        color: colors.text,
-    },
-    trendChange: {
+    trendChangeBadge: {
+        flexDirection: 'row',
         alignItems: 'center',
-    },
-    trendChangeNum: {
-        fontSize: 16,
-        fontWeight: '700',
-    },
-    trendStatus: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 8,
+        paddingHorizontal: spacing[3],
+        paddingVertical: spacing[2],
+        borderRadius: radius.full,
     },
 
     // Log weight
     logCard: {
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        borderRadius: radius.md,
-        padding: spacing[3],
-        marginTop: spacing[3],
-    },
-    logTitle: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 10,
-        marginBottom: spacing[2],
+        padding: spacing[4],
     },
     logRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: spacing[2],
     },
     logInput: {
         flex: 1,
-        backgroundColor: colors.background,
-        borderWidth: 1,
-        borderColor: colors.border,
+        backgroundColor: colors.surfaceLight,
+        borderRadius: radius.md,
         color: colors.text,
-        fontSize: 18,
-        fontWeight: '700',
-        textAlign: 'center',
-        padding: spacing[2],
-    },
-    logUnit: {
-        ...textStyles.label,
-        color: colors.textDim,
-        fontSize: 14,
+        fontSize: 20,
+        fontWeight: 'bold',
+        paddingHorizontal: spacing[4],
+        paddingVertical: spacing[3],
+        borderWidth: 1,
+        borderColor: colors.borderLight,
     },
     logBtn: {
-        width: 40,
-        height: 40,
+        width: 48,
+        height: 48,
+        borderRadius: radius.full,
         backgroundColor: colors.primary,
         justifyContent: 'center',
         alignItems: 'center',
@@ -380,11 +361,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingRight: spacing[1],
         width: 36,
-    },
-    graphYLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 8,
     },
     graphScroll: {
         flex: 1,
@@ -405,174 +381,85 @@ const styles = StyleSheet.create({
         width: 10,
         minHeight: 4,
     },
-    graphBarLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 6,
-        marginTop: 2,
-    },
 
     // History
     historyRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        borderRadius: radius.sm,
-        padding: spacing[2],
-        paddingHorizontal: spacing[3],
-        marginBottom: 2,
-    },
-    historyDate: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 10,
-    },
-    historyWeight: {
-        ...textStyles.label,
-        color: colors.text,
-        fontSize: 13,
+        alignItems: 'center',
+        paddingVertical: spacing[4],
+        paddingHorizontal: spacing[4],
+        borderBottomWidth: 1,
+        borderBottomColor: colors.borderLight,
     },
 
     // Measurements
     measurementCard: {
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        borderRadius: radius.md,
-        padding: spacing[3],
-    },
-    measurementDate: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 9,
-        marginBottom: spacing[2],
+        padding: spacing[2],
     },
     measurementGrid: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        gap: spacing[2],
     },
     measurementItem: {
-        width: '30%',
+        width: '33.33%',
         alignItems: 'center',
-        padding: spacing[2],
-        backgroundColor: colors.background,
+        padding: spacing[4],
     },
-    measurementIcon: { fontSize: 14 },
-    measurementVal: {
-        fontSize: 16,
-        fontWeight: '900',
-        color: colors.text,
-    },
-    measurementLabel: {
-        ...textStyles.caption,
-        color: colors.textDim,
-        fontSize: 7,
+    measurementIconBox: {
+        width: 32,
+        height: 32,
+        borderRadius: radius.full,
+        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 
     // Measurement form
     measurementForm: {
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.primary,
-        padding: spacing[3],
-        marginTop: spacing[2],
-    },
-    measurementFormTitle: {
-        ...textStyles.label,
-        color: colors.primary,
-        fontSize: 11,
-        marginBottom: spacing[2],
+        marginTop: spacing[4],
+        padding: spacing[5],
     },
     measurementInputRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingVertical: spacing[1],
+        paddingVertical: spacing[3],
         borderBottomWidth: 1,
-        borderBottomColor: colors.border,
-    },
-    measurementInputLabel: {
-        ...textStyles.caption,
-        color: colors.textSecondary,
-        fontSize: 11,
+        borderBottomColor: colors.borderLight,
     },
     measurementInput: {
-        width: 60,
-        backgroundColor: colors.background,
-        borderWidth: 1,
-        borderColor: colors.border,
+        width: 80,
+        backgroundColor: colors.surfaceLight,
+        borderRadius: radius.sm,
         color: colors.text,
-        fontSize: 14,
-        fontWeight: '700',
-        textAlign: 'center',
-        padding: spacing[1],
+        fontSize: 16,
+        fontWeight: 'bold',
+        textAlign: 'right',
+        paddingVertical: spacing[2],
+        paddingHorizontal: spacing[3],
+        borderWidth: 1,
+        borderColor: colors.borderLight,
     },
     measurementBtns: {
         flexDirection: 'row',
-        gap: spacing[2],
-        marginTop: spacing[3],
-    },
-    measurementCancel: {
-        flex: 1,
-        padding: spacing[2],
-        borderWidth: 1,
-        borderColor: colors.border,
-        alignItems: 'center',
-    },
-    cancelText: {
-        ...textStyles.caption,
-        color: colors.textDim,
-    },
-    measurementSave: {
-        flex: 1,
-        padding: spacing[2],
-        backgroundColor: colors.primary,
-        alignItems: 'center',
-    },
-    saveText: {
-        ...textStyles.button,
-        color: '#000',
-        fontSize: 11,
-    },
-    addMeasurementBtn: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderWidth: 1,
-        borderColor: colors.primary,
-        borderStyle: 'dashed',
-        padding: spacing[3],
-        marginTop: spacing[2],
-        gap: spacing[2],
-    },
-    addMeasurementText: {
-        ...textStyles.caption,
-        color: colors.primary,
-        fontSize: 10,
+        gap: spacing[3],
+        marginTop: spacing[6],
     },
 
     // Empty
     emptyCard: {
-        backgroundColor: colors.surface,
-        borderWidth: 1,
-        borderColor: colors.border,
-        padding: spacing[5],
+        padding: spacing[8],
         alignItems: 'center',
+        justifyContent: 'center',
     },
-    emptyIcon: { fontSize: 24, marginBottom: spacing[1] },
-    emptyText: {
-        ...textStyles.label,
-        color: colors.textDim,
-        fontSize: 12,
-    },
-    emptySubtext: {
-        ...textStyles.caption,
-        color: colors.textMuted,
-        fontSize: 9,
-        marginTop: 2,
+    emptyIconBox: {
+        width: 56,
+        height: 56,
+        borderRadius: radius.full,
+        backgroundColor: colors.surfaceLight,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });
 
