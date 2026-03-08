@@ -6,12 +6,16 @@ import {
     StatusBar,
     TouchableOpacity,
     Animated,
+    Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import Svg, { Circle } from 'react-native-svg';
 import { colors, spacing, radius } from '../theme';
-import { Typography } from '../components';
+import { BlurView } from 'expo-blur';
+import { Typography, ScreenWrapper } from '../components';
+
+const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
 import useUserStore from '../../store/userStore';
 import useCommitmentStore from '../../store/commitmentStore';
@@ -173,129 +177,178 @@ const DashboardScreen = ({ navigation }) => {
     const getTodaysRoutineStatus = useLookmaxxStore((s) => s.getTodaysRoutineStatus);
     const routineStatus = getTodaysRoutineStatus() || { amCompleted: 0, amTotal: 0, pmCompleted: 0, pmTotal: 0 };
 
-    // Haptic Scroll
-    const handleScroll = (e) => {
-        const y = e.nativeEvent.contentOffset.y;
-        if (y < -30) {
-            // Pull down refresh feel
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    // Haptic Scroll & Stick Header
+    const scrollY = React.useRef(new Animated.Value(0)).current;
+
+    const handleScroll = Animated.event(
+        [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+        {
+            useNativeDriver: false, // We use it for height/colors, so not native
+            listener: (e) => {
+                const y = e.nativeEvent.contentOffset.y;
+                if (y < -30) {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                }
+            }
         }
-    };
+    );
+
+    // Calculate header animations
+    const headerHeight = scrollY.interpolate({
+        inputRange: [0, 60],
+        outputRange: [100, 60],
+        extrapolate: 'clamp',
+    });
+
+    const headerBlur = scrollY.interpolate({
+        inputRange: [0, 20, 60],
+        outputRange: [0, 0, 100],
+        extrapolate: 'clamp',
+    });
+
+    const headerOpacity = scrollY.interpolate({
+        inputRange: [30, 60],
+        outputRange: [0, 1],
+        extrapolate: 'clamp',
+    });
 
     return (
         <View style={styles.container}>
             <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
-            <ScrollView
+
+            {/* Sticky Blurring Header */}
+            <Animated.View style={[styles.stickyHeader, { height: headerHeight }]}>
+                {Platform.OS === 'ios' ? (
+                    <AnimatedBlurView
+                        tint="light"
+                        intensity={headerBlur}
+                        style={StyleSheet.absoluteFill}
+                    />
+                ) : (
+                    <Animated.View style={[
+                        StyleSheet.absoluteFill,
+                        { backgroundColor: colors.surface, opacity: headerOpacity }
+                    ]} />
+                )}
+                <View style={styles.stickyHeaderContent}>
+                    <Animated.Text style={[styles.stickyTitle, { opacity: headerOpacity }]}>
+                        {userName}'s Forge
+                    </Animated.Text>
+                </View>
+            </Animated.View>
+
+            <Animated.ScrollView
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.scrollContent}
                 onScroll={handleScroll}
                 scrollEventThrottle={16}
                 overScrollMode="always"
             >
-                {/* Premium Header */}
-                <View style={styles.header}>
-                    <View>
-                        <Typography variant="subheadline" color={colors.textSecondary} style={{ fontWeight: '600' }}>
-                            {greeting},
-                        </Typography>
-                        <Typography variant="largeTitle" style={{ marginTop: -2, letterSpacing: -1 }}>
-                            {userName}
+                <ScreenWrapper staggerScale={0.8}>
+                    {/* Premium Header (Scrolls away) */}
+                    <View style={styles.header}>
+                        <View>
+                            <Typography variant="subheadline" color={colors.textSecondary} style={{ fontWeight: '600' }}>
+                                {greeting},
+                            </Typography>
+                            <Typography variant="largeTitle" style={{ marginTop: -2, letterSpacing: -1 }}>
+                                {userName}
+                            </Typography>
+                        </View>
+                        <TouchableOpacity
+                            style={styles.dayBadge}
+                            onPress={() => {
+                                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+                                navigation.navigate('Profile');
+                            }}
+                            activeOpacity={0.8}
+                        >
+                            <Typography variant="caption" color={colors.surface} style={{ fontWeight: '800' }}>DAY</Typography>
+                            <Typography variant="title2" color={colors.surface} style={{ marginTop: -4 }} tabularNums>
+                                {dayCount}
+                            </Typography>
+                        </TouchableOpacity>
+                    </View>
+
+                    {/* Glassmorphic Stats Grid */}
+                    <View style={styles.statsGrid}>
+                        <View style={styles.statBox}>
+                            <Ionicons name="barbell" size={16} color={colors.primary} style={{ marginBottom: 4 }} />
+                            <Typography variant="title1" style={{ fontSize: 28 }} tabularNums>{totalWorkouts}</Typography>
+                            <Typography variant="caption" color={colors.textDim} style={{ marginTop: 2 }}>Workouts</Typography>
+                        </View>
+                        <View style={[styles.statBox, styles.statBoxCenter]}>
+                            <Ionicons name="water" size={16} color={colors.info} style={{ marginBottom: 4 }} />
+                            <Typography variant="title1" color={colors.info} style={{ fontSize: 28 }} tabularNums>{nutritionTotals.water}</Typography>
+                            <Typography variant="caption" color={colors.textDim} style={{ marginTop: 2 }}>Glasses</Typography>
+                        </View>
+                        <View style={styles.statBox}>
+                            <Ionicons name="checkmark-done" size={16} color={colors.warning} style={{ marginBottom: 4 }} />
+                            <Typography variant="title1" style={{ fontSize: 28 }} tabularNums>{habitStatus.completed}</Typography>
+                            <Typography variant="caption" color={colors.textDim} style={{ marginTop: 2 }}>Habits</Typography>
+                        </View>
+                    </View>
+
+                    {/* Main Action Items */}
+                    <View style={styles.sectionHeader}>
+                        <Typography variant="title2" style={{ fontWeight: '700', letterSpacing: -0.5 }}>
+                            Today's Progress
                         </Typography>
                     </View>
+
+                    <ActionCard
+                        title="Training"
+                        subtitle={todayPlanName}
+                        icon="barbell"
+                        color={colors.primary}
+                        progress={workoutDone ? 1 : (activeWorkout ? 0.5 : 0)}
+                        onPress={() => navigation.navigate('Workout')}
+                    />
+
+                    <ActionCard
+                        title="Nutrition"
+                        subtitle={`${Math.round(nutritionTotals.calories)} / ${calTarget} kcal`}
+                        icon="restaurant"
+                        color={colors.success}
+                        progress={calProgress}
+                        onPress={() => navigation.navigate('Nutrition')}
+                    />
+
+                    <ActionCard
+                        title="Discipline"
+                        subtitle={`${habitStatus.completed} of ${habitStatus.total} habits done`}
+                        icon="flash"
+                        color={colors.warning}
+                        progress={habitStatus.total > 0 ? (habitStatus.completed / habitStatus.total) : 0}
+                        onPress={() => navigation.navigate('Discipline')}
+                    />
+
+                    {/* Lookmaxx Mini Card */}
                     <TouchableOpacity
-                        style={styles.dayBadge}
                         onPress={() => {
-                            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+                            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
                             navigation.navigate('Profile');
                         }}
                         activeOpacity={0.8}
+                        style={{ marginTop: spacing[2], marginBottom: spacing[24] }} // Extra padding for blur tab bar
                     >
-                        <Typography variant="caption" color={colors.surface} style={{ fontWeight: '800' }}>DAY</Typography>
-                        <Typography variant="title2" color={colors.surface} style={{ marginTop: -4 }}>
-                            {dayCount}
-                        </Typography>
-                    </TouchableOpacity>
-                </View>
-
-                {/* Glassmorphic Stats Grid */}
-                <View style={styles.statsGrid}>
-                    <View style={styles.statBox}>
-                        <Ionicons name="barbell" size={16} color={colors.primary} style={{ marginBottom: 4 }} />
-                        <Typography variant="title1" style={{ fontSize: 28 }}>{totalWorkouts}</Typography>
-                        <Typography variant="caption" color={colors.textDim} style={{ marginTop: 2 }}>Workouts</Typography>
-                    </View>
-                    <View style={[styles.statBox, styles.statBoxCenter]}>
-                        <Ionicons name="water" size={16} color={colors.info} style={{ marginBottom: 4 }} />
-                        <Typography variant="title1" color={colors.info} style={{ fontSize: 28 }}>{nutritionTotals.water}</Typography>
-                        <Typography variant="caption" color={colors.textDim} style={{ marginTop: 2 }}>Glasses</Typography>
-                    </View>
-                    <View style={styles.statBox}>
-                        <Ionicons name="checkmark-done" size={16} color={colors.warning} style={{ marginBottom: 4 }} />
-                        <Typography variant="title1" style={{ fontSize: 28 }}>{habitStatus.completed}</Typography>
-                        <Typography variant="caption" color={colors.textDim} style={{ marginTop: 2 }}>Habits</Typography>
-                    </View>
-                </View>
-
-                {/* Main Action Items */}
-                <View style={styles.sectionHeader}>
-                    <Typography variant="title2" style={{ fontWeight: '700', letterSpacing: -0.5 }}>
-                        Today's Progress
-                    </Typography>
-                </View>
-
-                <ActionCard
-                    title="Training"
-                    subtitle={todayPlanName}
-                    icon="barbell"
-                    color={colors.primary}
-                    progress={workoutDone ? 1 : (activeWorkout ? 0.5 : 0)}
-                    onPress={() => navigation.navigate('Workout')}
-                />
-
-                <ActionCard
-                    title="Nutrition"
-                    subtitle={`${Math.round(nutritionTotals.calories)} / ${calTarget} kcal`}
-                    icon="restaurant"
-                    color={colors.success}
-                    progress={calProgress}
-                    onPress={() => navigation.navigate('Nutrition')}
-                />
-
-                <ActionCard
-                    title="Discipline"
-                    subtitle={`${habitStatus.completed} of ${habitStatus.total} habits done`}
-                    icon="flash"
-                    color={colors.warning}
-                    progress={habitStatus.total > 0 ? (habitStatus.completed / habitStatus.total) : 0}
-                    onPress={() => navigation.navigate('Discipline')}
-                />
-
-                {/* Lookmaxx Mini Card */}
-                <TouchableOpacity
-                    onPress={() => {
-                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-                        navigation.navigate('Profile');
-                    }}
-                    activeOpacity={0.8}
-                    style={{ marginTop: spacing[2], marginBottom: spacing[24] }} // Extra padding for blur tab bar
-                >
-                    <View style={styles.lookmaxxCard}>
-                        <View style={styles.lookmaxxLeft}>
-                            <View style={[styles.iconBox, { backgroundColor: colors.textSecondary + '10', width: 36, height: 36 }]}>
-                                <Ionicons name="sparkles" size={16} color={colors.textSecondary} />
-                            </View>
-                            <View style={{ marginLeft: spacing[3] }}>
-                                <Typography variant="headline" style={{ fontSize: 15 }}>Self-Care Routine</Typography>
-                                <Typography variant="caption" color={colors.textDim}>
-                                    AM: {routineStatus.amCompleted}/{routineStatus.amTotal} • PM: {routineStatus.pmCompleted}/{routineStatus.pmTotal}
-                                </Typography>
+                        <View style={styles.lookmaxxCard}>
+                            <View style={styles.lookmaxxLeft}>
+                                <View style={[styles.iconBox, { backgroundColor: colors.textSecondary + '10', width: 36, height: 36 }]}>
+                                    <Ionicons name="sparkles" size={16} color={colors.textSecondary} />
+                                </View>
+                                <View style={{ marginLeft: spacing[3] }}>
+                                    <Typography variant="headline" style={{ fontSize: 15 }}>Self-Care Routine</Typography>
+                                    <Typography variant="caption" color={colors.textDim}>
+                                        AM: {routineStatus.amCompleted}/{routineStatus.amTotal} • PM: {routineStatus.pmCompleted}/{routineStatus.pmTotal}
+                                    </Typography>
+                                </View>
                             </View>
                         </View>
-                        <Ionicons name="chevron-forward" size={16} color={colors.borderLight} />
-                    </View>
-                </TouchableOpacity>
+                    </TouchableOpacity>
+                </ScreenWrapper>
 
-            </ScrollView>
+            </Animated.ScrollView>
         </View>
     );
 };
@@ -307,8 +360,32 @@ const styles = StyleSheet.create({
     },
     scrollContent: {
         paddingHorizontal: spacing[6],
-        paddingTop: spacing[16], // Generous top padding
+        paddingTop: spacing[8] + 100, // Account for sticky header
         paddingBottom: spacing[12],
+    },
+    stickyHeader: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 100,
+        overflow: 'hidden',
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderBottomColor: 'rgba(0,0,0,0.05)',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        paddingBottom: spacing[4],
+    },
+    stickyHeaderContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: spacing[4],
+    },
+    stickyTitle: {
+        fontFamily: 'Inter-SemiBold',
+        fontSize: 17, // Standard iOS header size
+        color: colors.text,
+        letterSpacing: -0.5,
     },
     header: {
         flexDirection: 'row',
