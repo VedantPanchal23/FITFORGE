@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, spacing, radius, shadows } from '../theme';
-import { Card, Typography, Button } from '../components';
+import { Card, Typography, Button, CustomBottomSheet } from '../components';
 import useProgressStore from '../../store/progressStore';
 import WeightChart from '../components/WeightChart';
 
@@ -34,7 +34,7 @@ const ProgressScreen = ({ navigation }) => {
     const getLatestMeasurements = useProgressStore((s) => s.getLatestMeasurements);
 
     const [newWeight, setNewWeight] = useState('');
-    const [showMeasurements, setShowMeasurements] = useState(false);
+    const measurementsSheetRef = React.useRef(null);
     const [measurements, setMeasurements] = useState({});
     const [refreshKey, setRefreshKey] = useState(0);
 
@@ -70,7 +70,7 @@ const ProgressScreen = ({ navigation }) => {
 
         logMeasurements(parsed);
         setMeasurements({});
-        setShowMeasurements(false);
+        measurementsSheetRef.current?.dismiss();
         Vibration.vibrate(50);
         setRefreshKey(k => k + 1);
     };
@@ -223,53 +223,55 @@ const ProgressScreen = ({ navigation }) => {
                 )}
 
                 {/* Add Measurements */}
-                {showMeasurements ? (
-                    <Card style={styles.measurementForm}>
-                        <Typography variant="headline" style={{ marginBottom: spacing[4] }}>Log Measurements (cm)</Typography>
-                        {MEASUREMENT_FIELDS.map((field, index) => {
-                            const isLast = index === MEASUREMENT_FIELDS.length - 1;
-                            return (
-                                <View key={field.key} style={[styles.measurementInputRow, isLast && { borderBottomWidth: 0 }]}>
-                                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing[2] }}>
-                                        <Ionicons name={field.icon} size={16} color={colors.textSecondary} />
-                                        <Typography variant="body" color={colors.text}>{field.label}</Typography>
-                                    </View>
-                                    <TextInput
-                                        style={styles.measurementInput}
-                                        value={measurements[field.key] || ''}
-                                        onChangeText={(v) => setMeasurements(m => ({ ...m, [field.key]: v }))}
-                                        placeholder="–"
-                                        placeholderTextColor={colors.textDim}
-                                        keyboardType="numeric"
-                                    />
-                                </View>
-                            );
-                        })}
-                        <View style={styles.measurementBtns}>
-                            <Button
-                                title="Cancel"
-                                variant="secondary"
-                                onPress={() => { setShowMeasurements(false); setMeasurements({}); }}
-                                style={{ flex: 1 }}
-                            />
-                            <Button
-                                title="Save Measurements"
-                                onPress={handleLogMeasurements}
-                                style={{ flex: 1 }}
-                            />
-                        </View>
-                    </Card>
-                ) : (
-                    <Button
-                        title="Update Measurements"
-                        variant="secondary"
-                        onPress={() => setShowMeasurements(true)}
-                        style={{ marginTop: spacing[4] }}
-                    />
-                )}
+                <Button
+                    title="Update Measurements"
+                    variant="secondary"
+                    onPress={() => measurementsSheetRef.current?.present()}
+                    style={{ marginTop: spacing[4] }}
+                />
 
                 <View style={{ height: 40 }} />
             </ScrollView>
+
+            <CustomBottomSheet ref={measurementsSheetRef} snapPoints={['75%']}>
+                <Typography variant="title2" style={{ marginBottom: spacing[2] }}>Log Measurements</Typography>
+                <Typography variant="body" color={colors.textSecondary} style={{ marginBottom: spacing[6] }}>
+                    Update your physical dimensions in cm.
+                </Typography>
+
+                {MEASUREMENT_FIELDS.map((field, index) => {
+                    const isLast = index === MEASUREMENT_FIELDS.length - 1;
+                    return (
+                        <View key={field.key} style={[styles.measurementInputRow, isLast && { borderBottomWidth: 0 }]}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing[2] }}>
+                                <Ionicons name={field.icon} size={16} color={colors.textSecondary} />
+                                <Typography variant="body" color={colors.text}>{field.label}</Typography>
+                            </View>
+                            <TextInput
+                                style={styles.measurementInput}
+                                value={measurements[field.key] || ''}
+                                onChangeText={(v) => setMeasurements(m => ({ ...m, [field.key]: v }))}
+                                placeholder="–"
+                                placeholderTextColor={colors.textDim}
+                                keyboardType="numeric"
+                            />
+                        </View>
+                    );
+                })}
+                <View style={styles.measurementBtns}>
+                    <Button
+                        title="Cancel"
+                        variant="secondary"
+                        onPress={() => { measurementsSheetRef.current?.dismiss(); setMeasurements({}); }}
+                        style={{ flex: 1 }}
+                    />
+                    <Button
+                        title="Save Measurements"
+                        onPress={handleLogMeasurements}
+                        style={{ flex: 1 }}
+                    />
+                </View>
+            </CustomBottomSheet>
         </View>
     );
 };
