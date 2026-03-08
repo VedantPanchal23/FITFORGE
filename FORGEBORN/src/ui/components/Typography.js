@@ -7,6 +7,7 @@ export const Typography = ({
     color = colors.text,
     align = 'left',
     weight,
+    tabularNums,
     style,
     numberOfLines,
     children,
@@ -20,6 +21,7 @@ export const Typography = ({
                 textStyle,
                 { color: color, textAlign: align },
                 weight ? { fontFamily: typography.fontFamily[weight] } : {},
+                tabularNums ? { fontVariant: ['tabular-nums'] } : {},
                 style,
             ]}
             numberOfLines={numberOfLines}
