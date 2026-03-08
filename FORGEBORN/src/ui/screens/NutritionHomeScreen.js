@@ -7,11 +7,15 @@ import {
     TouchableOpacity,
     Animated,
     Alert,
+    Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { colors, spacing, radius } from '../theme';
-import { Card, Typography, Button, ProgressBar } from '../components';
+import { BlurView } from 'expo-blur';
+import { Card, Typography, Button, ProgressBar, ScreenWrapper } from '../components';
+
+const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 import useUserStore from '../../store/userStore';
 import useNutritionStore from '../../store/nutritionStore';
 import CalorieRing from '../components/CalorieRing';
@@ -125,247 +129,297 @@ const NutritionHomeScreen = ({ navigation }) => {
         );
     };
 
+    // Scroll & Sticky Header Animations
+    const scrollY = React.useRef(new Animated.Value(0)).current;
+
+    const headerHeight = scrollY.interpolate({
+        inputRange: [0, 60],
+        outputRange: [100, 60],
+        extrapolate: 'clamp',
+    });
+
+    const headerBlur = scrollY.interpolate({
+        inputRange: [0, 20, 60],
+        outputRange: [0, 0, 100],
+        extrapolate: 'clamp',
+    });
+
+    const headerOpacity = scrollY.interpolate({
+        inputRange: [30, 60],
+        outputRange: [0, 1],
+        extrapolate: 'clamp',
+    });
+
     return (
         <View style={styles.container}>
             <StatusBar barStyle="dark-content" backgroundColor={colors.surface} />
-            <ScrollView
+
+            {/* Sticky Blurring Header */}
+            <Animated.View style={[styles.stickyHeader, { height: headerHeight }]}>
+                {Platform.OS === 'ios' ? (
+                    <AnimatedBlurView
+                        tint="light"
+                        intensity={headerBlur}
+                        style={StyleSheet.absoluteFill}
+                    />
+                ) : (
+                    <Animated.View style={[
+                        StyleSheet.absoluteFill,
+                        { backgroundColor: colors.surface, opacity: headerOpacity }
+                    ]} />
+                )}
+                <View style={styles.stickyHeaderContent}>
+                    <Animated.Text style={[styles.stickyTitle, { opacity: headerOpacity }]}>
+                        Nutrition
+                    </Animated.Text>
+                </View>
+            </Animated.View>
+
+            <Animated.ScrollView
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.scrollContent}
+                onScroll={Animated.event(
+                    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                    { useNativeDriver: false }
+                )}
+                scrollEventThrottle={16}
             >
-                {/* Header */}
-                <Typography variant="largeTitle" color={colors.text}>Nutrition</Typography>
-                <Typography variant="subheadline" color={colors.textSecondary} style={{ marginBottom: spacing[6], letterSpacing: 1, fontWeight: '600' }}>
-                    {plan.deficit < 0 ? `${Math.abs(plan.deficit)} CAL DEFICIT` :
-                        plan.deficit > 0 ? `${plan.deficit} CAL SURPLUS` : 'MAINTENANCE'}
-                </Typography>
+                <ScreenWrapper staggerScale={0.7}>
+                    {/* Header (Scrolls away) */}
+                    <Typography variant="largeTitle" color={colors.text}>Nutrition</Typography>
+                    <Typography variant="subheadline" color={colors.textSecondary} style={{ marginBottom: spacing[6], letterSpacing: 1, fontWeight: '600' }}>
+                        {plan.deficit < 0 ? `${Math.abs(plan.deficit)} CAL DEFICIT` :
+                            plan.deficit > 0 ? `${plan.deficit} CAL SURPLUS` : 'MAINTENANCE'}
+                    </Typography>
 
-                {/* Calorie Ring Card */}
-                <Card style={styles.calorieCard}>
-                    <View style={styles.ringContainer}>
-                        <CalorieRing
-                            consumed={totals.calories}
-                            target={plan.targetCalories}
-                            size={140}
-                            strokeWidth={12}
-                            color={colors.primary}
-                        />
-                    </View>
-                    <View style={styles.calorieStats}>
-                        <View style={styles.calStatRow}>
-                            <Typography variant="caption" color={colors.textSecondary} style={{ fontWeight: '600' }}>TARGET</Typography>
-                            <Typography variant="headline" style={{ fontVariant: ['tabular-nums'] }}>{plan.targetCalories}</Typography>
+                    {/* Calorie Ring Card */}
+                    <Card style={styles.calorieCard}>
+                        <View style={styles.ringContainer}>
+                            <CalorieRing
+                                consumed={totals.calories}
+                                target={plan.targetCalories}
+                                size={140}
+                                strokeWidth={12}
+                                color={colors.primary}
+                            />
                         </View>
-                        <View style={styles.calStatRow}>
-                            <Typography variant="caption" color={colors.textSecondary} style={{ fontWeight: '600' }}>CONSUMED</Typography>
-                            <Typography variant="headline" color={colors.primary} style={{ fontVariant: ['tabular-nums'] }}>{totals.calories}</Typography>
+                        <View style={styles.calorieStats}>
+                            <View style={styles.calStatRow}>
+                                <Typography variant="caption" color={colors.textSecondary} style={{ fontWeight: '600' }}>TARGET</Typography>
+                                <Typography variant="headline" style={{ fontVariant: ['tabular-nums'] }} tabularNums>{plan.targetCalories}</Typography>
+                            </View>
+                            <View style={styles.calStatRow}>
+                                <Typography variant="caption" color={colors.textSecondary} style={{ fontWeight: '600' }}>CONSUMED</Typography>
+                                <Typography variant="headline" color={colors.primary} style={{ fontVariant: ['tabular-nums'] }} tabularNums>{totals.calories}</Typography>
+                            </View>
+                            <View style={styles.calStatRow}>
+                                <Typography variant="caption" color={colors.textSecondary} style={{ fontWeight: '600' }}>REMAIN</Typography>
+                                <Typography variant="headline" color={remainingCals < 0 ? colors.danger : colors.text} style={{ fontVariant: ['tabular-nums'] }} tabularNums>
+                                    {remainingCals}
+                                </Typography>
+                            </View>
+                            <View style={[styles.calStatRow, { marginTop: spacing[3], borderTopWidth: 1, borderTopColor: colors.borderLight, paddingTop: spacing[3] }]}>
+                                <Typography variant="caption" color={colors.textDim} style={{ fontWeight: '600' }}>BMR</Typography>
+                                <Typography variant="caption" style={{ fontVariant: ['tabular-nums'] }} tabularNums>{plan.bmr}</Typography>
+                            </View>
+                            <View style={styles.calStatRow}>
+                                <Typography variant="caption" color={colors.textDim} style={{ fontWeight: '600' }}>TDEE</Typography>
+                                <Typography variant="caption" style={{ fontVariant: ['tabular-nums'] }} tabularNums>{plan.tdee}</Typography>
+                            </View>
                         </View>
-                        <View style={styles.calStatRow}>
-                            <Typography variant="caption" color={colors.textSecondary} style={{ fontWeight: '600' }}>REMAIN</Typography>
-                            <Typography variant="headline" color={remainingCals < 0 ? colors.danger : colors.text} style={{ fontVariant: ['tabular-nums'] }}>
-                                {remainingCals}
-                            </Typography>
-                        </View>
-                        <View style={[styles.calStatRow, { marginTop: spacing[3], borderTopWidth: 1, borderTopColor: colors.borderLight, paddingTop: spacing[3] }]}>
-                            <Typography variant="caption" color={colors.textDim} style={{ fontWeight: '600' }}>BMR</Typography>
-                            <Typography variant="caption" style={{ fontVariant: ['tabular-nums'] }}>{plan.bmr}</Typography>
-                        </View>
-                        <View style={styles.calStatRow}>
-                            <Typography variant="caption" color={colors.textDim} style={{ fontWeight: '600' }}>TDEE</Typography>
-                            <Typography variant="caption" style={{ fontVariant: ['tabular-nums'] }}>{plan.tdee}</Typography>
-                        </View>
-                    </View>
-                </Card>
+                    </Card>
 
-                {/* Macro Bars */}
-                <Typography variant="title2" style={styles.sectionLabel}>Macros</Typography>
-                <Card style={styles.macroCard}>
-                    <View style={styles.macroRow}>
-                        <View style={styles.macroInfo}>
-                            <Typography variant="subheadline" style={{ fontWeight: '700' }}>Protein</Typography>
-                            <Typography variant="caption" color={colors.textSecondary} style={{ fontVariant: ['tabular-nums'] }}>
-                                {Math.round(totals.protein)} / {plan.macros.protein}g
-                            </Typography>
+                    {/* Macro Bars */}
+                    <Typography variant="title2" style={styles.sectionLabel}>Macros</Typography>
+                    <Card style={styles.macroCard}>
+                        <View style={styles.macroRow}>
+                            <View style={styles.macroInfo}>
+                                <Typography variant="subheadline" style={{ fontWeight: '700' }}>Protein</Typography>
+                                <Typography variant="caption" color={colors.textSecondary} style={{ fontVariant: ['tabular-nums'] }}>
+                                    {Math.round(totals.protein)} / {plan.macros.protein}g
+                                </Typography>
+                            </View>
+                            <ProgressBar progress={proteinProgress} color={colors.protein || '#3B82F6'} height={8} />
                         </View>
-                        <ProgressBar progress={proteinProgress} color={colors.protein || '#3B82F6'} height={8} />
-                    </View>
 
-                    <View style={styles.macroRow}>
-                        <View style={styles.macroInfo}>
-                            <Typography variant="subheadline" style={{ fontWeight: '700' }}>Carbs</Typography>
-                            <Typography variant="caption" color={colors.textSecondary} style={{ fontVariant: ['tabular-nums'] }}>
-                                {Math.round(totals.carbs)} / {plan.macros.carbs}g
-                            </Typography>
+                        <View style={styles.macroRow}>
+                            <View style={styles.macroInfo}>
+                                <Typography variant="subheadline" style={{ fontWeight: '700' }}>Carbs</Typography>
+                                <Typography variant="caption" color={colors.textSecondary} style={{ fontVariant: ['tabular-nums'] }}>
+                                    {Math.round(totals.carbs)} / {plan.macros.carbs}g
+                                </Typography>
+                            </View>
+                            <ProgressBar progress={carbsProgress} color={colors.carbs || '#F59E0B'} height={8} />
                         </View>
-                        <ProgressBar progress={carbsProgress} color={colors.carbs || '#F59E0B'} height={8} />
-                    </View>
 
-                    <View style={styles.macroRow}>
-                        <View style={styles.macroInfo}>
-                            <Typography variant="subheadline" style={{ fontWeight: '700' }}>Fats</Typography>
-                            <Typography variant="caption" color={colors.textSecondary} style={{ fontVariant: ['tabular-nums'] }}>
-                                {Math.round(totals.fats)} / {plan.macros.fats}g
-                            </Typography>
+                        <View style={styles.macroRow}>
+                            <View style={styles.macroInfo}>
+                                <Typography variant="subheadline" style={{ fontWeight: '700' }}>Fats</Typography>
+                                <Typography variant="caption" color={colors.textSecondary} style={{ fontVariant: ['tabular-nums'] }}>
+                                    {Math.round(totals.fats)} / {plan.macros.fats}g
+                                </Typography>
+                            </View>
+                            <ProgressBar progress={fatsProgress} color={colors.fats || '#EF4444'} height={8} />
                         </View>
-                        <ProgressBar progress={fatsProgress} color={colors.fats || '#EF4444'} height={8} />
-                    </View>
-                </Card>
+                    </Card>
 
-                {/* Meal Slots */}
-                <Typography variant="title2" style={styles.sectionLabel}>Meals</Typography>
-                {MEAL_SLOTS.map((slot) => {
-                    const meals = getMealsByType(slot.type);
-                    const slotCals = meals.reduce((sum, m) => sum + m.calories, 0);
+                    {/* Meal Slots */}
+                    <Typography variant="title2" style={styles.sectionLabel}>Meals</Typography>
+                    {MEAL_SLOTS.map((slot) => {
+                        const meals = getMealsByType(slot.type);
+                        const slotCals = meals.reduce((sum, m) => sum + m.calories, 0);
 
-                    return (
-                        <Card key={slot.type} style={styles.mealSlot}>
-                            <View style={styles.mealSlotHeader}>
-                                <View style={styles.mealSlotLeft}>
-                                    <View style={styles.iconBox}>
-                                        <Ionicons name={slot.icon} size={20} color={colors.primary} />
+                        return (
+                            <Card key={slot.type} style={styles.mealSlot}>
+                                <View style={styles.mealSlotHeader}>
+                                    <View style={styles.mealSlotLeft}>
+                                        <View style={styles.iconBox}>
+                                            <Ionicons name={slot.icon} size={20} color={colors.primary} />
+                                        </View>
+                                        <View>
+                                            <Typography variant="title2" style={{ fontSize: 18 }}>{slot.label}</Typography>
+                                            <Typography variant="caption" color={colors.textSecondary} style={{ fontWeight: '600' }}>{slot.time}</Typography>
+                                        </View>
                                     </View>
-                                    <View>
-                                        <Typography variant="title2" style={{ fontSize: 18 }}>{slot.label}</Typography>
-                                        <Typography variant="caption" color={colors.textSecondary} style={{ fontWeight: '600' }}>{slot.time}</Typography>
+                                    <View style={styles.mealSlotRight}>
+                                        {slotCals > 0 && (
+                                            <Typography variant="subheadline" color={colors.textSecondary} style={{ fontVariant: ['tabular-nums'] }}>{slotCals} cal</Typography>
+                                        )}
+                                        <TouchableOpacity
+                                            style={styles.addMealBtn}
+                                            onPress={() => {
+                                                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                                                navigation.navigate('MealLog', { mealType: slot.type });
+                                            }}
+                                            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                                        >
+                                            <Ionicons name="add" size={22} color={colors.primary} />
+                                        </TouchableOpacity>
                                     </View>
                                 </View>
-                                <View style={styles.mealSlotRight}>
-                                    {slotCals > 0 && (
-                                        <Typography variant="subheadline" color={colors.textSecondary} style={{ fontVariant: ['tabular-nums'] }}>{slotCals} cal</Typography>
-                                    )}
+
+                                {/* Logged items */}
+                                {meals.map((meal) => (
                                     <TouchableOpacity
-                                        style={styles.addMealBtn}
+                                        key={meal.id}
+                                        style={styles.loggedItem}
+                                        onLongPress={() => handleLongPressMeal(meal.id, meal.name)}
+                                        activeOpacity={0.7}
+                                    >
+                                        <View style={styles.loggedItemLeft}>
+                                            <Typography variant="headline" style={{ fontSize: 16 }}>{meal.name}</Typography>
+                                            <Typography variant="caption" color={colors.textDim} style={{ marginTop: 2, fontVariant: ['tabular-nums'] }}>
+                                                P:{Math.round(meal.protein)}g  C:{Math.round(meal.carbs)}g  F:{Math.round(meal.fats)}g
+                                            </Typography>
+                                        </View>
+                                        <View style={{ alignItems: 'flex-end' }}>
+                                            <Typography variant="headline" style={{ fontVariant: ['tabular-nums'] }}>{meal.calories}</Typography>
+                                            <Typography variant="caption" color={colors.textDim} style={{ fontSize: 10, marginTop: 2 }}>cal</Typography>
+                                        </View>
+                                    </TouchableOpacity>
+                                ))}
+
+                                {meals.length === 0 && (
+                                    <TouchableOpacity
+                                        style={styles.emptySlot}
                                         onPress={() => {
                                             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                                             navigation.navigate('MealLog', { mealType: slot.type });
                                         }}
-                                        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                                        activeOpacity={0.7}
                                     >
-                                        <Ionicons name="add" size={22} color={colors.primary} />
+                                        <Ionicons name="add-circle-outline" size={18} color={colors.textDim} />
+                                        <Typography variant="caption" color={colors.textSecondary} style={{ fontWeight: '600' }}>Tap to log {slot.label.toLowerCase()}</Typography>
                                     </TouchableOpacity>
-                                </View>
-                            </View>
-
-                            {/* Logged items */}
-                            {meals.map((meal) => (
-                                <TouchableOpacity
-                                    key={meal.id}
-                                    style={styles.loggedItem}
-                                    onLongPress={() => handleLongPressMeal(meal.id, meal.name)}
-                                    activeOpacity={0.7}
-                                >
-                                    <View style={styles.loggedItemLeft}>
-                                        <Typography variant="headline" style={{ fontSize: 16 }}>{meal.name}</Typography>
-                                        <Typography variant="caption" color={colors.textDim} style={{ marginTop: 2, fontVariant: ['tabular-nums'] }}>
-                                            P:{Math.round(meal.protein)}g  C:{Math.round(meal.carbs)}g  F:{Math.round(meal.fats)}g
-                                        </Typography>
-                                    </View>
-                                    <View style={{ alignItems: 'flex-end' }}>
-                                        <Typography variant="headline" style={{ fontVariant: ['tabular-nums'] }}>{meal.calories}</Typography>
-                                        <Typography variant="caption" color={colors.textDim} style={{ fontSize: 10, marginTop: 2 }}>cal</Typography>
-                                    </View>
-                                </TouchableOpacity>
-                            ))}
-
-                            {meals.length === 0 && (
-                                <TouchableOpacity
-                                    style={styles.emptySlot}
-                                    onPress={() => {
-                                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                                        navigation.navigate('MealLog', { mealType: slot.type });
-                                    }}
-                                    activeOpacity={0.7}
-                                >
-                                    <Ionicons name="add-circle-outline" size={18} color={colors.textDim} />
-                                    <Typography variant="caption" color={colors.textSecondary} style={{ fontWeight: '600' }}>Tap to log {slot.label.toLowerCase()}</Typography>
-                                </TouchableOpacity>
-                            )}
-                        </Card>
-                    );
-                })}
-
-                {/* Water Tracker */}
-                <Typography variant="title2" style={styles.sectionLabel}>Hydration</Typography>
-                <Card style={styles.waterCard}>
-                    <View style={styles.waterHeader}>
-                        <View>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing[1] }}>
-                                <Ionicons name="water" size={18} color={colors.info || '#3B82F6'} />
-                                <Typography variant="title2">Water</Typography>
-                            </View>
-                            <Typography variant="caption" color={colors.textSecondary} style={{ marginTop: 2, fontWeight: '600' }}>
-                                {totals.water} / {plan.waterGlasses} GLASSES
-                            </Typography>
-                        </View>
-                        <View style={{ alignItems: 'flex-end' }}>
-                            <Typography variant="subheadline" color={colors.textSecondary} style={{ fontVariant: ['tabular-nums'] }}>
-                                {totals.water * 250}ml
-                            </Typography>
-                            <Typography variant="caption" color={colors.textDim} style={{ fontVariant: ['tabular-nums'] }}>
-                                / {plan.waterGlasses * 250}ml
-                            </Typography>
-                        </View>
-                    </View>
-
-                    {/* Water progress */}
-                    <ProgressBar progress={waterProgress} color={colors.info || '#3B82F6'} height={8} style={{ marginBottom: spacing[5] }} />
-
-                    {/* Water glasses */}
-                    <View style={styles.glassRow}>
-                        {Array.from({ length: Math.min(plan.waterGlasses, 16) }, (_, i) => (
-                            <View
-                                key={i}
-                                style={[styles.glass,
-                                i < totals.water && styles.glassFilled
-                                ]}
-                            >
-                                <Ionicons
-                                    name={i < totals.water ? 'water' : 'water-outline'}
-                                    size={18}
-                                    color={i < totals.water ? (colors.info || '#3B82F6') : colors.textDim}
-                                />
-                            </View>
-                        ))}
-                    </View>
-
-                    <Button
-                        title="Add Glass"
-                        onPress={handleAddWater}
-                        variant="secondary"
-                        icon={<Ionicons name="add" size={18} color={colors.info || '#3B82F6'} />}
-                        textStyle={{ color: colors.info || '#3B82F6' }}
-                        hapticFeedback={false} // Handled custom above
-                    />
-                </Card>
-
-                {/* Week Overview */}
-                <Typography variant="title2" style={styles.sectionLabel}>This Week</Typography>
-                <Card style={styles.weekCard}>
-                    {weekSummary.map((day, i) => {
-                        const dayProgress = day.calories > 0
-                            ? Math.min(1, day.calories / Math.max(plan.targetCalories, 1))
-                            : 0;
-                        const isToday = i === 6;
-
-                        let barColor = colors.textDim;
-                        if (isToday) barColor = colors.primary;
-                        else if (dayProgress >= 0.8) barColor = colors.success;
-
-                        return (
-                            <View key={day.date} style={styles.weekDay}>
-                                <Typography variant={isToday ? "bold" : "caption"} color={isToday ? colors.primary : colors.textSecondary} style={{ fontSize: 10, marginBottom: spacing[2], fontWeight: '700' }}>
-                                    {day.day}
-                                </Typography>
-                                <WeekBar progress={dayProgress} isToday={isToday} color={barColor} />
-                                <Typography variant="caption" color={colors.textDim} style={{ fontSize: 10, marginTop: spacing[2], fontVariant: ['tabular-nums'] }}>
-                                    {day.calories > 0 ? day.calories : '–'}
-                                </Typography>
-                            </View>
+                                )}
+                            </Card>
                         );
                     })}
-                </Card>
 
-                <View style={{ height: 40 }} />
-            </ScrollView>
+                    {/* Water Tracker */}
+                    <Typography variant="title2" style={styles.sectionLabel}>Hydration</Typography>
+                    <Card style={styles.waterCard}>
+                        <View style={styles.waterHeader}>
+                            <View>
+                                <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing[1] }}>
+                                    <Ionicons name="water" size={18} color={colors.info || '#3B82F6'} />
+                                    <Typography variant="title2">Water</Typography>
+                                </View>
+                                <Typography variant="caption" color={colors.textSecondary} style={{ marginTop: 2, fontWeight: '600' }}>
+                                    {totals.water} / {plan.waterGlasses} GLASSES
+                                </Typography>
+                            </View>
+                            <View style={{ alignItems: 'flex-end' }}>
+                                <Typography variant="subheadline" color={colors.textSecondary} style={{ fontVariant: ['tabular-nums'] }}>
+                                    {totals.water * 250}ml
+                                </Typography>
+                                <Typography variant="caption" color={colors.textDim} style={{ fontVariant: ['tabular-nums'] }}>
+                                    / {plan.waterGlasses * 250}ml
+                                </Typography>
+                            </View>
+                        </View>
+
+                        {/* Water progress */}
+                        <ProgressBar progress={waterProgress} color={colors.info || '#3B82F6'} height={8} style={{ marginBottom: spacing[5] }} />
+
+                        {/* Water glasses */}
+                        <View style={styles.glassRow}>
+                            {Array.from({ length: Math.min(plan.waterGlasses, 16) }, (_, i) => (
+                                <View
+                                    key={i}
+                                    style={[styles.glass,
+                                    i < totals.water && styles.glassFilled
+                                    ]}
+                                >
+                                    <Ionicons
+                                        name={i < totals.water ? 'water' : 'water-outline'}
+                                        size={18}
+                                        color={i < totals.water ? (colors.info || '#3B82F6') : colors.textDim}
+                                    />
+                                </View>
+                            ))}
+                        </View>
+
+                        <Button
+                            title="Add Glass"
+                            onPress={handleAddWater}
+                            variant="secondary"
+                            icon={<Ionicons name="add" size={18} color={colors.info || '#3B82F6'} />}
+                            textStyle={{ color: colors.info || '#3B82F6' }}
+                            hapticFeedback={false} // Handled custom above
+                        />
+                    </Card>
+
+                    {/* Week Overview */}
+                    <Typography variant="title2" style={styles.sectionLabel}>This Week</Typography>
+                    <Card style={styles.weekCard}>
+                        {weekSummary.map((day, i) => {
+                            const dayProgress = day.calories > 0
+                                ? Math.min(1, day.calories / Math.max(plan.targetCalories, 1))
+                                : 0;
+                            const isToday = i === 6;
+
+                            let barColor = colors.textDim;
+                            if (isToday) barColor = colors.primary;
+                            else if (dayProgress >= 0.8) barColor = colors.success;
+
+                            return (
+                                <View key={day.date} style={styles.weekDay}>
+                                    <Typography variant={isToday ? "bold" : "caption"} color={isToday ? colors.primary : colors.textSecondary} style={{ fontSize: 10, marginBottom: spacing[2], fontWeight: '700' }}>
+                                        {day.day}
+                                    </Typography>
+                                    <WeekBar progress={dayProgress} isToday={isToday} color={barColor} />
+                                    <Typography variant="caption" color={colors.textDim} style={{ fontSize: 10, marginTop: spacing[2], fontVariant: ['tabular-nums'] }}>
+                                        {day.calories > 0 ? day.calories : '–'}
+                                    </Typography>
+                                </View>
+                            );
+                        })}
+                    </Card>
+
+                    <View style={{ height: 40 }} />
+                </ScreenWrapper>
+            </Animated.ScrollView>
         </View>
     );
 };
@@ -377,8 +431,32 @@ const styles = StyleSheet.create({
     },
     scrollContent: {
         paddingHorizontal: spacing[4],
-        paddingTop: spacing[12],
+        paddingTop: spacing[8] + 100, // Account for sticky header
         paddingBottom: spacing[8],
+    },
+    stickyHeader: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 100,
+        overflow: 'hidden',
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderBottomColor: 'rgba(0,0,0,0.05)',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        paddingBottom: spacing[4],
+    },
+    stickyHeaderContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: spacing[4],
+    },
+    stickyTitle: {
+        fontFamily: 'Inter-SemiBold',
+        fontSize: 17, // Standard iOS header size
+        color: colors.text,
+        letterSpacing: -0.5,
     },
     sectionLabel: {
         marginTop: spacing[8],
