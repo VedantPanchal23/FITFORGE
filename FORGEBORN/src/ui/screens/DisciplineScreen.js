@@ -13,9 +13,10 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { colors, spacing, radius } from '../theme';
-import { Card, Typography, Button, ProgressBar, ScreenWrapper, CustomBottomSheet } from '../components';
+import { Card, Typography, Button, ProgressBar, ScreenWrapper, CustomBottomSheet, SwipeableCard } from '../components';
 import { BlurView } from 'expo-blur';
 import AbstractPattern from '../components/AbstractPattern';
+import SoundEngine from '../../utils/SoundEngine';
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 import useHabitStore from '../../store/habitStore';
@@ -96,9 +97,9 @@ const DisciplineScreen = () => {
         toggleHabit(habitId);
 
         if (wasDone) {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            SoundEngine.play('light');
         } else {
-            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+            SoundEngine.play('complete');
         }
         setRefreshKey(k => k + 1);
     }, [isHabitDone, toggleHabit]);
@@ -271,46 +272,54 @@ const DisciplineScreen = () => {
                                         const isLast = index === sortedHabits.length - 1;
 
                                         return (
-                                            <TouchableOpacity
+                                            <SwipeableCard
                                                 key={habit.id}
-                                                style={[styles.habitRow, isLast && { borderBottomWidth: 0 }]}
-                                                onPress={() => handleToggle(habit.id)}
-                                                onLongPress={() => habit.isCustom && handleRemoveHabit(habit.id)}
-                                                activeOpacity={0.7}
+                                                style={isLast ? {} : { borderBottomWidth: 1, borderBottomColor: colors.borderLight + '50' }}
+                                                onSwipeLeft={() => handleToggle(habit.id)}
+                                                leftActionIcon={done ? "arrow-undo" : "checkmark"}
+                                                leftActionColor={done ? colors.warning : colors.success}
+                                                onSwipeRight={habit.isCustom ? () => handleRemoveHabit(habit.id) : null}
                                             >
-                                                <View style={styles.habitLeft}>
-                                                    <View style={[styles.checkbox, done && styles.checkboxDone]}>
-                                                        {done && <Ionicons name="checkmark" size={16} color={colors.textInverse} />}
-                                                    </View>
-                                                    <View style={styles.iconBox}>
-                                                        <Ionicons name={habit.icon} size={22} color={done ? colors.textDim : CATEGORY_COLORS[category] || colors.primary} />
-                                                    </View>
-                                                    <View style={styles.habitInfo}>
-                                                        <Typography
-                                                            variant="headline"
-                                                            style={[
-                                                                { fontSize: 16 },
-                                                                done ? { textDecorationLine: 'line-through', color: colors.textDim } : { color: colors.text }
-                                                            ]}
-                                                        >
-                                                            {habit.name}
-                                                        </Typography>
-                                                        <Typography variant="caption" color={colors.primary} style={{ marginTop: 2, fontWeight: '700' }} tabularNums>
-                                                            +{habit.xpReward} XP
-                                                        </Typography>
-                                                    </View>
-                                                </View>
-                                                <View style={styles.habitRight}>
-                                                    {streak.current > 0 && (
-                                                        <View style={styles.streakBadge}>
-                                                            <Ionicons name="flame" size={14} color="#EF4444" />
-                                                            <Typography variant="caption" color="#EF4444" style={{ fontWeight: '800' }} tabularNums>
-                                                                {streak.current}
+                                                <TouchableOpacity
+                                                    style={styles.habitRow}
+                                                    onPress={() => handleToggle(habit.id)}
+                                                    onLongPress={() => habit.isCustom && handleRemoveHabit(habit.id)}
+                                                    activeOpacity={0.7}
+                                                >
+                                                    <View style={styles.habitLeft}>
+                                                        <View style={[styles.checkbox, done && styles.checkboxDone]}>
+                                                            {done && <Ionicons name="checkmark" size={16} color={colors.textInverse} />}
+                                                        </View>
+                                                        <View style={styles.iconBox}>
+                                                            <Ionicons name={habit.icon} size={22} color={done ? colors.textDim : CATEGORY_COLORS[category] || colors.primary} />
+                                                        </View>
+                                                        <View style={styles.habitInfo}>
+                                                            <Typography
+                                                                variant="headline"
+                                                                style={[
+                                                                    { fontSize: 16 },
+                                                                    done ? { textDecorationLine: 'line-through', color: colors.textDim } : { color: colors.text }
+                                                                ]}
+                                                            >
+                                                                {habit.name}
+                                                            </Typography>
+                                                            <Typography variant="caption" color={colors.primary} style={{ marginTop: 2, fontWeight: '700' }} tabularNums>
+                                                                +{habit.xpReward} XP
                                                             </Typography>
                                                         </View>
-                                                    )}
-                                                </View>
-                                            </TouchableOpacity>
+                                                    </View>
+                                                    <View style={styles.habitRight}>
+                                                        {streak.current > 0 && (
+                                                            <View style={styles.streakBadge}>
+                                                                <Ionicons name="flame" size={14} color="#EF4444" />
+                                                                <Typography variant="caption" color="#EF4444" style={{ fontWeight: '800' }} tabularNums>
+                                                                    {streak.current}
+                                                                </Typography>
+                                                            </View>
+                                                        )}
+                                                    </View>
+                                                </TouchableOpacity>
+                                            </SwipeableCard>
                                         );
                                     })}
                                 </Card>
@@ -534,8 +543,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingVertical: spacing[5],
         paddingHorizontal: spacing[5],
-        borderBottomWidth: 1,
-        borderBottomColor: colors.borderLight + '50',
         backgroundColor: colors.surface,
     },
     habitLeft: {
