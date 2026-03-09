@@ -111,7 +111,6 @@ function DisciplineStackScreen() {
 
 // ─── Tab Navigator ────────────────────────────────────────────────────────────
 import { BlurView } from 'expo-blur';
-import { StyleSheet } from 'react-native';
 
 import * as Haptics from 'expo-haptics';
 
