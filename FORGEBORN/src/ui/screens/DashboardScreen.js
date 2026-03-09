@@ -13,8 +13,10 @@ import * as Haptics from 'expo-haptics';
 import Svg, { Circle } from 'react-native-svg';
 import { colors, spacing, radius } from '../theme';
 import { BlurView } from 'expo-blur';
-import { Typography, ScreenWrapper } from '../components';
+import { Typography, ScreenWrapper, DynamicFocusWidget } from '../components';
+import { NestableScrollContainer, NestableDraggableFlatList, ScaleDecorator } from 'react-native-draggable-flatlist';
 
+const AnimatedNestable = Animated.createAnimatedComponent(NestableScrollContainer);
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
 import useUserStore from '../../store/userStore';
@@ -83,7 +85,7 @@ const ProgressRing = ({ progress, color, size = 60, strokeWidth = 6 }) => {
 };
 
 // --- Premium Pressable Card ---
-const ActionCard = ({ title, subtitle, icon, color, progress, onPress, targetValueStr = '' }) => {
+const ActionCard = ({ title, subtitle, icon, color, progress, onPress, drag, isActive }) => {
     const animatedScale = React.useRef(new Animated.Value(1)).current;
 
     const handlePressIn = () => {
@@ -111,31 +113,36 @@ const ActionCard = ({ title, subtitle, icon, color, progress, onPress, targetVal
     };
 
     return (
-        <TouchableOpacity
-            onPressIn={handlePressIn}
-            onPressOut={handlePressOut}
-            onPress={handlePress}
-            activeOpacity={0.9}
-        >
-            <Animated.View style={[styles.card, { transform: [{ scale: animatedScale }] }]}>
-                <View style={styles.cardContent}>
-                    <View style={styles.cardHeaderRow}>
-                        <View style={[styles.iconBox, { backgroundColor: color + '15' }]}>
-                            <Ionicons name={icon} size={24} color={color} />
+        <ScaleDecorator>
+            <TouchableOpacity
+                onLongPress={drag}
+                delayLongPress={200}
+                onPressIn={handlePressIn}
+                onPressOut={handlePressOut}
+                onPress={handlePress}
+                activeOpacity={0.9}
+                disabled={isActive}
+            >
+                <Animated.View style={[styles.card, { transform: [{ scale: animatedScale }] }, isActive && { shadowOpacity: 0.1, elevation: 8, zIndex: 99 }]}>
+                    <View style={styles.cardContent}>
+                        <View style={styles.cardHeaderRow}>
+                            <View style={[styles.iconBox, { backgroundColor: color + '15' }]}>
+                                <Ionicons name={icon} size={24} color={color} />
+                            </View>
+                            <View style={styles.cardHeaderText}>
+                                <Typography variant="headline" style={{ fontWeight: '700' }}>{title}</Typography>
+                                <Typography variant="caption" color={colors.textDim} numberOfLines={1}>{subtitle}</Typography>
+                            </View>
                         </View>
-                        <View style={styles.cardHeaderText}>
-                            <Typography variant="headline" style={{ fontWeight: '700' }}>{title}</Typography>
-                            <Typography variant="caption" color={colors.textDim} numberOfLines={1}>{subtitle}</Typography>
-                        </View>
-                    </View>
 
-                    {/* Ring replaces simple progress bar */}
-                    <View style={styles.cardRight}>
-                        <ProgressRing progress={progress} color={color} size={54} strokeWidth={5} />
+                        {/* Ring replaces simple progress bar */}
+                        <View style={styles.cardRight}>
+                            <ProgressRing progress={progress} color={color} size={54} strokeWidth={5} />
+                        </View>
                     </View>
-                </View>
-            </Animated.View>
-        </TouchableOpacity>
+                </Animated.View>
+            </TouchableOpacity>
+        </ScaleDecorator>
     );
 };
 
@@ -143,6 +150,8 @@ const ActionCard = ({ title, subtitle, icon, color, progress, onPress, targetVal
 const DashboardScreen = ({ navigation }) => {
     // Stores
     const profile = useUserStore((s) => s.profile);
+    const dashboardOrder = useUserStore((s) => s.dashboardOrder || ['training', 'nutrition', 'discipline']);
+    const setDashboardOrder = useUserStore((s) => s.setDashboardOrder);
     const userName = profile?.name || 'Warrior';
 
     // Dates/Greeting
@@ -212,6 +221,38 @@ const DashboardScreen = ({ navigation }) => {
         extrapolate: 'clamp',
     });
 
+    const actionCardsData = [
+        {
+            id: 'training',
+            title: "Training",
+            subtitle: todayPlanName,
+            icon: "barbell",
+            color: colors.primary,
+            progress: workoutDone ? 1 : (activeWorkout ? 0.5 : 0),
+            onPress: () => navigation.navigate('Workout'),
+        },
+        {
+            id: 'nutrition',
+            title: "Nutrition",
+            subtitle: `${Math.round(nutritionTotals.calories)} / ${calTarget} kcal`,
+            icon: "restaurant",
+            color: colors.success,
+            progress: calProgress,
+            onPress: () => navigation.navigate('Nutrition'),
+        },
+        {
+            id: 'discipline',
+            title: "Discipline",
+            subtitle: `${habitStatus.completed} of ${habitStatus.total} habits done`,
+            icon: "flash",
+            color: colors.warning,
+            progress: habitStatus.total > 0 ? (habitStatus.completed / habitStatus.total) : 0,
+            onPress: () => navigation.navigate('Discipline'),
+        }
+    ];
+
+    const sortedActionCards = dashboardOrder.map(id => actionCardsData.find(c => c.id === id)).filter(Boolean);
+
     return (
         <View style={styles.container}>
             <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
@@ -237,7 +278,7 @@ const DashboardScreen = ({ navigation }) => {
                 </View>
             </Animated.View>
 
-            <Animated.ScrollView
+            <AnimatedNestable
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.scrollContent}
                 onScroll={handleScroll}
@@ -270,6 +311,9 @@ const DashboardScreen = ({ navigation }) => {
                         </TouchableOpacity>
                     </View>
 
+                    {/* Dynamic Focus Engine */}
+                    <DynamicFocusWidget navigation={navigation} />
+
                     {/* Glassmorphic Stats Grid */}
                     <View style={styles.statsGrid}>
                         <View style={styles.statBox}>
@@ -296,31 +340,25 @@ const DashboardScreen = ({ navigation }) => {
                         </Typography>
                     </View>
 
-                    <ActionCard
-                        title="Training"
-                        subtitle={todayPlanName}
-                        icon="barbell"
-                        color={colors.primary}
-                        progress={workoutDone ? 1 : (activeWorkout ? 0.5 : 0)}
-                        onPress={() => navigation.navigate('Workout')}
-                    />
-
-                    <ActionCard
-                        title="Nutrition"
-                        subtitle={`${Math.round(nutritionTotals.calories)} / ${calTarget} kcal`}
-                        icon="restaurant"
-                        color={colors.success}
-                        progress={calProgress}
-                        onPress={() => navigation.navigate('Nutrition')}
-                    />
-
-                    <ActionCard
-                        title="Discipline"
-                        subtitle={`${habitStatus.completed} of ${habitStatus.total} habits done`}
-                        icon="flash"
-                        color={colors.warning}
-                        progress={habitStatus.total > 0 ? (habitStatus.completed / habitStatus.total) : 0}
-                        onPress={() => navigation.navigate('Discipline')}
+                    <NestableDraggableFlatList
+                        data={sortedActionCards}
+                        keyExtractor={(item) => item.id}
+                        onDragEnd={({ data }) => {
+                            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                            setDashboardOrder(data.map(i => i.id));
+                        }}
+                        renderItem={({ item, drag, isActive }) => (
+                            <ActionCard
+                                title={item.title}
+                                subtitle={item.subtitle}
+                                icon={item.icon}
+                                color={item.color}
+                                progress={item.progress}
+                                onPress={item.onPress}
+                                drag={drag}
+                                isActive={isActive}
+                            />
+                        )}
                     />
 
                     {/* Lookmaxx Mini Card */}
@@ -348,7 +386,7 @@ const DashboardScreen = ({ navigation }) => {
                     </TouchableOpacity>
                 </ScreenWrapper>
 
-            </Animated.ScrollView>
+            </AnimatedNestable>
         </View>
     );
 };
