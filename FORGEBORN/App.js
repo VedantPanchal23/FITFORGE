@@ -20,6 +20,7 @@ import { useFonts, Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_7
 import * as SplashScreen from 'expo-splash-screen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import SoundEngine from './src/utils/SoundEngine';
 
 // Keep splash screen visible while fonts load
 SplashScreen.preventAutoHideAsync();
@@ -40,6 +41,7 @@ import LookmaxxingScreen from './src/ui/screens/LookmaxxingScreen';
 import ProgressScreen from './src/ui/screens/ProgressScreen';
 import LockScreen from './src/ui/screens/LockScreen';
 import CreateObligationScreen from './src/ui/screens/CreateObligationScreen';
+import { DebtOverlay, LevelUpModal } from './src/ui/components';
 
 // Stores
 import useCommitmentStore from './src/store/commitmentStore';
@@ -219,6 +221,8 @@ export default function App() {
   const tick = useObligationStore((s) => s.tick);
 
   useEffect(() => {
+    SoundEngine.init();
+
     const timer = setTimeout(() => {
       setIsReady(true);
       tick();
@@ -273,6 +277,8 @@ export default function App() {
       <BottomSheetModalProvider>
         <NavigationContainer>
           <MainTabs />
+          <DebtOverlay />
+          <LevelUpModal />
         </NavigationContainer>
       </BottomSheetModalProvider>
     </GestureHandlerRootView>
