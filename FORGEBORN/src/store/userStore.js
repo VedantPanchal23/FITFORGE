@@ -96,7 +96,8 @@ export const useUserStore = create(
 
         // Nutrition
         dietPreference: null,
-        mealsPerDay: 4,
+        // Dashboard Layout
+        dashboardOrder: ['training', 'nutrition', 'discipline'],
       },
 
       // Actions
@@ -104,6 +105,10 @@ export const useUserStore = create(
         set((state) => ({
           profile: { ...state.profile, ...updates },
         }));
+      },
+
+      setDashboardOrder: (order) => {
+        set({ dashboardOrder: order });
       },
 
       completeOnboarding: () => {
@@ -140,6 +145,7 @@ export const useUserStore = create(
             dietPreference: null,
             mealsPerDay: 4,
           },
+          dashboardOrder: ['training', 'nutrition', 'discipline'],
         });
       },
     }),
